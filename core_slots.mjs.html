@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>core/slots.mjs - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="CliError.html">CliError</a></li></ul><h3>Global</h3><ul><li><a href="global.html#ARMS_CFG_KEYS">ARMS_CFG_KEYS</a></li><li><a href="global.html#ARMS_DEFAULTS">ARMS_DEFAULTS</a></li><li><a href="global.html#ARM_KEYS">ARM_KEYS</a></li><li><a href="global.html#ARM_STATUS">ARM_STATUS</a></li><li><a href="global.html#CFG_KEYS">CFG_KEYS</a></li><li><a href="global.html#DEADLINE_WHY">DEADLINE_WHY</a></li><li><a href="global.html#DEFAULT_BUDGET">DEFAULT_BUDGET</a></li><li><a href="global.html#DEFAULT_FORBIDDEN">DEFAULT_FORBIDDEN</a></li><li><a href="global.html#DEFAULT_SIM">DEFAULT_SIM</a></li><li><a href="global.html#DOMAIN_KEYS">DOMAIN_KEYS</a></li><li><a href="global.html#DREAM_MUTEX">DREAM_MUTEX</a></li><li><a href="global.html#FRONTIER_BLOCKED">FRONTIER_BLOCKED</a></li><li><a href="global.html#FRONTIER_PATCH_KEYS">FRONTIER_PATCH_KEYS</a></li><li><a href="global.html#HEARTBEAT_FILE">HEARTBEAT_FILE</a></li><li><a href="global.html#HEARTBEAT_MS">HEARTBEAT_MS</a></li><li><a href="global.html#HEARTBEAT_STALE_MS">HEARTBEAT_STALE_MS</a></li><li><a href="global.html#HOOK_FAIL_HEAD">HOOK_FAIL_HEAD</a></li><li><a href="global.html#OCCUPIED">OCCUPIED</a></li><li><a href="global.html#PROC_STARTED_AT">PROC_STARTED_AT</a></li><li><a href="global.html#REALIZE_KINDS">REALIZE_KINDS</a></li><li><a href="global.html#REQUEST_MUST_HEAD">REQUEST_MUST_HEAD</a></li><li><a href="global.html#ROUND_NAME_SRC">ROUND_NAME_SRC</a></li><li><a href="global.html#STATUS">STATUS</a></li><li><a href="global.html#WRITE_ROOT_ENV">WRITE_ROOT_ENV</a></li><li><a href="global.html#accept">accept</a></li><li><a href="global.html#acquireSlots">acquireSlots</a></li><li><a href="global.html#aliasMapOf">aliasMapOf</a></li><li><a href="global.html#aliasMapOfNodes">aliasMapOfNodes</a></li><li><a href="global.html#aliasPreOf">aliasPreOf</a></li><li><a href="global.html#aliasShortOfDomain">aliasShortOfDomain</a></li><li><a href="global.html#allocateRound">allocateRound</a></li><li><a href="global.html#appendJsonl">appendJsonl</a></li><li><a href="global.html#applyDiff">applyDiff</a></li><li><a href="global.html#assertWriteRoot">assertWriteRoot</a></li><li><a href="global.html#atomicStats">atomicStats</a></li><li><a href="global.html#canonicalJson">canonicalJson</a></li><li><a href="global.html#carriersOfArm">carriersOfArm</a></li><li><a href="global.html#catalogArmsOf">catalogArmsOf</a></li><li><a href="global.html#catalogLayersOf">catalogLayersOf</a></li><li><a href="global.html#checkArmsCfg">checkArmsCfg</a></li><li><a href="global.html#checkCfg">checkCfg</a></li><li><a href="global.html#checkDomain">checkDomain</a></li><li><a href="global.html#checkPolicySource">checkPolicySource</a></li><li><a href="global.html#clearGenRequest">clearGenRequest</a></li><li><a href="global.html#createRsi">createRsi</a></li><li><a href="global.html#debtStreakOf">debtStreakOf</a></li><li><a href="global.html#earlyEmbedOf">earlyEmbedOf</a></li><li><a href="global.html#evaluatePolicy">evaluatePolicy</a></li><li><a href="global.html#extractTurning">extractTurning</a></li><li><a href="global.html#featureOf">featureOf</a></li><li><a href="global.html#frontierOutcomesOf">frontierOutcomesOf</a></li><li><a href="global.html#generationCheck">generationCheck</a></li><li><a href="global.html#hookErrText">hookErrText</a></li><li><a href="global.html#hookFailureOf">hookFailureOf</a></li><li><a href="global.html#isAliasShort">isAliasShort</a></li><li><a href="global.html#isGenerationFulfilled">isGenerationFulfilled</a></li><li><a href="global.html#isMainModule">isMainModule</a></li><li><a href="global.html#isRoundDir">isRoundDir</a></li><li><a href="global.html#jobKey">jobKey</a></li><li><a href="global.html#lastChangeAtOf">lastChangeAtOf</a></li><li><a href="global.html#lastDreamAt">lastDreamAt</a></li><li><a href="global.html#listRoundDirs">listRoundDirs</a></li><li><a href="global.html#loadPolicyFile">loadPolicyFile</a></li><li><a href="global.html#loadSummaries">loadSummaries</a></li><li><a href="global.html#maintenanceOf">maintenanceOf</a></li><li><a href="global.html#makeArms">makeArms</a></li><li><a href="global.html#makeAuto">makeAuto</a></li><li><a href="global.html#makeDream">makeDream</a></li><li><a href="global.html#makeExplore">makeExplore</a></li><li><a href="global.html#makeNode">makeNode</a></li><li><a href="global.html#makePaths">makePaths</a></li><li><a href="global.html#makeRegistry">makeRegistry</a></li><li><a href="global.html#makeStatus">makeStatus</a></li><li><a href="global.html#makeStore">makeStore</a></li><li><a href="global.html#makeView">makeView</a></li><li><a href="global.html#markerPidOf">markerPidOf</a></li><li><a href="global.html#markerRoundDirOf">markerRoundDirOf</a></li><li><a href="global.html#markerStale">markerStale</a></li><li><a href="global.html#maxOfDir">maxOfDir</a></li><li><a href="global.html#meta">meta</a></li><li><a href="global.html#newToken">newToken</a></li><li><a href="global.html#nodeIdOf">nodeIdOf</a></li><li><a href="global.html#noveltyDebtOf">noveltyDebtOf</a></li><li><a href="global.html#nowIso">nowIso</a></li><li><a href="global.html#omitMask">omitMask</a></li><li><a href="global.html#opsOfArm">opsOfArm</a></li><li><a href="global.html#originsOfArm">originsOfArm</a></li><li><a href="global.html#ownedBy">ownedBy</a></li><li><a href="global.html#ownerLine">ownerLine</a></li><li><a href="global.html#parentIdsOf">parentIdsOf</a></li><li><a href="global.html#parseCli">parseCli</a></li><li><a href="global.html#peekRound">peekRound</a></li><li><a href="global.html#pidAlive">pidAlive</a></li><li><a href="global.html#policyDevCheck">policyDevCheck</a></li><li><a href="global.html#policySourcesOf">policySourcesOf</a></li><li><a href="global.html#policyViewOfNode">policyViewOfNode</a></li><li><a href="global.html#readGenRequest">readGenRequest</a></li><li><a href="global.html#readHeartbeat">readHeartbeat</a></li><li><a href="global.html#readJson">readJson</a></li><li><a href="global.html#readJsonl">readJsonl</a></li><li><a href="global.html#readOwner">readOwner</a></li><li><a href="global.html#reclaimDeadSlots">reclaimDeadSlots</a></li><li><a href="global.html#reclaimJobDirs">reclaimJobDirs</a></li><li><a href="global.html#relativeImportsOf">relativeImportsOf</a></li><li><a href="global.html#releaseSlots">releaseSlots</a></li><li><a href="global.html#replanFillOf">replanFillOf</a></li><li><a href="global.html#reportOf">reportOf</a></li><li><a href="global.html#requestBaseOf">requestBaseOf</a></li><li><a href="global.html#requestMustOf">requestMustOf</a></li><li><a href="global.html#rescore">rescore</a></li><li><a href="global.html#roundDirs">roundDirs</a></li><li><a href="global.html#roundNameOf">roundNameOf</a></li><li><a href="global.html#roundNumOf">roundNumOf</a></li><li><a href="global.html#runJobs">runJobs</a></li><li><a href="global.html#selectableOf">selectableOf</a></li><li><a href="global.html#sha">sha</a></li><li><a href="global.html#simulate">simulate</a></li><li><a href="global.html#sleepMs">sleepMs</a></li><li><a href="global.html#slotAuxOf">slotAuxOf</a></li><li><a href="global.html#slotsInUse">slotsInUse</a></li><li><a href="global.html#slotsStatus">slotsStatus</a></li><li><a href="global.html#specDiff">specDiff</a></li><li><a href="global.html#specHash">specHash</a></li><li><a href="global.html#startHeartbeat">startHeartbeat</a></li><li><a href="global.html#tryAcquireSlots">tryAcquireSlots</a></li><li><a href="global.html#unusedOf">unusedOf</a></li><li><a href="global.html#usageOf">usageOf</a></li><li><a href="global.html#validateCatalog">validateCatalog</a></li><li><a href="global.html#waitNote">waitNote</a></li><li><a href="global.html#withLock">withLock</a></li><li><a href="global.html#writeAllowed">writeAllowed</a></li><li><a href="global.html#writeFileAtomic">writeFileAtomic</a></li><li><a href="global.html#writeJson">writeJson</a></li><li><a href="global.html#writeJsonl">writeJsonl</a></li><li><a href="global.html#writeRootsOf">writeRootsOf</a></li></ul>
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">core/slots.mjs</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import fs from 'fs'
+import path from 'path'
+import { fileURLToPath } from 'url'
+import { sleepMs } from './lock.mjs'
+import { pidAlive, readOwner, newToken, ownerLine, ownedBy, waitNote } from './proc.mjs'
+import { parseCli } from './cli.mjs'
+
+
+//全域 worker 槽位(跨 session 之計數信號量;目錄 rename 之原子性):多個 agent 同時派 worker 時, 總子程序數 ≤ max
+//  槽位 = dir/s{i}(內含 owner:`pid ISO時間 token`, 見 core/proc.mjs);持有者行程已死 ⇒ 視為遺留, 取槽時自動回收(不需手動 rm)
+//  **租約(2026-09-26 修訂)**:持有者存活即不回收(不論持有多久)—— 原本「逾 staleMs(6 小時)即判死」會奪走存活之長持有者
+//    (長流程管線持互斥可逾 6 小時 ⇒ 兩條管線並行);槽位為長租約且同步持有端(spawnSync)無法心跳續約 ⇒ 以存活判定;staleMs 參數保留相容, 只用於顯示逾時
+//    釋放只刪自己的槽(owner token 相符);pid 被重用而永佔之槽會於狀態列顯示持有者與起始時刻, 由人判斷
+//  **原子建槽(2026-10-09;已觀察之上限違反:某次驗收 peak 5 > 4)**:
+//    原:mkdir(s{i}) 後才寫 owner ⇒ 其間之槽無 owner, 他方見「無 owner 且 mtime 逾 2 秒」即判死刪之再取 ⇒ 建槽者寫 owner 被延遲 > 2 秒
+//      (E 核排程飢餓)時兩方同持一槽(建槽者之 owner 蓋入他方之槽), 或建槽者寫 owner 時 ENOENT
+//    今:先於同夾建暫存夾 s{i}.tmp-&lt;token>(token 首段 = pid)並寫 owner, 再 rename 為 s{i} ⇒ 槽於出現之時即帶 owner(新碼不再有「無 owner 之活槽」)
+//      rename 之目標已存在 ⇒ 不取(Windows:目標為夾一律 EPERM —— 2026-10-09 node 24 / win32 實測;POSIX:非空夾 ENOTEMPTY / EEXIST)⇒ 刪暫存、此槽本輪不取
+//      rename 失敗而目標不存在(Windows 之防毒 / 索引短暫開啟暫存內之檔 ⇒ EPERM / EACCES / EBUSY)⇒ 遞增等待重試(合計約 0.3 秒), 仍不成 ⇒ 此槽本輪不取(下一輪再試)
+//    釋放 / 回收死槽:先 rename 為 s{i}.rel-&lt;token> / s{i}.dead-&lt;token> 再刪 ⇒ s{i} 不以「空夾」之形存在(POSIX 之 rename 會取代空夾:刪到一半之空夾可被新槽取代, 再被刪者連同新槽之 owner 刪掉)
+//      回收另於移走後核對 owner 未變(判死時所讀之 pid / 時刻 / token 與移走者相同);不同 ⇒ 移回(判死與移走之間他方已回收並重取;原「判死後 rmSync」會刪掉新持有者之槽)
+//    輔助夾(s{i}.tmp- / .rel- / .dead-&lt;pid>.…)之殘留(程序於建槽 / 刪除中途死亡):取槽與 reclaimDeadSlots 時刪**名內 pid 已死**者 —— 依 pid, 不依時間(存活者之建槽不論多慢皆不動)
+//    相容:舊形之槽(無 owner 之 s{i}:舊碼建槽之瞬間 / 舊碼之殘留 / 釋放時刪 owner 後之瞬間)照舊以 2 秒寬限判死;輔助夾不計入占用、maxOfDir(只認 s{i})
+//  等待:逾 waitLogMs(預設 60 秒)起, 每 waitLogMs 以 stderr 同步寫一行(已等秒數、各槽持有者), 免 1 ~ 3 小時之等待無聲
+//  查詢 / 回收(2026-09-25):node w-recursi/src/core/slots.mjs --status &lt;dir> [--max N] | --reclaim &lt;dir> [--max N](未帶 --max ⇒ maxOfDir)
+//  上限之記錄(2026-09-25;某次回報:CLI 未帶 --max 時印預設 8, 而領域實際上限 10 ⇒ s8 / s9 不顯示、不回收, 他 agent 誤判已滿)
+//    取槽時把本次 max 記於 dir/.max(內容不同才寫);maxOfDir = max(.max 記錄 或 預設, 現存最大槽號 + 1)
+export { pidAlive }
+const FN_MAX = '.max'
+let recordMax = (dir, max) => {
+    try {
+        let fp = path.join(dir, FN_MAX)
+        let cur = fs.existsSync(fp) ? fs.readFileSync(fp, 'utf8').trim() : null
+        if (cur !== String(max)) { fs.writeFileSync(fp, String(max)) }
+    }
+    catch (e) {}
+}
+/**
+ * 槽位夾之上限:max(取槽時記於 &lt;dir>/.max 之上限或預設值, 現存最大槽號 + 1)——CLI 未帶 --max 時據以顯示與回收
+ *
+ * @param {String} dir 輸入槽位夾
+ * @param {Number} [dflt=8] 輸入無記錄時之預設上限
+ * @returns {Number} 回傳上限
+ * @example
+ * import fs from 'fs'
+ * import os from 'os'
+ * import path from 'path'
+ *
+ * let dir = fs.mkdtempSync(path.join(os.tmpdir(), 'w-recursi-'))
+ * console.log(maxOfDir(dir))
+ * // => 8
+ * let hs = acquireSlots(dir, { want: 1, max: 3 })
+ * console.log(maxOfDir(dir))
+ * // => 3
+ * releaseSlots(hs)
+ * fs.rmSync(dir, { recursive: true, force: true })
+ */
+export let maxOfDir = (dir, dflt = 8) => {
+    let rec = NaN
+    try { rec = Number(fs.readFileSync(path.join(dir, FN_MAX), 'utf8').trim()) } catch (e) {}
+    let hi = 0
+    try { for (let f of fs.readdirSync(dir)) { let m = f.match(/^s(\d+)$/); if (m) { hi = Math.max(hi, Number(m[1]) + 1) } } } catch (e) {}
+    return Math.max(Number.isFinite(rec) &amp;&amp; rec > 0 ? rec : dflt, hi)
+}
+//判死(附判死時所讀之 owner, 供回收之核對):owner 有效 ⇒ 持有者不存活;owner 空檔 / 半寫 / 無(舊形)⇒ 夾之 mtime 逾 2 秒寬限(2026-09-25 修雙持有競態)
+let judge = (fd) => {
+    let o = readOwner(fd)
+    if (o) { return { dead: !pidAlive(o.pid), o } }
+    try { return { dead: Date.now() - fs.statSync(fd).mtimeMs > 2000, o: null } } catch (e) { return { dead: false, o: null } }
+}
+let isDead = (fd) => judge(fd).dead
+let sameOwner = (a, b) => (a === null ? b === null : !!b &amp;&amp; a.pid === b.pid &amp;&amp; a.at === b.at &amp;&amp; a.token === b.token)
+//want / max 之數值防呆(2026-09-26 審查:`--workers` 缺值 ⇒ NaN ⇒ 一格也不取、條件永不成立 ⇒ 無聲忙等 1 小時)
+let checkCounts = (want, max) => {
+    if (!Number.isInteger(want) || want &lt; 0) { throw new Error(`取槽之 want 須為非負整數(收到 ${want})`) }
+    if (!Number.isInteger(max) || max &lt; 1) { throw new Error(`取槽之 max 須為正整數(收到 ${max})`) }
+}
+//—— 輔助夾:s{i}.{tmp|rel|dead}-&lt;token>(token = `pid.時戳.亂碼`;名內 pid = 建立者)——
+const RE_AUX = /^s(\d+)\.(tmp|rel|dead)-(\d+)\./
+const TRANSIENT = ['EPERM', 'EACCES', 'EBUSY'] //Windows:被開啟之檔 / 目標為既存之夾
+const TAKEN = ['EEXIST', 'ENOTEMPTY'] //POSIX:目標為非空夾
+let auxOf = (fd, kind) => `${fd}.${kind}-${newToken()}`
+let rmQuiet = (fd) => { try { fs.rmSync(fd, { recursive: true, force: true }); return true } catch (e) { return false } }
+//輔助夾之列舉(唯讀):[{ name, slot, kind, pid, alive }]
+/**
+ * 列出輔助夾(建槽暫存 s{i}.tmp-、釋放 .rel-、回收 .dead-;名內 pid = 建立者),供顯示與殘留掃除;不計入占用
+ *
+ * @param {String} dir 輸入槽位夾
+ * @returns {Array} 回傳 [{ name, slot, kind, pid, alive }]
+ * @example
+ * import fs from 'fs'
+ * import os from 'os'
+ * import path from 'path'
+ *
+ * let dir = fs.mkdtempSync(path.join(os.tmpdir(), 'w-recursi-'))
+ * fs.mkdirSync(path.join(dir, 's0.tmp-99999999.abc'))
+ * let x = slotAuxOf(dir)[0]
+ * console.log(x.slot, x.kind, x.pid, x.alive)
+ * // => s0 tmp 99999999 false
+ * fs.rmSync(dir, { recursive: true, force: true })
+ */
+export let slotAuxOf = (dir) => {
+    let out = []
+    let ents = []
+    try { ents = fs.readdirSync(dir) } catch (e) { return out }
+    for (let f of ents) { let m = f.match(RE_AUX); if (m) { let pid = Number(m[3]); out.push({ name: f, slot: `s${m[1]}`, kind: m[2], pid, alive: pidAlive(pid) }) } }
+    return out
+}
+//輔助夾之掃除:名內 pid 已死者刪之(不依時間);回刪除數
+let sweepAux = (dir) => {
+    let n = 0
+    for (let x of slotAuxOf(dir)) { if (!x.alive &amp;&amp; rmQuiet(path.join(dir, x.name))) { n++ } }
+    return n
+}
+//移走再刪(釋放用):移走不成(Windows 之讀者短暫開啟其內之檔)⇒ 直接刪(舊行為;Windows 之 rename 不取代既存之夾, 無 POSIX 之空夾競態);已不在 ⇒ 無事
+let retire = (fd) => {
+    let grave = auxOf(fd, 'rel')
+    try { fs.renameSync(fd, grave) }
+    catch (e) { if (e.code !== 'ENOENT') { rmQuiet(fd) } return }
+    rmQuiet(grave)
+}
+//回收一個已判死之槽(j = judge 之結果):移走 → 核對 owner 未變 → 刪;不同 ⇒ 移回;移走不成(已不在 / 暫時被開啟)⇒ 不回收(下一輪再判)
+let reclaimSlot = (fd, j) => {
+    let grave = auxOf(fd, 'dead')
+    try { fs.renameSync(fd, grave) } catch (e) { return false }
+    let o2 = readOwner(grave)
+    if (!sameOwner(j.o, o2)) {
+        //移走的不是判死之那一份(判死後他方已回收並重取)⇒ 移回;移回不成(s{i} 又被取)⇒ 留於輔助夾並示警(極少見:需三方於微秒級之窗交錯)
+        try { fs.renameSync(grave, fd) }
+        catch (e) { waitNote(`槽位 ${fd}:回收時移走之槽已換持有者(pid ${o2 ? o2.pid : '?'}), 移回未成(${e.code});該槽留於 ${path.basename(grave)}, 待其持有者結束後由取槽之掃除回收`) }
+        return false
+    }
+    rmQuiet(grave)
+    return true
+}
+//單一槽位:取得 ⇒ handle { i, fd, token };被占 ⇒ null(占用者已死則順手回收, 下一輪可取)
+let takeSlot = (dir, i) => {
+    let fd = path.join(dir, `s${i}`)
+    if (fs.existsSync(fd)) { let j = judge(fd); if (j.dead) { reclaimSlot(fd, j) } return null }
+    let token = newToken()
+    let tmp = `${fd}.tmp-${token}`
+    fs.mkdirSync(tmp, { recursive: false })
+    try { fs.writeFileSync(path.join(tmp, 'owner'), ownerLine(token)) }
+    catch (e) { rmQuiet(tmp); throw e }
+    for (let k = 0; ; k++) {
+        try { fs.renameSync(tmp, fd); return { i, fd, token } }
+        catch (e) {
+            let taken = fs.existsSync(fd)
+            let transient = TRANSIENT.includes(e.code)
+            if (taken || !transient || k >= 5) {
+                rmQuiet(tmp)
+                if (taken || transient || TAKEN.includes(e.code)) { return null }
+                throw e
+            }
+            sleepMs(10 + k * 15)
+        }
+    }
+}
+let holdersNote = (dir, max) => slotsStatus(dir, { max }).map((s) => `${s.slot}:pid ${s.pid}${s.alive ? '' : '(已死)'}`).join(' ')
+
+//取 want 個槽(至少 minWant 個才回;否則等到 timeoutMs);回 handles(可能少於 want)
+/**
+ * 取槽(跨 session 之計數信號量,目錄 rename 之原子性):取 want 個,至少 minWant 個才回,否則等到 timeoutMs 並拋錯;持有者存活即不回收,持有者已死者取槽時自動回收
+ *
+ * @param {String} dir 輸入槽位夾
+ * @param {Object} [opt={}] 輸入選項 { want:Number(預設 1), max:Number(預設 8), minWant:Number(預設 1), timeoutMs:Number(預設 3600000), waitLogMs:Number(預設 60000) }
+ * @returns {Array} 回傳 handles [{ i, fd, token }](可能少於 want)
+ * @throws {Error} want 或 max 非整數、逾時取不到槽時拋出
+ * @example
+ * import fs from 'fs'
+ * import os from 'os'
+ * import path from 'path'
+ *
+ * let dir = fs.mkdtempSync(path.join(os.tmpdir(), 'w-recursi-'))
+ * let hs = acquireSlots(dir, { want: 2, max: 3 })
+ * console.log(hs.map((h) => h.i).join(','), slotsInUse(dir, { max: 3 }))
+ * // => 0,1 2
+ * releaseSlots(hs)
+ * console.log(slotsInUse(dir, { max: 3 }))
+ * // => 0
+ * fs.rmSync(dir, { recursive: true, force: true })
+ */
+export let acquireSlots = (dir, { want = 1, max = 8, minWant = 1, timeoutMs = 3600000, waitLogMs = 60000 } = {}) => {
+    checkCounts(want, max)
+    fs.mkdirSync(dir, { recursive: true })
+    recordMax(dir, max)
+    sweepAux(dir)
+    let t0 = Date.now(), lastNote = t0
+    let got = []
+    for (;;) {
+        for (let i = 0; i &lt; max &amp;&amp; got.length &lt; want; i++) { let h = takeSlot(dir, i); if (h) { got.push(h) } }
+        if (got.length >= Math.min(want, Math.max(1, minWant))) { return got }
+        let now = Date.now()
+        if (now - t0 > timeoutMs) { releaseSlots(got); throw new Error(`worker 槽位逾時 ${timeoutMs} ms(${dir}:${max} 槽皆被占用;${holdersNote(dir, max)})`) }
+        if (now - lastNote >= waitLogMs) { lastNote = now; waitNote(`等待槽位 ${path.basename(dir)} 已 ${Math.round((now - t0) / 1000)} 秒(要 ${want}、已得 ${got.length};${holdersNote(dir, max)})`) }
+        sleepMs(100 + Math.floor(Math.random() * 200))
+    }
+}
+//不等待之試取(2026-09-25:runner 運行中補槽用):掃一輪, 取到幾個算幾個(可能 0 個)
+/**
+ * 不等待之試取:掃至多兩輪(死槽於第一輪被回收後第二輪可取),取到幾個算幾個(可能 0 個)
+ *
+ * @param {String} dir 輸入槽位夾
+ * @param {Object} [opt={}] 輸入選項 { want:Number(預設 1), max:Number(預設 8) }
+ * @returns {Array} 回傳 handles
+ * @throws {Error} want 或 max 非整數時拋出
+ * @example
+ * import fs from 'fs'
+ * import os from 'os'
+ * import path from 'path'
+ *
+ * let dir = fs.mkdtempSync(path.join(os.tmpdir(), 'w-recursi-'))
+ * let a = tryAcquireSlots(dir, { want: 2, max: 2 })
+ * let b = tryAcquireSlots(dir, { want: 1, max: 2 })
+ * console.log(a.length, b.length)
+ * // => 2 0
+ * releaseSlots(a)
+ * fs.rmSync(dir, { recursive: true, force: true })
+ */
+export let tryAcquireSlots = (dir, { want = 1, max = 8 } = {}) => {
+    checkCounts(want, max)
+    fs.mkdirSync(dir, { recursive: true })
+    recordMax(dir, max)
+    sweepAux(dir)
+    let got = []
+    //死槽於第一輪被回收後, 第二輪才取得 ⇒ 至多兩輪
+    for (let pass = 0; pass &lt; 2 &amp;&amp; got.length &lt; want; pass++) {
+        for (let i = 0; i &lt; max &amp;&amp; got.length &lt; want; i++) { let h = takeSlot(dir, i); if (h) { got.push(h) } }
+    }
+    return got
+}
+//釋放:只刪自己的槽(owner token 相符;無 token 之舊 handle 以 pid 比對);先移走再刪(retire)
+/**
+ * 釋放槽位:只刪自己的槽(owner token 相符;無 token 之舊 handle 以 pid 比對),先移走再刪
+ *
+ * @param {Array} handles 輸入 acquireSlots 或 tryAcquireSlots 之回傳
+ * @returns {undefined} 無回傳
+ * @example
+ * import fs from 'fs'
+ * import os from 'os'
+ * import path from 'path'
+ *
+ * let dir = fs.mkdtempSync(path.join(os.tmpdir(), 'w-recursi-'))
+ * let hs = acquireSlots(dir, { want: 1, max: 2 })
+ * releaseSlots(hs)
+ * console.log(slotsInUse(dir, { max: 2 }))
+ * // => 0
+ * fs.rmSync(dir, { recursive: true, force: true })
+ */
+export let releaseSlots = (handles) => {
+    for (let h of handles || []) {
+        let o = readOwner(h.fd)
+        if (o &amp;&amp; !ownedBy(o, h.token)) { waitNote(`槽位 ${h.fd} 已非本程序持有(現持有者 pid ${o.pid}), 不刪`); continue }
+        retire(h.fd)
+    }
+}
+/**
+ * 占用中之槽數(持有者存活者;夾不存在 ⇒ 0)
+ *
+ * @param {String} dir 輸入槽位夾
+ * @param {Object} [opt={}] 輸入選項 { max:Number(預設 8) }
+ * @returns {Number} 回傳占用數
+ * @example
+ * import fs from 'fs'
+ * import os from 'os'
+ * import path from 'path'
+ *
+ * let dir = fs.mkdtempSync(path.join(os.tmpdir(), 'w-recursi-'))
+ * console.log(slotsInUse(path.join(dir, 'none')))
+ * // => 0
+ * fs.rmSync(dir, { recursive: true, force: true })
+ */
+export let slotsInUse = (dir, { max = 8 } = {}) => {
+    if (!fs.existsSync(dir)) { return 0 }
+    let n = 0
+    for (let i = 0; i &lt; max; i++) { let fd = path.join(dir, `s${i}`); if (fs.existsSync(fd) &amp;&amp; !isDead(fd)) { n++ } }
+    return n
+}
+//逐槽狀態:[{ slot, pid, at, alive, stale, dead }](不存在之槽不列;stale = 持有逾 staleMs, 只供顯示, 存活者不因此判死;輔助夾不列 —— 見 slotAuxOf)
+/**
+ * 逐槽狀態(不存在之槽不列);stale 只供顯示(持有逾 staleMs),存活者不因此判死
+ *
+ * @param {String} dir 輸入槽位夾
+ * @param {Object} [opt={}] 輸入選項 { max:Number(預設 8), staleMs:Number(預設 21600000) }
+ * @returns {Array} 回傳 [{ slot, pid, at, alive, stale, dead }]
+ * @example
+ * import fs from 'fs'
+ * import os from 'os'
+ * import path from 'path'
+ *
+ * let dir = fs.mkdtempSync(path.join(os.tmpdir(), 'w-recursi-'))
+ * let hs = acquireSlots(dir, { want: 1, max: 2 })
+ * let s = slotsStatus(dir, { max: 2 })[0]
+ * console.log(s.slot, s.pid === process.pid, s.alive, s.dead)
+ * // => s0 true true false
+ * releaseSlots(hs)
+ * fs.rmSync(dir, { recursive: true, force: true })
+ */
+export let slotsStatus = (dir, { max = 8, staleMs = 6 * 3600000 } = {}) => {
+    let out = []
+    if (!fs.existsSync(dir)) { return out }
+    for (let i = 0; i &lt; max; i++) {
+        let fd = path.join(dir, `s${i}`)
+        if (!fs.existsSync(fd)) { continue }
+        let o = readOwner(fd)
+        let alive = !!o &amp;&amp; pidAlive(o.pid)
+        let t = o ? Date.parse(o.at || '') : NaN
+        let stale = Number.isFinite(t) &amp;&amp; Date.now() - t > staleMs
+        out.push({ slot: `s${i}`, pid: o ? o.pid : null, at: o ? o.at : null, alive, stale, dead: isDead(fd) })
+    }
+    return out
+}
+//回收已死(持有者行程不在)之槽(移走 → 核對 → 刪);回收數;另掃除名內 pid 已死之輔助夾
+/**
+ * 回收已死(持有者行程不在)之槽:移走 → 核對 owner 未變 → 刪;另掃除名內 pid 已死之輔助夾;只動死槽,不以 rm 手刪(手刪會誤刪活槽)
+ *
+ * @param {String} dir 輸入槽位夾
+ * @param {Object} [opt={}] 輸入選項 { max:Number(預設 8) }
+ * @returns {Number} 回傳回收之槽數
+ * @example
+ * import fs from 'fs'
+ * import os from 'os'
+ * import path from 'path'
+ *
+ * let dir = fs.mkdtempSync(path.join(os.tmpdir(), 'w-recursi-'))
+ * fs.mkdirSync(path.join(dir, 's0'))
+ * fs.writeFileSync(path.join(dir, 's0', 'owner'), '99999999 2020-01-01T00:00:00.000Z tok')
+ * console.log(reclaimDeadSlots(dir, { max: 2 }), fs.existsSync(path.join(dir, 's0')))
+ * // => 1 false
+ * fs.rmSync(dir, { recursive: true, force: true })
+ */
+export let reclaimDeadSlots = (dir, { max = 8 } = {}) => {
+    if (!fs.existsSync(dir)) { return 0 }
+    sweepAux(dir)
+    let n = 0
+    for (let i = 0; i &lt; max; i++) {
+        let fd = path.join(dir, `s${i}`)
+        if (!fs.existsSync(fd)) { continue }
+        let j = judge(fd)
+        if (j.dead &amp;&amp; reclaimSlot(fd, j)) { n++ }
+    }
+    return n
+}
+
+export default { acquireSlots, tryAcquireSlots, releaseSlots, slotsInUse, slotsStatus, reclaimDeadSlots, slotAuxOf, pidAlive, maxOfDir }
+
+let isMain = process.argv[1] &amp;&amp; path.resolve(process.argv[1]) === path.resolve(fileURLToPath(import.meta.url))
+if (isMain) {
+    //參數經 core/cli.mjs(2026-09-26):未知 / 位置參數 / 值錯 exit 2
+    const USAGE = '用法:node w-recursi/src/core/slots.mjs --status &lt;dir> [--max N] | --reclaim &lt;dir> [--max N](未帶 --max ⇒ 取槽時所記之上限 / 現存最大槽號 + 1 / 8 之大者)'
+    let { values: V } = parseCli(process.argv.slice(2), { name: 'w-recursi/src/core/slots.mjs', usage: USAGE, options: { status: { type: 'str' }, reclaim: { type: 'str' }, max: { type: 'int', min: 1, max: 1024 } } })
+    if (!!V.status === !!V.reclaim) { console.error(`須 --status &lt;dir> 或 --reclaim &lt;dir> 之一(未執行任何動作)\n${USAGE}`); process.exit(2) }
+    let dir = V.status || V.reclaim
+    let max = V.max ?? maxOfDir(dir)
+    if (V.reclaim) { console.log(`回收死槽 ${reclaimDeadSlots(dir, { max })} 個`) }
+    let st = slotsStatus(dir, { max })
+    console.log(`槽位 ${dir}:占用 ${st.filter((s) => !s.dead).length} / ${max}${st.some((s) => s.dead) ? `(另有死槽 ${st.filter((s) => s.dead).length}, 取槽時自動回收;或加 --reclaim)` : ''}`)
+    for (let s of st) { console.log(`  ${s.slot} pid ${s.pid} ${s.alive ? '存活' : '已死'}${s.stale ? '(持有逾 6 小時)' : ''} ${s.at || ''}`) }
+    let aux = slotAuxOf(dir)
+    if (aux.length) { console.log(`  輔助夾 ${aux.length}(建槽暫存 / 釋放 / 回收之中途;名內 pid 已死者 ${aux.filter((x) => !x.alive).length}, 取槽或 --reclaim 時刪):${aux.map((x) => `${x.name.slice(0, 40)}${x.alive ? '' : '(已死)'}`).join(' ')}`) }
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.5</a> on Sat Nov 07 2026 22:16:09 GMT+0800 (台北標準時間) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+
+</body>
+</html>

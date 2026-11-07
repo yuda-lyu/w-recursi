@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>loop/policyDev.mjs - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="CliError.html">CliError</a></li></ul><h3>Global</h3><ul><li><a href="global.html#ARMS_CFG_KEYS">ARMS_CFG_KEYS</a></li><li><a href="global.html#ARMS_DEFAULTS">ARMS_DEFAULTS</a></li><li><a href="global.html#ARM_KEYS">ARM_KEYS</a></li><li><a href="global.html#ARM_STATUS">ARM_STATUS</a></li><li><a href="global.html#CFG_KEYS">CFG_KEYS</a></li><li><a href="global.html#DEADLINE_WHY">DEADLINE_WHY</a></li><li><a href="global.html#DEFAULT_BUDGET">DEFAULT_BUDGET</a></li><li><a href="global.html#DEFAULT_FORBIDDEN">DEFAULT_FORBIDDEN</a></li><li><a href="global.html#DEFAULT_SIM">DEFAULT_SIM</a></li><li><a href="global.html#DOMAIN_KEYS">DOMAIN_KEYS</a></li><li><a href="global.html#DREAM_MUTEX">DREAM_MUTEX</a></li><li><a href="global.html#FRONTIER_BLOCKED">FRONTIER_BLOCKED</a></li><li><a href="global.html#FRONTIER_PATCH_KEYS">FRONTIER_PATCH_KEYS</a></li><li><a href="global.html#HEARTBEAT_FILE">HEARTBEAT_FILE</a></li><li><a href="global.html#HEARTBEAT_MS">HEARTBEAT_MS</a></li><li><a href="global.html#HEARTBEAT_STALE_MS">HEARTBEAT_STALE_MS</a></li><li><a href="global.html#HOOK_FAIL_HEAD">HOOK_FAIL_HEAD</a></li><li><a href="global.html#OCCUPIED">OCCUPIED</a></li><li><a href="global.html#PROC_STARTED_AT">PROC_STARTED_AT</a></li><li><a href="global.html#REALIZE_KINDS">REALIZE_KINDS</a></li><li><a href="global.html#REQUEST_MUST_HEAD">REQUEST_MUST_HEAD</a></li><li><a href="global.html#ROUND_NAME_SRC">ROUND_NAME_SRC</a></li><li><a href="global.html#STATUS">STATUS</a></li><li><a href="global.html#WRITE_ROOT_ENV">WRITE_ROOT_ENV</a></li><li><a href="global.html#accept">accept</a></li><li><a href="global.html#acquireSlots">acquireSlots</a></li><li><a href="global.html#aliasMapOf">aliasMapOf</a></li><li><a href="global.html#aliasMapOfNodes">aliasMapOfNodes</a></li><li><a href="global.html#aliasPreOf">aliasPreOf</a></li><li><a href="global.html#aliasShortOfDomain">aliasShortOfDomain</a></li><li><a href="global.html#allocateRound">allocateRound</a></li><li><a href="global.html#appendJsonl">appendJsonl</a></li><li><a href="global.html#applyDiff">applyDiff</a></li><li><a href="global.html#assertWriteRoot">assertWriteRoot</a></li><li><a href="global.html#atomicStats">atomicStats</a></li><li><a href="global.html#canonicalJson">canonicalJson</a></li><li><a href="global.html#carriersOfArm">carriersOfArm</a></li><li><a href="global.html#catalogArmsOf">catalogArmsOf</a></li><li><a href="global.html#catalogLayersOf">catalogLayersOf</a></li><li><a href="global.html#checkArmsCfg">checkArmsCfg</a></li><li><a href="global.html#checkCfg">checkCfg</a></li><li><a href="global.html#checkDomain">checkDomain</a></li><li><a href="global.html#checkPolicySource">checkPolicySource</a></li><li><a href="global.html#clearGenRequest">clearGenRequest</a></li><li><a href="global.html#createRsi">createRsi</a></li><li><a href="global.html#debtStreakOf">debtStreakOf</a></li><li><a href="global.html#earlyEmbedOf">earlyEmbedOf</a></li><li><a href="global.html#evaluatePolicy">evaluatePolicy</a></li><li><a href="global.html#extractTurning">extractTurning</a></li><li><a href="global.html#featureOf">featureOf</a></li><li><a href="global.html#frontierOutcomesOf">frontierOutcomesOf</a></li><li><a href="global.html#generationCheck">generationCheck</a></li><li><a href="global.html#hookErrText">hookErrText</a></li><li><a href="global.html#hookFailureOf">hookFailureOf</a></li><li><a href="global.html#isAliasShort">isAliasShort</a></li><li><a href="global.html#isGenerationFulfilled">isGenerationFulfilled</a></li><li><a href="global.html#isMainModule">isMainModule</a></li><li><a href="global.html#isRoundDir">isRoundDir</a></li><li><a href="global.html#jobKey">jobKey</a></li><li><a href="global.html#lastChangeAtOf">lastChangeAtOf</a></li><li><a href="global.html#lastDreamAt">lastDreamAt</a></li><li><a href="global.html#listRoundDirs">listRoundDirs</a></li><li><a href="global.html#loadPolicyFile">loadPolicyFile</a></li><li><a href="global.html#loadSummaries">loadSummaries</a></li><li><a href="global.html#maintenanceOf">maintenanceOf</a></li><li><a href="global.html#makeArms">makeArms</a></li><li><a href="global.html#makeAuto">makeAuto</a></li><li><a href="global.html#makeDream">makeDream</a></li><li><a href="global.html#makeExplore">makeExplore</a></li><li><a href="global.html#makeNode">makeNode</a></li><li><a href="global.html#makePaths">makePaths</a></li><li><a href="global.html#makeRegistry">makeRegistry</a></li><li><a href="global.html#makeStatus">makeStatus</a></li><li><a href="global.html#makeStore">makeStore</a></li><li><a href="global.html#makeView">makeView</a></li><li><a href="global.html#markerPidOf">markerPidOf</a></li><li><a href="global.html#markerRoundDirOf">markerRoundDirOf</a></li><li><a href="global.html#markerStale">markerStale</a></li><li><a href="global.html#maxOfDir">maxOfDir</a></li><li><a href="global.html#meta">meta</a></li><li><a href="global.html#newToken">newToken</a></li><li><a href="global.html#nodeIdOf">nodeIdOf</a></li><li><a href="global.html#noveltyDebtOf">noveltyDebtOf</a></li><li><a href="global.html#nowIso">nowIso</a></li><li><a href="global.html#omitMask">omitMask</a></li><li><a href="global.html#opsOfArm">opsOfArm</a></li><li><a href="global.html#originsOfArm">originsOfArm</a></li><li><a href="global.html#ownedBy">ownedBy</a></li><li><a href="global.html#ownerLine">ownerLine</a></li><li><a href="global.html#parentIdsOf">parentIdsOf</a></li><li><a href="global.html#parseCli">parseCli</a></li><li><a href="global.html#peekRound">peekRound</a></li><li><a href="global.html#pidAlive">pidAlive</a></li><li><a href="global.html#policyDevCheck">policyDevCheck</a></li><li><a href="global.html#policySourcesOf">policySourcesOf</a></li><li><a href="global.html#policyViewOfNode">policyViewOfNode</a></li><li><a href="global.html#readGenRequest">readGenRequest</a></li><li><a href="global.html#readHeartbeat">readHeartbeat</a></li><li><a href="global.html#readJson">readJson</a></li><li><a href="global.html#readJsonl">readJsonl</a></li><li><a href="global.html#readOwner">readOwner</a></li><li><a href="global.html#reclaimDeadSlots">reclaimDeadSlots</a></li><li><a href="global.html#reclaimJobDirs">reclaimJobDirs</a></li><li><a href="global.html#relativeImportsOf">relativeImportsOf</a></li><li><a href="global.html#releaseSlots">releaseSlots</a></li><li><a href="global.html#replanFillOf">replanFillOf</a></li><li><a href="global.html#reportOf">reportOf</a></li><li><a href="global.html#requestBaseOf">requestBaseOf</a></li><li><a href="global.html#requestMustOf">requestMustOf</a></li><li><a href="global.html#rescore">rescore</a></li><li><a href="global.html#roundDirs">roundDirs</a></li><li><a href="global.html#roundNameOf">roundNameOf</a></li><li><a href="global.html#roundNumOf">roundNumOf</a></li><li><a href="global.html#runJobs">runJobs</a></li><li><a href="global.html#selectableOf">selectableOf</a></li><li><a href="global.html#sha">sha</a></li><li><a href="global.html#simulate">simulate</a></li><li><a href="global.html#sleepMs">sleepMs</a></li><li><a href="global.html#slotAuxOf">slotAuxOf</a></li><li><a href="global.html#slotsInUse">slotsInUse</a></li><li><a href="global.html#slotsStatus">slotsStatus</a></li><li><a href="global.html#specDiff">specDiff</a></li><li><a href="global.html#specHash">specHash</a></li><li><a href="global.html#startHeartbeat">startHeartbeat</a></li><li><a href="global.html#tryAcquireSlots">tryAcquireSlots</a></li><li><a href="global.html#unusedOf">unusedOf</a></li><li><a href="global.html#usageOf">usageOf</a></li><li><a href="global.html#validateCatalog">validateCatalog</a></li><li><a href="global.html#waitNote">waitNote</a></li><li><a href="global.html#withLock">withLock</a></li><li><a href="global.html#writeAllowed">writeAllowed</a></li><li><a href="global.html#writeFileAtomic">writeFileAtomic</a></li><li><a href="global.html#writeJson">writeJson</a></li><li><a href="global.html#writeJsonl">writeJsonl</a></li><li><a href="global.html#writeRootsOf">writeRootsOf</a></li></ul>
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">loop/policyDev.mjs</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import fs from 'fs'
+import path from 'path'
+import every from 'lodash-es/every.js'
+import get from 'lodash-es/get.js'
+import isFunction from 'lodash-es/isFunction.js'
+import { withLock } from '../core/lock.mjs'
+import { readJson, writeJson } from '../core/jsonl.mjs'
+import { nowIso } from '../core/canonical.mjs'
+import { assertWriteRoot } from '../core/writeRoot.mjs'
+
+
+//changelog 之末次改版時刻(2026-09-29;純函式):
+//  原以 slice(2, 26) 取末列 ⇒ 人工手寫列「- 2026-09-28 v2 2.2.0(同檔…」被當時刻, 字串比較時 'T' > ' ' ⇒ 該日所有輪都算「改版後」
+//  改為:自末列往前, 取第一個「列首(`- ` 之後)為完整 ISO 時刻」之列之 ISO;列首無 ISO 之列(手寫之日期列 / 備註)略過;全無 ⇒ null
+//  (手寫之改版列請寫完整 ISO, 如「- 2026-09-28T10:54:00.000Z v2 2.2.0 …」, 否則不計為改版時刻)
+const RE_ROW_ISO = /^\s*-\s*(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?Z)/
+/**
+ * changelog 之末次改版時刻(純函式):自末列往前,取第一個「列首(`- ` 之後)為完整 ISO 時刻」之列之 ISO;列首無 ISO 之列(手寫之日期列、備註)略過;全無 ⇒ null
+ *
+ * @param {String} text 輸入 changelog.md 內容
+ * @returns {String|null} 回傳 ISO 時刻或 null
+ * @example
+ * let text = '- 2026-09-28 v2 手寫列\n- 2026-09-29T01:02:03.000Z v3 ← c1:ok\n- 2026-09-30 備註\n'
+ * console.log(lastChangeAtOf(text), lastChangeAtOf(''))
+ * // => 2026-09-29T01:02:03.000Z null
+ */
+export let lastChangeAtOf = (text) => {
+    let ls = String(text || '').split(/\r?\n/)
+    for (let i = ls.length - 1; i >= 0; i--) { let m = RE_ROW_ISO.exec(ls[i]); if (m &amp;&amp; Number.isFinite(Date.parse(m[1]))) { return m[1] } }
+    return null
+}
+
+//策略開發觸發(由代理執行;此處只判定並寫請求):連續兩輪無階梯≥1 之新節點, 或距上次策略改版 ≥ minRounds 輪
+//  全域單一請求:policies/.dev_request.json 存在且未逾時 ⇒ 他 session 已請求, 不重複(接受新策略時由 dream 清除)
+/**
+ * 策略開發觸發:連續兩輪無階梯 ≥ 1 之新節點,或距上次策略改版 ≥ minRounds 輪 ⇒ 寫 POLICY_DEV_REQUEST.md(領域可以 domain.policyDevText 改寫);全域單一請求(policies/.dev_request.json 存在且未逾時 ⇒ 不重複);此處只判定並寫請求,不派工
+ *
+ * @param {Object} rsi 輸入實例
+ * @param {String} fdRound 輸入本輪夾
+ * @param {Array} sums 輸入輪次摘要
+ * @param {Object} [opt={}] 輸入 { minRounds:Number(3), ttlMs:Number(86400000) }(併 cfg.policyDev)
+ * @returns {String|null} 回傳請求檔路徑;未達觸發條件或已有請求 ⇒ null
+ * @example
+ * import fs from 'fs'
+ * import os from 'os'
+ * import path from 'path'
+ * import { createRsi } from 'w-recursi/src/index.mjs'
+ *
+ * let dir = fs.mkdtempSync(path.join(os.tmpdir(), 'w-recursi-'))
+ * let domain = {
+ *     name: 'toy',
+ *     score: (raw) => ({ S: raw.v, ladder: raw.v >= 2 ? 1 : 0, flags: {} }),
+ *     validateSpec: (s) => { if (typeof s.x !== 'number') { throw new Error('x 須為數字') } },
+ *     operators: [{ name: 'inc', family: 'f', applies: () => true, children: (s) => [{ spec: { x: s.x + 1 }, params: { by: 1 } }] }],
+ *     carriers: { root: { x: 0 } },
+ *     evaluator: { mode: 'inProcess', evaluate: async (spec) => ({ v: spec.x }) },
+ * }
+ * let rsi = createRsi({ root: dir, domain, budget: { arms: 2, novelty: 1 } }).init()
+ * let ex = await rsi.explore()
+ * let fp = policyDevCheck(rsi, ex.fd, rsi.summaries(), { minRounds: 1 })
+ * console.log(path.basename(fp))
+ * // => POLICY_DEV_REQUEST.md
+ * console.log(policyDevCheck(rsi, ex.fd, rsi.summaries(), { minRounds: 1 }))
+ * // => null
+ * fs.rmSync(dir, { recursive: true, force: true })
+ */
+export let policyDevCheck = (rsi, fdRound, sums, opt = {}) => {
+    let { paths, domain } = rsi
+    let O = { minRounds: 3, ttlMs: 24 * 3600000, ...(get(rsi.cfg, 'policyDev', {}) || {}), ...opt }
+    let last2 = sums.slice(-2)
+    let stalled = last2.length === 2 &amp;&amp; every(last2, (s) => (s.ladderGe1 || 0) === 0 &amp;&amp; (s.nExecuted || 0) > 0)
+    //距上次改版之輪數:summary.at 晚於末次改版時刻者(以時刻比較, 非字串);無可解析之改版時刻 ⇒ 全部輪次
+    let lastIso = fs.existsSync(paths.changelog) ? lastChangeAtOf(fs.readFileSync(paths.changelog, 'utf8')) : null
+    let tChange = lastIso ? Date.parse(lastIso) : NaN
+    let sinceChange = sums.filter((s) => !Number.isFinite(tChange) || Date.parse(s.at) > tChange).length
+    if (!stalled &amp;&amp; sinceChange &lt; O.minRounds) { return null }
+    return withLock(() => {
+        let m = readJson(paths.devRequest, null)
+        if (m &amp;&amp; Date.now() - Date.parse(m.at) &lt; O.ttlMs) { return null }
+        let fp = path.join(fdRound, 'POLICY_DEV_REQUEST.md')
+        let why = `${stalled ? '連續兩輪無階梯≥1 之新節點' : ''}${stalled &amp;&amp; sinceChange >= O.minRounds ? ';' : ''}${sinceChange >= O.minRounds ? `距上次策略改版已 ${sinceChange} 輪` : ''}`
+        let text = isFunction(domain.policyDevText) ? domain.policyDevText({ why, fdRound, paths }) : [
+            '# 策略開發請求(R4;任一 LLM agent 執行;全域同時只有一份)', '', `- 觸發:${why}`, '',
+            '## 作業', '', `1. 讀 \`${paths.current}\`(當前策略)、\`${paths.scores}\`(歷次夢分數)、status 之樹統計;方向性摘要不注入(只看樹)。`,
+            '2. 以 dream 取得當前策略之全樣本 / 留出 / 回溯分數與揭露軌跡(策略視圖已遮蔽;策略碼不得讀被遮蔽之欄位, 靜態檢查會擋)。',
+            `3. 改寫 2 ~ 5 個候選策略至 \`${paths.candidates}/&lt;name>.mjs\`(純函式;介面同 v0.mjs;只改分配:展開哪些節點、用哪些算子、開幾個、何時停、新區域額度)。`,
+            '4. dream --accept:只有留出分數優於當前達 margin 且全樣本不劣於 floor 者升版;當前策略恆在池中(單調不退化)。',
+            '5. 於本輪 report.md 末尾附一段:改了什麼、為何、夢分數、是否升版。', ''].join('\n')
+        assertWriteRoot(fp, { what: 'POLICY_DEV_REQUEST.md' }) //寫域守門(2026-10-09;未設 ⇒ 不檢;標記之 writeJson 另經原語守)
+        fs.writeFileSync(fp, text)
+        writeJson(paths.devRequest, { at: nowIso(), round: path.basename(fdRound), fp, by: `pid${process.pid}`, why })
+        return fp
+    }, { dir: paths.policies, name: 'policies' })
+}
+
+export default policyDevCheck
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.5</a> on Sat Nov 07 2026 22:16:09 GMT+0800 (台北標準時間) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>core/domainContract.mjs - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="CliError.html">CliError</a></li></ul><h3>Global</h3><ul><li><a href="global.html#ARMS_CFG_KEYS">ARMS_CFG_KEYS</a></li><li><a href="global.html#ARMS_DEFAULTS">ARMS_DEFAULTS</a></li><li><a href="global.html#ARM_KEYS">ARM_KEYS</a></li><li><a href="global.html#ARM_STATUS">ARM_STATUS</a></li><li><a href="global.html#CFG_KEYS">CFG_KEYS</a></li><li><a href="global.html#DEADLINE_WHY">DEADLINE_WHY</a></li><li><a href="global.html#DEFAULT_BUDGET">DEFAULT_BUDGET</a></li><li><a href="global.html#DEFAULT_FORBIDDEN">DEFAULT_FORBIDDEN</a></li><li><a href="global.html#DEFAULT_SIM">DEFAULT_SIM</a></li><li><a href="global.html#DOMAIN_KEYS">DOMAIN_KEYS</a></li><li><a href="global.html#DREAM_MUTEX">DREAM_MUTEX</a></li><li><a href="global.html#FRONTIER_BLOCKED">FRONTIER_BLOCKED</a></li><li><a href="global.html#FRONTIER_PATCH_KEYS">FRONTIER_PATCH_KEYS</a></li><li><a href="global.html#HEARTBEAT_FILE">HEARTBEAT_FILE</a></li><li><a href="global.html#HEARTBEAT_MS">HEARTBEAT_MS</a></li><li><a href="global.html#HEARTBEAT_STALE_MS">HEARTBEAT_STALE_MS</a></li><li><a href="global.html#HOOK_FAIL_HEAD">HOOK_FAIL_HEAD</a></li><li><a href="global.html#OCCUPIED">OCCUPIED</a></li><li><a href="global.html#PROC_STARTED_AT">PROC_STARTED_AT</a></li><li><a href="global.html#REALIZE_KINDS">REALIZE_KINDS</a></li><li><a href="global.html#REQUEST_MUST_HEAD">REQUEST_MUST_HEAD</a></li><li><a href="global.html#ROUND_NAME_SRC">ROUND_NAME_SRC</a></li><li><a href="global.html#STATUS">STATUS</a></li><li><a href="global.html#WRITE_ROOT_ENV">WRITE_ROOT_ENV</a></li><li><a href="global.html#accept">accept</a></li><li><a href="global.html#acquireSlots">acquireSlots</a></li><li><a href="global.html#aliasMapOf">aliasMapOf</a></li><li><a href="global.html#aliasMapOfNodes">aliasMapOfNodes</a></li><li><a href="global.html#aliasPreOf">aliasPreOf</a></li><li><a href="global.html#aliasShortOfDomain">aliasShortOfDomain</a></li><li><a href="global.html#allocateRound">allocateRound</a></li><li><a href="global.html#appendJsonl">appendJsonl</a></li><li><a href="global.html#applyDiff">applyDiff</a></li><li><a href="global.html#assertWriteRoot">assertWriteRoot</a></li><li><a href="global.html#atomicStats">atomicStats</a></li><li><a href="global.html#canonicalJson">canonicalJson</a></li><li><a href="global.html#carriersOfArm">carriersOfArm</a></li><li><a href="global.html#catalogArmsOf">catalogArmsOf</a></li><li><a href="global.html#catalogLayersOf">catalogLayersOf</a></li><li><a href="global.html#checkArmsCfg">checkArmsCfg</a></li><li><a href="global.html#checkCfg">checkCfg</a></li><li><a href="global.html#checkDomain">checkDomain</a></li><li><a href="global.html#checkPolicySource">checkPolicySource</a></li><li><a href="global.html#clearGenRequest">clearGenRequest</a></li><li><a href="global.html#createRsi">createRsi</a></li><li><a href="global.html#debtStreakOf">debtStreakOf</a></li><li><a href="global.html#earlyEmbedOf">earlyEmbedOf</a></li><li><a href="global.html#evaluatePolicy">evaluatePolicy</a></li><li><a href="global.html#extractTurning">extractTurning</a></li><li><a href="global.html#featureOf">featureOf</a></li><li><a href="global.html#frontierOutcomesOf">frontierOutcomesOf</a></li><li><a href="global.html#generationCheck">generationCheck</a></li><li><a href="global.html#hookErrText">hookErrText</a></li><li><a href="global.html#hookFailureOf">hookFailureOf</a></li><li><a href="global.html#isAliasShort">isAliasShort</a></li><li><a href="global.html#isGenerationFulfilled">isGenerationFulfilled</a></li><li><a href="global.html#isMainModule">isMainModule</a></li><li><a href="global.html#isRoundDir">isRoundDir</a></li><li><a href="global.html#jobKey">jobKey</a></li><li><a href="global.html#lastChangeAtOf">lastChangeAtOf</a></li><li><a href="global.html#lastDreamAt">lastDreamAt</a></li><li><a href="global.html#listRoundDirs">listRoundDirs</a></li><li><a href="global.html#loadPolicyFile">loadPolicyFile</a></li><li><a href="global.html#loadSummaries">loadSummaries</a></li><li><a href="global.html#maintenanceOf">maintenanceOf</a></li><li><a href="global.html#makeArms">makeArms</a></li><li><a href="global.html#makeAuto">makeAuto</a></li><li><a href="global.html#makeDream">makeDream</a></li><li><a href="global.html#makeExplore">makeExplore</a></li><li><a href="global.html#makeNode">makeNode</a></li><li><a href="global.html#makePaths">makePaths</a></li><li><a href="global.html#makeRegistry">makeRegistry</a></li><li><a href="global.html#makeStatus">makeStatus</a></li><li><a href="global.html#makeStore">makeStore</a></li><li><a href="global.html#makeView">makeView</a></li><li><a href="global.html#markerPidOf">markerPidOf</a></li><li><a href="global.html#markerRoundDirOf">markerRoundDirOf</a></li><li><a href="global.html#markerStale">markerStale</a></li><li><a href="global.html#maxOfDir">maxOfDir</a></li><li><a href="global.html#meta">meta</a></li><li><a href="global.html#newToken">newToken</a></li><li><a href="global.html#nodeIdOf">nodeIdOf</a></li><li><a href="global.html#noveltyDebtOf">noveltyDebtOf</a></li><li><a href="global.html#nowIso">nowIso</a></li><li><a href="global.html#omitMask">omitMask</a></li><li><a href="global.html#opsOfArm">opsOfArm</a></li><li><a href="global.html#originsOfArm">originsOfArm</a></li><li><a href="global.html#ownedBy">ownedBy</a></li><li><a href="global.html#ownerLine">ownerLine</a></li><li><a href="global.html#parentIdsOf">parentIdsOf</a></li><li><a href="global.html#parseCli">parseCli</a></li><li><a href="global.html#peekRound">peekRound</a></li><li><a href="global.html#pidAlive">pidAlive</a></li><li><a href="global.html#policyDevCheck">policyDevCheck</a></li><li><a href="global.html#policySourcesOf">policySourcesOf</a></li><li><a href="global.html#policyViewOfNode">policyViewOfNode</a></li><li><a href="global.html#readGenRequest">readGenRequest</a></li><li><a href="global.html#readHeartbeat">readHeartbeat</a></li><li><a href="global.html#readJson">readJson</a></li><li><a href="global.html#readJsonl">readJsonl</a></li><li><a href="global.html#readOwner">readOwner</a></li><li><a href="global.html#reclaimDeadSlots">reclaimDeadSlots</a></li><li><a href="global.html#reclaimJobDirs">reclaimJobDirs</a></li><li><a href="global.html#relativeImportsOf">relativeImportsOf</a></li><li><a href="global.html#releaseSlots">releaseSlots</a></li><li><a href="global.html#replanFillOf">replanFillOf</a></li><li><a href="global.html#reportOf">reportOf</a></li><li><a href="global.html#requestBaseOf">requestBaseOf</a></li><li><a href="global.html#requestMustOf">requestMustOf</a></li><li><a href="global.html#rescore">rescore</a></li><li><a href="global.html#roundDirs">roundDirs</a></li><li><a href="global.html#roundNameOf">roundNameOf</a></li><li><a href="global.html#roundNumOf">roundNumOf</a></li><li><a href="global.html#runJobs">runJobs</a></li><li><a href="global.html#selectableOf">selectableOf</a></li><li><a href="global.html#sha">sha</a></li><li><a href="global.html#simulate">simulate</a></li><li><a href="global.html#sleepMs">sleepMs</a></li><li><a href="global.html#slotAuxOf">slotAuxOf</a></li><li><a href="global.html#slotsInUse">slotsInUse</a></li><li><a href="global.html#slotsStatus">slotsStatus</a></li><li><a href="global.html#specDiff">specDiff</a></li><li><a href="global.html#specHash">specHash</a></li><li><a href="global.html#startHeartbeat">startHeartbeat</a></li><li><a href="global.html#tryAcquireSlots">tryAcquireSlots</a></li><li><a href="global.html#unusedOf">unusedOf</a></li><li><a href="global.html#usageOf">usageOf</a></li><li><a href="global.html#validateCatalog">validateCatalog</a></li><li><a href="global.html#waitNote">waitNote</a></li><li><a href="global.html#withLock">withLock</a></li><li><a href="global.html#writeAllowed">writeAllowed</a></li><li><a href="global.html#writeFileAtomic">writeFileAtomic</a></li><li><a href="global.html#writeJson">writeJson</a></li><li><a href="global.html#writeJsonl">writeJsonl</a></li><li><a href="global.html#writeRootsOf">writeRootsOf</a></li></ul>
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">core/domainContract.mjs</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import castArray from 'lodash-es/castArray.js'
+import isArray from 'lodash-es/isArray.js'
+import isFunction from 'lodash-es/isFunction.js'
+import isPlainObject from 'lodash-es/isPlainObject.js'
+import keys from 'lodash-es/keys.js'
+import toPairs from 'lodash-es/toPairs.js'
+
+
+//領域介面(依賴注入)之單一來源(2026-09-25 收斂):已知鍵 → { type, required?, doc }
+//  createRsi 以 checkDomain 檢查:缺必填或型別不符 ⇒ 拋錯;未知鍵 ⇒ 警告一次(多為拼錯, 如 transferBlok ⇒ 鉤子靜默失效)
+//  新增鉤子時:先在此登錄(型別與簽名), 再於使用處讀 domain.&lt;鍵>;README §4 之表由此抄錄
+//  type:'function' | 'object' | 'array' | 'string' | 'number';多型以陣列列出
+/**
+ * 領域介面(依賴注入)之單一來源:已知鍵 → { type, required?, doc };createRsi 以 checkDomain 檢查,缺必填或型別不符 ⇒ 拋錯,未知鍵 ⇒ 警告一次(多為拼錯)。新增鉤子時先在此登錄,再於使用處讀 domain.&lt;鍵>,並補 README 之表
+ *
+ * @type {Object}
+ */
+export const DOMAIN_KEYS = {
+    score: { type: 'function', required: true, doc: 'score(raw, node) → { S, ladder, flags:{ vetoed, … }, evaluator, … }:判讀層(可重算不重跑);ladder = 證據之序數階梯, **≥ 1 = 通過領域之第一道真偽**(引擎據以計 summary.ladderGe1、策略開發之停滯判定「連續兩輪無 ladder ≥ 1」;做夢之 targetLadder 由 cfg.dream 設);flags.vetoed = 否決(不入目標)' },
+    evaluator: { type: 'object', doc: "{ mode:'spawn', module, ctxOpt, protocol, costOf(job) } | { mode:'inProcess', evaluate, createContext, ctxOpt, protocol };costOf 供 runner 大者先派" },
+    evaluatorVersion: { type: ['number', 'string'], doc: '評估器版本(status 顯示)' },
+    name: { type: 'string', doc: '領域名稱(資訊)' },
+    validateSpec: { type: 'function', doc: 'validateSpec(spec):拋錯即無效' },
+    summarize: { type: 'function', doc: 'summarize(spec) → 字串' },
+    carrierOf: { type: 'function', doc: 'carrierOf(spec) → 分組標籤' },
+    envHash: { type: 'function', doc: 'envHash(spec) → 節點 id 之環境雜湊' },
+    operators: { type: 'array', doc: '[{ name, family, applies(spec), children(spec) → [{ spec, params, reason }], controls?, rank? }]' },
+    familyRank: { type: 'object', doc: '{ family: rank }(策略展開順位)' },
+    carriers: { type: ['object', 'function'], doc: '{ name: spec } | () => ({ name: spec })(新區域 / 冷啟動之根候選;函式每次出計畫時求值)' },
+    fingerprint: { type: 'function', doc: 'fingerprint(raw, node) → 行為指紋(別名判定)' },
+    aliasShortOf: { type: 'function', doc: 'aliasShortOf(node) → { of, what? } | null:評估器是否因本臂原料指紋 = 某父(cfg.aliasPre 之提示)而略過部分計算;of = 父 id、what = 略過之計算(報告用語);summary.nAliasShort 與報告「行為別名短路」計之(未給 ⇒ 0;2026-10-01 起引擎不再讀領域原料之欄位)' },
+    isAnchor: { type: 'function', doc: 'isAnchor(node):不作別名亦不作正本(如既有型)' },
+    excludeParent: { type: 'function', doc: 'excludeParent(view) → 不作父節點' },
+    mask: { type: 'function', doc: 'mask(score, node) → 策略可見之分數(遮蔽)' },
+    maskNode: { type: 'function', doc: 'maskNode(view, node) → view:策略視圖之節點層遮蔽 / 附加(於 mask 之後;如移除 evidence / notes 等可能含窗外資訊之欄、加領域標記;2026-09-27)' },
+    ctxExtra: { type: 'function', doc: 'ctxExtra({ executed, views, lineage }) → 物件:併入策略之 ctx(如全域取樣器 sampleGlobal(n, opt)、規格判定;純函式、可重放;2026-09-27)' },
+    forbidden: { type: 'array', doc: '[regex]:策略碼靜態檢查(套件另擋 child_process / 樹寫入 / 暫存)' },
+    gates: { type: 'object', doc: '{ pre(spec, { view }) → { ok, why }, post(node) → { ok, why } }' },
+    excludeArm: { type: 'function', doc: 'excludeArm(spec, ctx) → { exclude: boolean, why?: string } | null:生成端之臂排除(explore 出計畫時, 於 validateSpec 與 gates.pre 之後;如領域已結案論證過之臂 —— 再評估無新資訊);ctx = { id, spec, specHash, parent, kindOf, op, origin: { topic, operator, controlOf, … }, round, item }(節點形:可直接交領域之對照臂判定;item = 計畫項之 op / controlOf / kindOf / parentId / reason / origin);exclude 為真 ⇒ 入計畫之 rejected(excluded: true;why 缺 ⇒ excludeArm)、寫拒絕存根(notes.excluded)、前緣結案 rejectedByGate、本輪重計畫不再提;拋錯 ⇒ 不排除(計畫備註記一行);未給 ⇒ 逐字不變(2026-10-09 rsi 改善窗 B 之 B9)' },
+    hooks: { type: 'object', doc: '{ afterRound({ rsi, round, fd, nodes, … }) → { lines } }' },
+    childBlock: { type: 'function', doc: 'childBlock({ op, params, parent, child, byId }) → 擋下理由 | null:策略展開參數型子臂前過濾(如上限於父之訓練期不綁定 ⇒ 別名;byId = 譜系 Map, 如同一改動已於父之父大跌);引擎以規格為單位套用:視圖內任一父之路徑擋下某子規格, 經他父亦不出' },
+    transferBlock: { type: 'function', doc: 'transferBlock({ op, params, from, child, to, spec, byId }) → 擋下理由 | null:轉折點搬移提案前過濾(byId = 已執行節點 Map)' },
+    normSpec: { type: 'function', doc: 'normSpec(spec) → spec:規格之正規形(轉折點提取之提案先正規化再判占用 / 去重 / validateSpec;未給時不正規化;2026-09-30)' },
+    proposalBlock: { type: 'function', doc: 'proposalBlock(spec, ctx) → 擋下理由 | null:轉折點提取之三種提案(搬移 / 外推 / 交叉)共用之產生端守門(於 normSpec / 占用 / validateSpec 之後;ctx = { op, origin, byId, parent?, parents, kidOp? };擋下者入回傳之 blocked(by proposalBlock)、不入 seen;未給時逐字不變;2026-10-04 rsi r128 #1)' },
+    turningParentOk: { type: 'function', doc: 'turningParentOk(view) → bool:轉折點提取之父 / 有效邊之子之領域條件(如只取 PIT 節點;2026-09-27)' },
+    costOf: { type: 'function', doc: 'costOf(spec) → 做夢重放之成本估算(未給時用預設)' },
+    reportColumns: { type: 'array', doc: '[{ header, of(node) }]:輪次報告之欄' },
+    reportExtra: { type: 'function', doc: 'reportExtra(nodes, plan, { items, getNode }) → [lines]:輪次報告之尾段;items = 本 session 實得之計畫項(kindOf / op / parentId / spec;含認領衝突之重計畫;2026-10-02 起, 無則 null), getNode(id) → 節點或 null' },
+    indexExtra: { type: 'function', doc: 'indexExtra(node) → index 列之附加欄' },
+    policyDevText: { type: 'function', doc: 'policyDevText({ why }) → 策略開發請求之文字' },
+    generationText: { type: 'function', doc: 'generationText({ … }) → 生成請求之文字' },
+}
+let typeOf = (v) => (isArray(v) ? 'array' : isFunction(v) ? 'function' : isPlainObject(v) ? 'object' : typeof v)
+//→ { errors:[字串], unknown:[鍵] };null / undefined 視為未給(不檢型別)
+/**
+ * 檢查領域介面:必填、型別、未知鍵(null 與 undefined 視為未給)
+ *
+ * @param {Object} [domain={}] 輸入領域物件
+ * @returns {Object} 回傳 { errors:Array(字串), unknown:Array(未知鍵) }
+ * @example
+ * let r = checkDomain({ score: () => 1, scroe: 2 })
+ * console.log(r.errors.length, r.unknown.join(','))
+ * // => 0 scroe
+ *
+ * console.log(checkDomain({}).errors.length)
+ * // => 1
+ */
+export let checkDomain = (domain = {}) => {
+    let errors = [], unknown = []
+    for (let [k, spec] of toPairs(DOMAIN_KEYS)) {
+        let v = domain[k]
+        if (v === null || v === undefined) { if (spec.required) { errors.push(`domain.${k} 必填(${spec.doc})`) } continue }
+        let want = castArray(spec.type)
+        if (!want.includes(typeOf(v))) { errors.push(`domain.${k} 型別應為 ${want.join(' | ')}, 實為 ${typeOf(v)}(${spec.doc})`) }
+    }
+    for (let k of keys(domain)) { if (!DOMAIN_KEYS[k]) { unknown.push(k) } }
+    return { errors, unknown }
+}
+
+//領域鉤子 aliasShortOf 之包裝(2026-10-01;explore 之計數與 report 之列舉共用, 置此免 explore ↔ report 循環匯入):
+//  未給鉤子 ⇒ 恆 null(不計);鉤子拋錯 ⇒ 視同 null(只影響計數 / 報告, 不影響流程)
+/**
+ * 領域鉤子 domain.aliasShortOf 之包裝:未給鉤子 ⇒ 恆 null(不計);鉤子拋錯 ⇒ 視同 null(只影響計數與報告,不影響流程)
+ *
+ * @param {Object} domain 輸入領域物件
+ * @returns {Function} 回傳 (node) => { of, what? } | null
+ * @example
+ * let f = aliasShortOfDomain({ aliasShortOf: (n) => (n.id === 'x' ? { of: 'p1' } : null) })
+ * console.log(JSON.stringify(f({ id: 'x' })), f({ id: 'y' }), aliasShortOfDomain({})({ id: 'x' }))
+ * // => {"of":"p1"} null null
+ */
+export let aliasShortOfDomain = (domain) => (n) => {
+    if (!domain || !isFunction(domain.aliasShortOf)) { return null }
+    try { return domain.aliasShortOf(n) || null } catch (e) { return null }
+}
+
+export default { DOMAIN_KEYS, checkDomain, aliasShortOfDomain }
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.5</a> on Sat Nov 07 2026 22:16:09 GMT+0800 (台北標準時間) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>core/cli.mjs - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="CliError.html">CliError</a></li></ul><h3>Global</h3><ul><li><a href="global.html#ARMS_CFG_KEYS">ARMS_CFG_KEYS</a></li><li><a href="global.html#ARMS_DEFAULTS">ARMS_DEFAULTS</a></li><li><a href="global.html#ARM_KEYS">ARM_KEYS</a></li><li><a href="global.html#ARM_STATUS">ARM_STATUS</a></li><li><a href="global.html#CFG_KEYS">CFG_KEYS</a></li><li><a href="global.html#DEADLINE_WHY">DEADLINE_WHY</a></li><li><a href="global.html#DEFAULT_BUDGET">DEFAULT_BUDGET</a></li><li><a href="global.html#DEFAULT_FORBIDDEN">DEFAULT_FORBIDDEN</a></li><li><a href="global.html#DEFAULT_SIM">DEFAULT_SIM</a></li><li><a href="global.html#DOMAIN_KEYS">DOMAIN_KEYS</a></li><li><a href="global.html#DREAM_MUTEX">DREAM_MUTEX</a></li><li><a href="global.html#FRONTIER_BLOCKED">FRONTIER_BLOCKED</a></li><li><a href="global.html#FRONTIER_PATCH_KEYS">FRONTIER_PATCH_KEYS</a></li><li><a href="global.html#HEARTBEAT_FILE">HEARTBEAT_FILE</a></li><li><a href="global.html#HEARTBEAT_MS">HEARTBEAT_MS</a></li><li><a href="global.html#HEARTBEAT_STALE_MS">HEARTBEAT_STALE_MS</a></li><li><a href="global.html#HOOK_FAIL_HEAD">HOOK_FAIL_HEAD</a></li><li><a href="global.html#OCCUPIED">OCCUPIED</a></li><li><a href="global.html#PROC_STARTED_AT">PROC_STARTED_AT</a></li><li><a href="global.html#REALIZE_KINDS">REALIZE_KINDS</a></li><li><a href="global.html#REQUEST_MUST_HEAD">REQUEST_MUST_HEAD</a></li><li><a href="global.html#ROUND_NAME_SRC">ROUND_NAME_SRC</a></li><li><a href="global.html#STATUS">STATUS</a></li><li><a href="global.html#WRITE_ROOT_ENV">WRITE_ROOT_ENV</a></li><li><a href="global.html#accept">accept</a></li><li><a href="global.html#acquireSlots">acquireSlots</a></li><li><a href="global.html#aliasMapOf">aliasMapOf</a></li><li><a href="global.html#aliasMapOfNodes">aliasMapOfNodes</a></li><li><a href="global.html#aliasPreOf">aliasPreOf</a></li><li><a href="global.html#aliasShortOfDomain">aliasShortOfDomain</a></li><li><a href="global.html#allocateRound">allocateRound</a></li><li><a href="global.html#appendJsonl">appendJsonl</a></li><li><a href="global.html#applyDiff">applyDiff</a></li><li><a href="global.html#assertWriteRoot">assertWriteRoot</a></li><li><a href="global.html#atomicStats">atomicStats</a></li><li><a href="global.html#canonicalJson">canonicalJson</a></li><li><a href="global.html#carriersOfArm">carriersOfArm</a></li><li><a href="global.html#catalogArmsOf">catalogArmsOf</a></li><li><a href="global.html#catalogLayersOf">catalogLayersOf</a></li><li><a href="global.html#checkArmsCfg">checkArmsCfg</a></li><li><a href="global.html#checkCfg">checkCfg</a></li><li><a href="global.html#checkDomain">checkDomain</a></li><li><a href="global.html#checkPolicySource">checkPolicySource</a></li><li><a href="global.html#clearGenRequest">clearGenRequest</a></li><li><a href="global.html#createRsi">createRsi</a></li><li><a href="global.html#debtStreakOf">debtStreakOf</a></li><li><a href="global.html#earlyEmbedOf">earlyEmbedOf</a></li><li><a href="global.html#evaluatePolicy">evaluatePolicy</a></li><li><a href="global.html#extractTurning">extractTurning</a></li><li><a href="global.html#featureOf">featureOf</a></li><li><a href="global.html#frontierOutcomesOf">frontierOutcomesOf</a></li><li><a href="global.html#generationCheck">generationCheck</a></li><li><a href="global.html#hookErrText">hookErrText</a></li><li><a href="global.html#hookFailureOf">hookFailureOf</a></li><li><a href="global.html#isAliasShort">isAliasShort</a></li><li><a href="global.html#isGenerationFulfilled">isGenerationFulfilled</a></li><li><a href="global.html#isMainModule">isMainModule</a></li><li><a href="global.html#isRoundDir">isRoundDir</a></li><li><a href="global.html#jobKey">jobKey</a></li><li><a href="global.html#lastChangeAtOf">lastChangeAtOf</a></li><li><a href="global.html#lastDreamAt">lastDreamAt</a></li><li><a href="global.html#listRoundDirs">listRoundDirs</a></li><li><a href="global.html#loadPolicyFile">loadPolicyFile</a></li><li><a href="global.html#loadSummaries">loadSummaries</a></li><li><a href="global.html#maintenanceOf">maintenanceOf</a></li><li><a href="global.html#makeArms">makeArms</a></li><li><a href="global.html#makeAuto">makeAuto</a></li><li><a href="global.html#makeDream">makeDream</a></li><li><a href="global.html#makeExplore">makeExplore</a></li><li><a href="global.html#makeNode">makeNode</a></li><li><a href="global.html#makePaths">makePaths</a></li><li><a href="global.html#makeRegistry">makeRegistry</a></li><li><a href="global.html#makeStatus">makeStatus</a></li><li><a href="global.html#makeStore">makeStore</a></li><li><a href="global.html#makeView">makeView</a></li><li><a href="global.html#markerPidOf">markerPidOf</a></li><li><a href="global.html#markerRoundDirOf">markerRoundDirOf</a></li><li><a href="global.html#markerStale">markerStale</a></li><li><a href="global.html#maxOfDir">maxOfDir</a></li><li><a href="global.html#meta">meta</a></li><li><a href="global.html#newToken">newToken</a></li><li><a href="global.html#nodeIdOf">nodeIdOf</a></li><li><a href="global.html#noveltyDebtOf">noveltyDebtOf</a></li><li><a href="global.html#nowIso">nowIso</a></li><li><a href="global.html#omitMask">omitMask</a></li><li><a href="global.html#opsOfArm">opsOfArm</a></li><li><a href="global.html#originsOfArm">originsOfArm</a></li><li><a href="global.html#ownedBy">ownedBy</a></li><li><a href="global.html#ownerLine">ownerLine</a></li><li><a href="global.html#parentIdsOf">parentIdsOf</a></li><li><a href="global.html#parseCli">parseCli</a></li><li><a href="global.html#peekRound">peekRound</a></li><li><a href="global.html#pidAlive">pidAlive</a></li><li><a href="global.html#policyDevCheck">policyDevCheck</a></li><li><a href="global.html#policySourcesOf">policySourcesOf</a></li><li><a href="global.html#policyViewOfNode">policyViewOfNode</a></li><li><a href="global.html#readGenRequest">readGenRequest</a></li><li><a href="global.html#readHeartbeat">readHeartbeat</a></li><li><a href="global.html#readJson">readJson</a></li><li><a href="global.html#readJsonl">readJsonl</a></li><li><a href="global.html#readOwner">readOwner</a></li><li><a href="global.html#reclaimDeadSlots">reclaimDeadSlots</a></li><li><a href="global.html#reclaimJobDirs">reclaimJobDirs</a></li><li><a href="global.html#relativeImportsOf">relativeImportsOf</a></li><li><a href="global.html#releaseSlots">releaseSlots</a></li><li><a href="global.html#replanFillOf">replanFillOf</a></li><li><a href="global.html#reportOf">reportOf</a></li><li><a href="global.html#requestBaseOf">requestBaseOf</a></li><li><a href="global.html#requestMustOf">requestMustOf</a></li><li><a href="global.html#rescore">rescore</a></li><li><a href="global.html#roundDirs">roundDirs</a></li><li><a href="global.html#roundNameOf">roundNameOf</a></li><li><a href="global.html#roundNumOf">roundNumOf</a></li><li><a href="global.html#runJobs">runJobs</a></li><li><a href="global.html#selectableOf">selectableOf</a></li><li><a href="global.html#sha">sha</a></li><li><a href="global.html#simulate">simulate</a></li><li><a href="global.html#sleepMs">sleepMs</a></li><li><a href="global.html#slotAuxOf">slotAuxOf</a></li><li><a href="global.html#slotsInUse">slotsInUse</a></li><li><a href="global.html#slotsStatus">slotsStatus</a></li><li><a href="global.html#specDiff">specDiff</a></li><li><a href="global.html#specHash">specHash</a></li><li><a href="global.html#startHeartbeat">startHeartbeat</a></li><li><a href="global.html#tryAcquireSlots">tryAcquireSlots</a></li><li><a href="global.html#unusedOf">unusedOf</a></li><li><a href="global.html#usageOf">usageOf</a></li><li><a href="global.html#validateCatalog">validateCatalog</a></li><li><a href="global.html#waitNote">waitNote</a></li><li><a href="global.html#withLock">withLock</a></li><li><a href="global.html#writeAllowed">writeAllowed</a></li><li><a href="global.html#writeFileAtomic">writeFileAtomic</a></li><li><a href="global.html#writeJson">writeJson</a></li><li><a href="global.html#writeJsonl">writeJsonl</a></li><li><a href="global.html#writeRootsOf">writeRootsOf</a></li></ul>
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">core/cli.mjs</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import fs from 'fs'
+import path from 'path'
+import { fileURLToPath } from 'url'
+import { parseArgs } from 'util'
+
+
+//各 CLI 之統一參數解析(w-recursi 通用件;2026-09-26)
+//  原狀:各檔手寫 argOf / has ⇒ 未知旗標、拼錯、缺值、位置參數一律靜默忽略, 且值不驗
+//    (實例:領域 CLI 之 `status` 漏 --mode ⇒ 起整輪;某模式之 `--nodes a` 之 --nodes 被忽略 ⇒ 全樹處理;`--max-count abc` ⇒ NaN ⇒ 數量無上限;
+//     `evidence --flag ture` ⇒ 寫成 false;`--workers` 缺值 ⇒ NaN ⇒ 取槽無聲忙等)
+//  本檔:util.parseArgs(strict)之上加 ① 型別 / 範圍 ② 逐模式旗標集 ③ 位置參數預設拒絕 ④ --help / -h 印用法 exit 0 ⑤ 錯誤一律 stderr 一行 + 用法、exit 2(未做任何事)
+//  **呼叫端須在載入重模組、寫任何東西之前呼叫**(help / 錯誤參數不得有副作用)
+//  選項型別:'flag'(開關, 無值)| 'str' | 'int' | 'num' | 'list'(逗號分隔、去空白、不得為空)| 'bool'(值只收 true / false)| 'enum'(配 values)
+//    其餘欄:short(單字母別名)、default、min / max(int / num)、values(enum)、desc(用法說明)
+//  spec:{ name, usage(多行字串), options: { key: {...} }, positionals: { min, max, names }(預設不收), mode: { key: 'mode', required: true, modes: { 名: [可用選項鍵…] } } }
+/**
+ * 命令列參數錯誤(parseCli 之錯誤型別;預設 code 2 = 未執行任何動作)
+ *
+ * @param {String} msg 輸入錯誤訊息
+ * @param {Number} [code=2] 輸入離開碼
+ * @example
+ * let e = new CliError('--n 須為整數')
+ * console.log(e instanceof Error, e.code, e.message)
+ * // => true 2 --n 須為整數
+ */
+export class CliError extends Error { constructor(msg, code = 2) { super(msg); this.code = code } }
+
+let camel = (k) => k.replace(/-([a-z])/g, (m, c) => c.toUpperCase())
+let fmtUsage = (spec) => {
+    let L = [spec.usage || `用法:node ${spec.name || ''}`]
+    let opts = Object.entries(spec.options || {})
+    if (opts.length) {
+        L.push('選項:')
+        for (let [k, o] of opts) {
+            let t = o.type === 'flag' ? '' : o.type === 'enum' ? ` &lt;${(o.values || []).join('|')}>` : o.type === 'bool' ? ' &lt;true|false>' : ` &lt;${o.type}>`
+            let d = o.default !== undefined &amp;&amp; o.type !== 'flag' ? `(預設 ${Array.isArray(o.default) ? o.default.join(',') : o.default})` : ''
+            let r = (o.min !== undefined || o.max !== undefined) ? `[${o.min ?? ''}..${o.max ?? ''}]` : ''
+            L.push(`  --${k}${o.short ? ` / -${o.short}` : ''}${t}${r}${d}${o.desc ? ` ${o.desc}` : ''}`)
+        }
+    }
+    if (spec.mode) {
+        L.push(`模式(--${spec.mode.key || 'mode'}${spec.mode.required === false ? '' : ', 必填'})與其可用選項:`)
+        for (let [m, ks] of Object.entries(spec.mode.modes)) { L.push(`  ${m}:${ks.length ? ks.map((k) => `--${k}`).join(' ') : '(無)'}`) }
+    }
+    L.push('通用:--args-file &lt;json>  以 JSON 物件給參數(鍵 = 選項名或模式鍵;免 shell 引號;與命令列同鍵 ⇒ 拒;旗標只收 true、清單收陣列)')
+    return L.join('\n')
+}
+/**
+ * 依 spec 組用法文字(用法首行、選項表、模式與其可用選項、通用之 --args-file 說明)
+ *
+ * @param {Object} spec 輸入 parseCli 之 spec { name, usage, options, positionals, mode }
+ * @returns {String} 回傳多行用法文字
+ * @example
+ * let spec = { name: 'demo.mjs', usage: '用法:node demo.mjs [選項]', options: { n: { type: 'int', min: 1, desc: '數量' } } }
+ * console.log(usageOf(spec).split('\n').slice(0, 2).join(' | '))
+ * // => 用法:node demo.mjs [選項] | 選項:
+ */
+export let usageOf = fmtUsage
+
+//--args-file &lt;json>(2026-10-01:免 shell 引號之包裝 —— 實測對話紀錄自製包裝腳本 24 次):
+//  JSON 物件之鍵 = 選項名(或模式鍵), 值 = 該選項之值 ⇒ 展開為命令列記號(字串以 --k=值 之內嵌形, 值含空白 / 引號 / 前導減號皆原樣)後與命令列走同一驗證
+//    (型別 / 範圍 / 模式可用旗標 / 未知鍵);與命令列同鍵 ⇒ 拒(免歧義);只可給一次;旗標只收 true;清單收陣列(元素不得含逗號)或逗號字串;值須為純量
+let expandArgsFile = (argv, spec) => {
+    let idx = argv.map((a, i) => (a === '--args-file' || a.startsWith('--args-file=') ? i : -1)).filter((i) => i >= 0)
+    if (!idx.length) { return argv }
+    if (idx.length > 1) { throw new CliError('--args-file 只可給一次') }
+    let i = idx[0], inline = argv[i].startsWith('--args-file=')
+    let fp = inline ? argv[i].slice('--args-file='.length) : argv[i + 1]
+    if (!fp || (!inline &amp;&amp; fp.startsWith('--'))) { throw new CliError('--args-file 須給 JSON 檔路徑') }
+    let rest = argv.filter((a, j) => j !== i &amp;&amp; !(!inline &amp;&amp; j === i + 1))
+    let obj
+    try { obj = JSON.parse(fs.readFileSync(fp, 'utf8')) } catch (e) { throw new CliError(`--args-file 讀取 / 解析失敗:${fp}(${String(e.message).slice(0, 120)})`) }
+    if (!obj || typeof obj !== 'object' || Array.isArray(obj)) { throw new CliError('--args-file 之內容須為 JSON 物件(鍵 = 選項名)') }
+    let modeKey = spec.mode ? (spec.mode.key || 'mode') : null
+    let opts = spec.options || {}
+    let shortOf = Object.fromEntries(Object.entries(opts).filter(([, o]) => o.short).map(([k, o]) => [o.short, k]))
+    let given = new Set()
+    for (let a of rest) {
+        if (a.startsWith('--')) { given.add(a.slice(2).split('=')[0]) }
+        else if (/^-[A-Za-z]$/.test(a) &amp;&amp; shortOf[a.slice(1)]) { given.add(shortOf[a.slice(1)]) }
+    }
+    let toks = []
+    for (let [k, v] of Object.entries(obj)) {
+        let o = k === modeKey ? { type: 'str' } : opts[k]
+        if (!o) { throw new CliError(`--args-file 之鍵 ${k} 未知(可用:${[...(modeKey ? [modeKey] : []), ...Object.keys(opts)].join(' ')})`) }
+        if (given.has(k)) { throw new CliError(`--${k} 同時見於命令列與 --args-file(擇一)`) }
+        if (o.type === 'flag') { if (v !== true) { throw new CliError(`--args-file 之旗標 ${k} 只收 true(不給即 false)`) } toks.push(`--${k}`); continue }
+        if (o.type === 'list' &amp;&amp; Array.isArray(v)) {
+            if (v.some((x) => x === null || typeof x === 'object')) { throw new CliError(`--args-file 之清單 ${k} 之元素須為純量`) }
+            if (v.some((x) => String(x).includes(','))) { throw new CliError(`--args-file 之清單 ${k} 之元素不得含逗號`) }
+            toks.push(`--${k}=${v.map(String).join(',')}`)
+            continue
+        }
+        if (v === null || typeof v === 'object') { throw new CliError(`--args-file 之 ${k} 須為純量`) }
+        toks.push(`--${k}=${String(v)}`)
+    }
+    return [...rest, ...toks]
+}
+
+//型別轉換與驗證;錯誤拋 CliError
+let coerce = (k, o, raw) => {
+    let bad = (why) => { throw new CliError(`--${k} ${why}(收到 ${JSON.stringify(raw)})`) }
+    switch (o.type) {
+        case 'flag': return raw === true
+        case 'str': if (raw === '') { bad('不得為空') } return raw
+        case 'int': {
+            if (!/^-?\d+$/.test(String(raw).trim())) { bad('須為整數') }
+            let v = Number(raw)
+            if (o.min !== undefined &amp;&amp; v &lt; o.min) { bad(`須 ≥ ${o.min}`) }
+            if (o.max !== undefined &amp;&amp; v > o.max) { bad(`須 ≤ ${o.max}`) }
+            return v
+        }
+        case 'num': {
+            let v = Number(raw)
+            if (String(raw).trim() === '' || !Number.isFinite(v)) { bad('須為有限數值') }
+            if (o.min !== undefined &amp;&amp; v &lt; o.min) { bad(`須 ≥ ${o.min}`) }
+            if (o.max !== undefined &amp;&amp; v > o.max) { bad(`須 ≤ ${o.max}`) }
+            return v
+        }
+        case 'list': {
+            let v = String(raw).split(',').map((s) => s.trim())
+            if (!v.length || v.some((s) => s === '')) { bad('須為逗號分隔之非空清單') }
+            return v
+        }
+        case 'bool': { if (raw !== 'true' &amp;&amp; raw !== 'false') { bad('只收 true / false') } return raw === 'true' }
+        case 'enum': { if (!(o.values || []).includes(raw)) { bad(`須為 ${(o.values || []).join(' | ')} 之一`) } return raw }
+        default: throw new Error(`cli spec:--${k} 之型別 ${o.type} 未知`)
+    }
+}
+
+//解析:回 { values(鍵為原名與 camelCase 兩種), positionals, mode, help, given }
+//  given(2026-10-09):**明給之鍵**(原名;命令列與 --args-file 展開後皆算, 預設值不算)—— 模式鍵(若明給)居首, 其餘依 spec.options 之序
+//    用途:有預設值之選項是否為使用者所給(如「--workers 只用於 --run」);原呼叫端掃 process.argv ⇒ --args-file 所給者漏偵
+//  opt.exit(預設 true):錯誤 ⇒ stderr + exit 2;help ⇒ stdout + exit 0;false 時改為拋 CliError / 回 { help: true }(單元測試用)
+/**
+ * 各 CLI 之統一參數解析(util.parseArgs strict 之上加型別與範圍、逐模式可用旗標、位置參數預設拒絕、--help、--args-file):
+ * 錯誤 ⇒ stderr 一行 + exit 2(未做任何事);呼叫端須在載入重模組與寫任何東西之前呼叫。
+ * 選項型別:flag | str | int | num | list(逗號分隔)| bool(只收 true / false)| enum(配 values)
+ *
+ * @param {Array} argv 輸入參數陣列(如 process.argv.slice(2))
+ * @param {Object} spec 輸入 { name, usage, options:{ 鍵:{ type, short, default, min, max, values, desc } }, positionals:{ min, max, names }, mode:{ key, required, default, modes:{ 名:[可用選項鍵] } } }
+ * @param {Object} [opt={}] 輸入選項 { exit:Boolean(預設 true;false 時改拋 CliError 或回 { help:true },單元測試用) }
+ * @returns {Object} 回傳 { values(鍵為原名與 camelCase 兩種)、positionals、mode、help、given(明給之鍵,命令列與 --args-file 皆算,預設值不算) }
+ * @throws {CliError} exit 為 false 且參數有誤時拋出
+ * @example
+ * let spec = { name: 'demo', options: { n: { type: 'int', min: 1 }, dry: { type: 'flag' }, 'stale-ms': { type: 'int', default: 5 } } }
+ * let r = parseCli(['--n', '3', '--dry'], spec, { exit: false })
+ * console.log(r.values.n, r.values.dry, r.values.staleMs, r.given.join(','))
+ * // => 3 true 5 n,dry
+ */
+export let parseCli = (argv, spec, { exit = true } = {}) => {
+    let options = { help: { type: 'boolean', short: 'h' } }
+    for (let [k, o] of Object.entries(spec.options || {})) { options[k] = { type: o.type === 'flag' ? 'boolean' : 'string', ...(o.short ? { short: o.short } : {}) } }
+    let modeKey = spec.mode ? (spec.mode.key || 'mode') : null
+    if (modeKey &amp;&amp; !options[modeKey]) { options[modeKey] = { type: 'string' } }
+    let fail = (msg) => {
+        if (!exit) { throw new CliError(msg) }
+        process.stderr.write(`${msg}(未執行任何動作;完整用法:node ${spec.name || '&lt;本檔>'} --help)\n`)
+        process.exit(2)
+    }
+    try { argv = expandArgsFile(argv, spec) }
+    catch (e) { if (e instanceof CliError) { return fail(e.message) } throw e }
+    let p
+    try { p = parseArgs({ args: argv, options, strict: true, allowPositionals: true }) }
+    catch (e) {
+        let m = String(e.message || e)
+        let msg = e.code === 'ERR_PARSE_ARGS_UNKNOWN_OPTION' ? `未知參數:${(m.match(/'([^']+)'/) || [])[1] || m}`
+            : e.code === 'ERR_PARSE_ARGS_INVALID_OPTION_VALUE' ? `參數值錯:${m}`
+                : `參數錯:${m}`
+        return fail(msg)
+    }
+    if (p.values.help) {
+        if (!exit) { return { help: true, usage: fmtUsage(spec) } }
+        process.stdout.write(fmtUsage(spec) + '\n')
+        process.exit(0)
+    }
+    try {
+        //位置參數
+        let pos = spec.positionals || { min: 0, max: 0 }
+        if (p.positionals.length &lt; (pos.min || 0) || p.positionals.length > (pos.max ?? 0)) {
+            throw new CliError(p.positionals.length > (pos.max ?? 0) ? `不收位置參數:${p.positionals.join(' ')}${modeKey &amp;&amp; p.positionals.length === 1 &amp;&amp; spec.mode.modes[p.positionals[0]] ? `(是要 --${modeKey} ${p.positionals[0]} 嗎?)` : ''}` : `位置參數不足(須 ${pos.min}:${(pos.names || []).join(' ')})`)
+        }
+        //明給之鍵(命令列與 --args-file 展開後;help 除外)
+        let givenSet = new Set(Object.keys(p.values).filter((k) => k !== 'help' &amp;&amp; p.values[k] !== undefined))
+        //模式
+        let mode = null
+        if (modeKey) {
+            mode = p.values[modeKey] ?? spec.mode.default ?? null
+            if (mode === null &amp;&amp; spec.mode.required !== false) { throw new CliError(`須指定 --${modeKey}(${Object.keys(spec.mode.modes).join(' | ')})`) }
+            if (mode !== null &amp;&amp; !spec.mode.modes[mode]) { throw new CliError(`未知 --${modeKey} ${mode}(可用:${Object.keys(spec.mode.modes).join(' | ')})`) }
+            let allowed = new Set(spec.mode.modes[mode] || [])
+            let given = [...givenSet].filter((k) => k !== modeKey)
+            let stray = given.filter((k) => !allowed.has(k))
+            if (stray.length) { throw new CliError(`${stray.map((k) => `--${k}`).join(' ')} 不適用於 --${modeKey} ${mode}(此模式可用:${[...allowed].map((k) => `--${k}`).join(' ') || '無'})`) }
+        }
+        //型別與預設
+        let values = {}
+        for (let [k, o] of Object.entries(spec.options || {})) {
+            let raw = p.values[k]
+            let v = raw === undefined ? (o.type === 'flag' ? false : o.default) : coerce(k, o, raw)
+            values[k] = v
+            values[camel(k)] = v
+        }
+        if (modeKey) { values[modeKey] = mode }
+        let given = [...(modeKey &amp;&amp; givenSet.has(modeKey) ? [modeKey] : []), ...Object.keys(spec.options || {}).filter((k) => k !== modeKey &amp;&amp; givenSet.has(k))]
+        return { values, positionals: p.positionals, mode, help: false, given }
+    }
+    catch (e) {
+        if (e instanceof CliError) { return fail(e.message) }
+        throw e
+    }
+}
+
+//是否為本程序之進入點(各 CLI 之 isMain 判定, 單一實作;URL → 路徑只經 fileURLToPath)
+/**
+ * 是否為本程序之進入點(各 CLI 之 isMain 判定,單一實作;URL 轉路徑只經 fileURLToPath)
+ *
+ * @param {String} metaUrl 輸入 import.meta.url
+ * @returns {Boolean} 回傳是否為進入點
+ * @example
+ * // 以 node 直接執行本檔時
+ * console.log(isMainModule(import.meta.url))
+ * // => true
+ */
+export let isMainModule = (metaUrl) => !!process.argv[1] &amp;&amp; path.resolve(process.argv[1]) === path.resolve(fileURLToPath(metaUrl))
+
+export default { parseCli, usageOf, CliError, isMainModule }
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.5</a> on Sat Nov 07 2026 22:16:09 GMT+0800 (台北標準時間) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+
+</body>
+</html>
