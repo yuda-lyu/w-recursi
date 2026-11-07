@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>loop/auto.mjs - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="CliError.html">CliError</a></li></ul><h3>Global</h3><ul><li><a href="global.html#ARMS_CFG_KEYS">ARMS_CFG_KEYS</a></li><li><a href="global.html#ARMS_DEFAULTS">ARMS_DEFAULTS</a></li><li><a href="global.html#ARM_KEYS">ARM_KEYS</a></li><li><a href="global.html#ARM_STATUS">ARM_STATUS</a></li><li><a href="global.html#CFG_KEYS">CFG_KEYS</a></li><li><a href="global.html#DEADLINE_WHY">DEADLINE_WHY</a></li><li><a href="global.html#DEFAULT_BUDGET">DEFAULT_BUDGET</a></li><li><a href="global.html#DEFAULT_FORBIDDEN">DEFAULT_FORBIDDEN</a></li><li><a href="global.html#DEFAULT_SIM">DEFAULT_SIM</a></li><li><a href="global.html#DOMAIN_KEYS">DOMAIN_KEYS</a></li><li><a href="global.html#DREAM_MUTEX">DREAM_MUTEX</a></li><li><a href="global.html#FRONTIER_BLOCKED">FRONTIER_BLOCKED</a></li><li><a href="global.html#FRONTIER_PATCH_KEYS">FRONTIER_PATCH_KEYS</a></li><li><a href="global.html#HEARTBEAT_FILE">HEARTBEAT_FILE</a></li><li><a href="global.html#HEARTBEAT_MS">HEARTBEAT_MS</a></li><li><a href="global.html#HEARTBEAT_STALE_MS">HEARTBEAT_STALE_MS</a></li><li><a href="global.html#HOOK_FAIL_HEAD">HOOK_FAIL_HEAD</a></li><li><a href="global.html#OCCUPIED">OCCUPIED</a></li><li><a href="global.html#PROC_STARTED_AT">PROC_STARTED_AT</a></li><li><a href="global.html#REALIZE_KINDS">REALIZE_KINDS</a></li><li><a href="global.html#REQUEST_MUST_HEAD">REQUEST_MUST_HEAD</a></li><li><a href="global.html#ROUND_NAME_SRC">ROUND_NAME_SRC</a></li><li><a href="global.html#STATUS">STATUS</a></li><li><a href="global.html#WRITE_ROOT_ENV">WRITE_ROOT_ENV</a></li><li><a href="global.html#accept">accept</a></li><li><a href="global.html#acquireSlots">acquireSlots</a></li><li><a href="global.html#aliasMapOf">aliasMapOf</a></li><li><a href="global.html#aliasMapOfNodes">aliasMapOfNodes</a></li><li><a href="global.html#aliasPreOf">aliasPreOf</a></li><li><a href="global.html#aliasShortOfDomain">aliasShortOfDomain</a></li><li><a href="global.html#allocateRound">allocateRound</a></li><li><a href="global.html#appendJsonl">appendJsonl</a></li><li><a href="global.html#applyDiff">applyDiff</a></li><li><a href="global.html#assertWriteRoot">assertWriteRoot</a></li><li><a href="global.html#atomicStats">atomicStats</a></li><li><a href="global.html#canonicalJson">canonicalJson</a></li><li><a href="global.html#carriersOfArm">carriersOfArm</a></li><li><a href="global.html#catalogArmsOf">catalogArmsOf</a></li><li><a href="global.html#catalogLayersOf">catalogLayersOf</a></li><li><a href="global.html#checkArmsCfg">checkArmsCfg</a></li><li><a href="global.html#checkCfg">checkCfg</a></li><li><a href="global.html#checkDomain">checkDomain</a></li><li><a href="global.html#checkPolicySource">checkPolicySource</a></li><li><a href="global.html#clearGenRequest">clearGenRequest</a></li><li><a href="global.html#createRsi">createRsi</a></li><li><a href="global.html#debtStreakOf">debtStreakOf</a></li><li><a href="global.html#earlyEmbedOf">earlyEmbedOf</a></li><li><a href="global.html#evaluatePolicy">evaluatePolicy</a></li><li><a href="global.html#extractTurning">extractTurning</a></li><li><a href="global.html#featureOf">featureOf</a></li><li><a href="global.html#frontierOutcomesOf">frontierOutcomesOf</a></li><li><a href="global.html#generationCheck">generationCheck</a></li><li><a href="global.html#hookErrText">hookErrText</a></li><li><a href="global.html#hookFailureOf">hookFailureOf</a></li><li><a href="global.html#isAliasShort">isAliasShort</a></li><li><a href="global.html#isGenerationFulfilled">isGenerationFulfilled</a></li><li><a href="global.html#isMainModule">isMainModule</a></li><li><a href="global.html#isRoundDir">isRoundDir</a></li><li><a href="global.html#jobKey">jobKey</a></li><li><a href="global.html#lastChangeAtOf">lastChangeAtOf</a></li><li><a href="global.html#lastDreamAt">lastDreamAt</a></li><li><a href="global.html#listRoundDirs">listRoundDirs</a></li><li><a href="global.html#loadPolicyFile">loadPolicyFile</a></li><li><a href="global.html#loadSummaries">loadSummaries</a></li><li><a href="global.html#maintenanceOf">maintenanceOf</a></li><li><a href="global.html#makeArms">makeArms</a></li><li><a href="global.html#makeAuto">makeAuto</a></li><li><a href="global.html#makeDream">makeDream</a></li><li><a href="global.html#makeExplore">makeExplore</a></li><li><a href="global.html#makeNode">makeNode</a></li><li><a href="global.html#makePaths">makePaths</a></li><li><a href="global.html#makeRegistry">makeRegistry</a></li><li><a href="global.html#makeStatus">makeStatus</a></li><li><a href="global.html#makeStore">makeStore</a></li><li><a href="global.html#makeView">makeView</a></li><li><a href="global.html#markerPidOf">markerPidOf</a></li><li><a href="global.html#markerRoundDirOf">markerRoundDirOf</a></li><li><a href="global.html#markerStale">markerStale</a></li><li><a href="global.html#maxOfDir">maxOfDir</a></li><li><a href="global.html#meta">meta</a></li><li><a href="global.html#newToken">newToken</a></li><li><a href="global.html#nodeIdOf">nodeIdOf</a></li><li><a href="global.html#noveltyDebtOf">noveltyDebtOf</a></li><li><a href="global.html#nowIso">nowIso</a></li><li><a href="global.html#omitMask">omitMask</a></li><li><a href="global.html#opsOfArm">opsOfArm</a></li><li><a href="global.html#originsOfArm">originsOfArm</a></li><li><a href="global.html#ownedBy">ownedBy</a></li><li><a href="global.html#ownerLine">ownerLine</a></li><li><a href="global.html#parentIdsOf">parentIdsOf</a></li><li><a href="global.html#parseCli">parseCli</a></li><li><a href="global.html#peekRound">peekRound</a></li><li><a href="global.html#pidAlive">pidAlive</a></li><li><a href="global.html#policyDevCheck">policyDevCheck</a></li><li><a href="global.html#policySourcesOf">policySourcesOf</a></li><li><a href="global.html#policyViewOfNode">policyViewOfNode</a></li><li><a href="global.html#readGenRequest">readGenRequest</a></li><li><a href="global.html#readHeartbeat">readHeartbeat</a></li><li><a href="global.html#readJson">readJson</a></li><li><a href="global.html#readJsonl">readJsonl</a></li><li><a href="global.html#readOwner">readOwner</a></li><li><a href="global.html#reclaimDeadSlots">reclaimDeadSlots</a></li><li><a href="global.html#reclaimJobDirs">reclaimJobDirs</a></li><li><a href="global.html#relativeImportsOf">relativeImportsOf</a></li><li><a href="global.html#releaseSlots">releaseSlots</a></li><li><a href="global.html#replanFillOf">replanFillOf</a></li><li><a href="global.html#reportOf">reportOf</a></li><li><a href="global.html#requestBaseOf">requestBaseOf</a></li><li><a href="global.html#requestMustOf">requestMustOf</a></li><li><a href="global.html#rescore">rescore</a></li><li><a href="global.html#roundDirs">roundDirs</a></li><li><a href="global.html#roundNameOf">roundNameOf</a></li><li><a href="global.html#roundNumOf">roundNumOf</a></li><li><a href="global.html#runJobs">runJobs</a></li><li><a href="global.html#selectableOf">selectableOf</a></li><li><a href="global.html#sha">sha</a></li><li><a href="global.html#simulate">simulate</a></li><li><a href="global.html#sleepMs">sleepMs</a></li><li><a href="global.html#slotAuxOf">slotAuxOf</a></li><li><a href="global.html#slotsInUse">slotsInUse</a></li><li><a href="global.html#slotsStatus">slotsStatus</a></li><li><a href="global.html#specDiff">specDiff</a></li><li><a href="global.html#specHash">specHash</a></li><li><a href="global.html#startHeartbeat">startHeartbeat</a></li><li><a href="global.html#tryAcquireSlots">tryAcquireSlots</a></li><li><a href="global.html#unusedOf">unusedOf</a></li><li><a href="global.html#usageOf">usageOf</a></li><li><a href="global.html#validateCatalog">validateCatalog</a></li><li><a href="global.html#waitNote">waitNote</a></li><li><a href="global.html#withLock">withLock</a></li><li><a href="global.html#writeAllowed">writeAllowed</a></li><li><a href="global.html#writeFileAtomic">writeFileAtomic</a></li><li><a href="global.html#writeJson">writeJson</a></li><li><a href="global.html#writeJsonl">writeJsonl</a></li><li><a href="global.html#writeRootsOf">writeRootsOf</a></li></ul>
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">loop/auto.mjs</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import fs from 'fs'
+import path from 'path'
+import get from 'lodash-es/get.js'
+import isFunction from 'lodash-es/isFunction.js'
+import round from 'lodash-es/round.js'
+import { loadSummaries } from './explore.mjs'
+import { policyDevCheck } from './policyDev.mjs'
+import { reportOf } from './report.mjs'
+import { lastDreamAt } from '../sim/dream.mjs'
+import { tryAcquireSlots, releaseSlots, slotsStatus } from '../core/slots.mjs'
+import { hookFailureOf } from '../core/hookResult.mjs'
+import { assertWriteRoot } from '../core/writeRoot.mjs'
+
+
+//每輪標準動作:探索 → 做夢快照(寫 scores.jsonl;可設 dream.everyRound=false 或 minIntervalMs 交由獨立排程)→ 領域鉤子(如自動衍生處理)→ 策略開發觸發判定 → 報告
+//  接受新策略(dream --accept)刻意不在此:那是單一寫者步驟, 由策略開發 agent 另行執行
+//  鉤子失敗(拋錯, 或回傳 { failed: true, errors })⇒ 結果之 hook.failed = true;CLI 以非 0 結束(2026-09-26 審查:原只寫進報告, 離開碼 0)
+//    拋錯之結果形 = core/hookResult.mjs 之 hookFailureOf(2026-10-09:與領域之尾段續跑同一來源)
+//  做夢之略過(2026-09-29:每輪兩 session 各做一次全量做夢, 樹大時 1 ~ 18 分):
+//    cfg.dream.minIntervalMs > 0(0 或未設 = 每輪)且距 scores.jsonl 末列不足 ⇒ 本輪略過(同批之另一 session 已做);opt.accept(明示之升版請求)不略過
+//    略過之理由記於結果之 dreamSkip 與報告之「做夢」節(「略過:同批已做」)
+//  結果另附 stagesSec = { explore, dream, hook, policyDev }(各段牆鐘秒;供呼叫端之完成紀錄)
+//  同批互斥(2026-10-01):上一判定讀 scores.jsonl 末列 = 做夢**結束**之時刻 ⇒ 兩 session 同時結束探索段時皆判「該做」而各做一次(每批多 16 ~ 29 分)
+//    ⇒ minIntervalMs > 0 時, 做夢前以槽位租約 policies/.mtx_dream(max 1;沿用 core/slots 之 pid / ISO / token 持有者列、半寫寬限、死者回收)登記「進行中」:
+//       取不到 ⇒ 他 session 正在做 ⇒ 略過「同批進行中」;取得後再讀一次末列(他方可能剛做完)⇒ 間隔不足即略過「同批已做」;finally 釋放
+//    opt.accept(明示之升版請求)與 minIntervalMs 0(每輪做夢)不經互斥(舊行為)
+//  輪之截止點(2026-10-09;截止點與預留之單一來源在領域端):opt.deadlineAt(毫秒;**未給 ⇒ 行為逐位同改前**)
+//    做夢開工前判(在「--no-dream / 同批已做 / 同批進行中」之後 —— 本輪本不做夢者不記為延期;取得做夢互斥且重判間隔之後):
+//      opt.mayStart('dream') ⇒ { ok, why, needMs?, leftMs? }(呼叫端注入「現在 + 做夢之預留 ≤ 截止點」之判讀);未注入 ⇒ 引擎之預設判 = 截止點未過(預留 0)
+//      不可 ⇒ 不做夢, dreamSkip = { why: DEADLINE_WHY, detail, at, deadlineAt, needSec?, leftSec? }(報告之做夢節照現形:「略過:輪截止點」);opt.accept 亦受之(截止點為時間之硬限)
+//    鉤子:afterRound({ rsi, ...ex, deadlineAt })(領域自判其子步驟之開工, 如每個子步驟之前;未給 ⇒ 不帶此鍵 = 改前)
+/**
+ * 做夢同批互斥之槽位租約夾名(policies 下;cfg.dream.minIntervalMs > 0 時用)
+ *
+ * @type {String}
+ */
+export const DREAM_MUTEX = '.mtx_dream'
+/**
+ * 輪之截止點略過做夢時 dreamSkip.why 之固定字樣
+ *
+ * @type {String}
+ */
+export const DEADLINE_WHY = '輪截止點'
+//opt ⇒ 做夢之截止點判讀(未給 deadlineAt ⇒ null)
+let deadlineGateOf = (opt) => {
+    if (opt.deadlineAt === undefined || opt.deadlineAt === null) { return null }
+    let at = Number(opt.deadlineAt)
+    if (!Number.isFinite(at)) { throw new Error(`auto:opt.deadlineAt 須為毫秒之數(收到 ${JSON.stringify(opt.deadlineAt)})`) }
+    return { at, gate: (stage) => { let g = isFunction(opt.mayStart) ? (opt.mayStart(stage) || {}) : { ok: Date.now() &lt;= at, why: '截止點已過' }; return { ...g, ok: g.ok !== false } } }
+}
+let deadlineSkipOf = (g, at) => ({ why: DEADLINE_WHY, detail: g.why || '截止點已過', at: new Date().toISOString(), deadlineAt: new Date(at).toISOString(), ...(Number.isFinite(g.needMs) ? { needSec: Math.round(g.needMs / 1000) } : {}), ...(Number.isFinite(g.leftMs) ? { leftSec: Math.round(g.leftMs / 1000) } : {}) })
+/**
+ * 每輪標準動作工廠(createRsi 以之組 rsi.auto):探索 → 做夢快照(寫 scores.jsonl;可設 dream.everyRound = false 或 minIntervalMs 交由獨立排程)→ 領域鉤子(afterRound;失敗 ⇒ hook.failed)→ 策略開發觸發判定 → 報告。接受新策略(dream --accept)刻意不在此(單一寫者步驟,由策略開發代理另行執行)。opt.deadlineAt(毫秒)給出時,做夢開工前判截止點
+ *
+ * @param {Object} rsi 輸入實例
+ * @returns {Function} 回傳 async (opt) => { ...explore 之結果, dream, dreamSkip, hook, policyDev, stagesSec };opt: explore 之 opt + { accept, noDream, deadlineAt, mayStart }
+ * @throws {Error} opt.deadlineAt 非有限數時於探索前拋出
+ * @example
+ * import fs from 'fs'
+ * import os from 'os'
+ * import path from 'path'
+ * import { createRsi } from 'w-recursi/src/index.mjs'
+ *
+ * let dir = fs.mkdtempSync(path.join(os.tmpdir(), 'w-recursi-'))
+ * let domain = {
+ *     name: 'toy',
+ *     score: (raw) => ({ S: raw.v, ladder: raw.v >= 2 ? 1 : 0, flags: {} }),
+ *     validateSpec: (s) => { if (typeof s.x !== 'number') { throw new Error('x 須為數字') } },
+ *     operators: [{ name: 'inc', family: 'f', applies: () => true, children: (s) => [{ spec: { x: s.x + 1 }, params: { by: 1 } }] }],
+ *     carriers: { root: { x: 0 } },
+ *     evaluator: { mode: 'inProcess', evaluate: async (spec) => ({ v: spec.x }) },
+ * }
+ * let rsi = createRsi({ root: dir, domain, budget: { arms: 2, novelty: 1 } }).init()
+ * let r = await rsi.auto({ noDream: true })
+ * console.log(r.round, r.dream, r.dreamSkip.why, Object.keys(r.stagesSec).join(','))
+ * // => 1 null --no-dream explore,dream,hook,policyDev
+ * fs.rmSync(dir, { recursive: true, force: true })
+ */
+export let makeAuto = (rsi) => async (opt = {}) => {
+    let { paths, domain } = rsi
+    let sec = (t) => round((Date.now() - t) / 1000, 1)
+    let DL = deadlineGateOf(opt)
+    let t0 = Date.now()
+    let ex = await rsi.explore(opt)
+    let stagesSec = { explore: sec(t0) }
+    if (ex.dry) { return { ...ex, dream: null, dreamSkip: null, hook: null, policyDev: null, stagesSec } }
+    let d = null, dreamSkip = null
+    let dcfg = get(rsi.cfg, 'dream', {}) || {}
+    let every = dcfg.everyRound !== false &amp;&amp; !opt.noDream
+    let minMs = Number(dcfg.minIntervalMs) || 0
+    let last = every &amp;&amp; minMs > 0 &amp;&amp; !opt.accept ? lastDreamAt(paths) : null
+    let gapMs = last ? Date.now() - Date.parse(last) : NaN
+    let tDream = Date.now()
+    if (!every) { dreamSkip = { why: opt.noDream ? '--no-dream' : 'dream.everyRound = false' } }
+    else if (last &amp;&amp; Number.isFinite(gapMs) &amp;&amp; gapMs &lt; minMs) { dreamSkip = { why: '同批已做', last, gapMin: round(gapMs / 60000, 1), minIntervalMin: round(minMs / 60000, 1) } }
+    else {
+        let fdMtx = path.join(paths.policies, DREAM_MUTEX)
+        let h = minMs > 0 &amp;&amp; !opt.accept ? tryAcquireSlots(fdMtx, { want: 1, max: 1 }) : null
+        if (h &amp;&amp; !h.length) {
+            let hold = slotsStatus(fdMtx, { max: 1 }).find((s) => !s.dead)
+            dreamSkip = { why: '同批進行中', holder: hold ? `pid ${hold.pid} 自 ${hold.at}` : null }
+        }
+        else {
+            try {
+                let last2 = h ? lastDreamAt(paths) : null
+                let gap2 = last2 ? Date.now() - Date.parse(last2) : NaN
+                let dg = null
+                if (last2 &amp;&amp; Number.isFinite(gap2) &amp;&amp; gap2 &lt; minMs) { dreamSkip = { why: '同批已做', last: last2, gapMin: round(gap2 / 60000, 1), minIntervalMin: round(minMs / 60000, 1) } }
+                else if (DL &amp;&amp; !(dg = DL.gate('dream')).ok) { dreamSkip = deadlineSkipOf(dg, DL.at) } //輪之截止點:做夢開工前判
+                else { d = await rsi.dream({ accept: !!opt.accept, currentOnly: !opt.accept }) } //輪內做夢只打當前(--accept 照舊打全部;2026-10-07)
+            }
+            finally { if (h) { releaseSlots(h) } }
+        }
+    }
+    stagesSec.dream = sec(tDream)
+    let tHook = Date.now()
+    let hook = null
+    if (isFunction(get(domain, 'hooks.afterRound'))) {
+        try { hook = await domain.hooks.afterRound({ rsi, ...ex, ...(DL ? { deadlineAt: DL.at } : {}) }) }
+        catch (e) { hook = hookFailureOf(e) }
+    }
+    stagesSec.hook = sec(tHook)
+    let tDev = Date.now()
+    let sums = loadSummaries(paths)
+    let req = ex.fd ? policyDevCheck(rsi, ex.fd, sums) : null
+    stagesSec.policyDev = sec(tDev)
+    if (ex.fd) { assertWriteRoot(path.join(ex.fd, 'report.md'), { what: 'auto(report.md)' }) } //寫域守門(2026-10-09;未設 ⇒ 不檢)
+    if (ex.fd) { fs.writeFileSync(path.join(ex.fd, 'report.md'), reportOf(rsi, ex.round, ex.plan, ex.nodes, ex.rejected, { skipped: ex.skipped, items: ex.items, replans: ex.replans, by: ex.summary &amp;&amp; ex.summary.by, turning: ex.turning, debt: ex.debt, generation: ex.generation, genClear: ex.genClear, frontierRes: ex.frontierRes, aliasShort: ex.summary ? ex.summary.nAliasShort : undefined, dream: d, dreamSkip, hook, policyDev: req, stagesSec })) }
+    return { ...ex, dream: d, dreamSkip, hook, policyDev: req, stagesSec }
+}
+
+export default makeAuto
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.5</a> on Sat Nov 07 2026 22:16:09 GMT+0800 (台北標準時間) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+
+</body>
+</html>

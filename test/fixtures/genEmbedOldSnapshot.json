@@ -1,0 +1,32 @@
+{
+ "note": "件 genEmbed 之改前快照:早退之報告「## 新區域額度」段(改前之 w-recursi/src/loop/generation.mjs + report.mjs;情境見 unit-genEmbed 之 GE02 / GE03)",
+ "at": "2026-10-04T02:46:28.252Z",
+ "src": "(擷取改前快照之腳本已略)",
+ "markerAt": "2026-10-03T07:12:50.597Z",
+ "plain": {
+  "streak": 2,
+  "escalate": false,
+  "keys": [
+   "fp",
+   "why",
+   "existing",
+   "streak",
+   "escalate",
+   "escalateRounds"
+  ],
+  "section": "## 新區域額度\n\n- 需 2、得 0、欠 2;他 session 已有生成請求(r010, 2026-10-03T07:12:50.597Z)\n"
+ },
+ "escalate": {
+  "streak": 3,
+  "escalate": true,
+  "keys": [
+   "fp",
+   "why",
+   "existing",
+   "streak",
+   "escalate",
+   "escalateRounds"
+  ],
+  "section": "## 新區域額度\n\n- 需 2、得 0、欠 2;他 session 已有生成請求(r010, 2026-10-03T07:12:50.597Z)\n- 連續欠額 3 輪 ⇒ **已達 3 輪, 路線須重構(換載體 / 換終點層), 不得只換參數再跑**(全域生成請求標記 r010 之 debt / streak 已更新;請求文見該輪夾之 GENERATION_REQUEST.md)\n"
+ }
+}

@@ -1,0 +1,21 @@
+#node toolg/addVersion.mjs
+node toolg/modifyReadme.mjs
+
+node toolg/cleanFolder.mjs
+./node_modules/.bin/jsdoc -c .jsdoc
+
+node toolg/gDocsExams.mjs
+
+node toolg/gDistRollup.mjs
+
+node toolg/genDocsDist.mjs
+
+git add .  -A
+git commit -m 'modify: '
+git push origin master:master
+
+npm run deploy
+
+#npm test
+
+#npm publish

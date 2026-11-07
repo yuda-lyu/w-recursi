@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>tree/view.mjs - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="CliError.html">CliError</a></li></ul><h3>Global</h3><ul><li><a href="global.html#ARMS_CFG_KEYS">ARMS_CFG_KEYS</a></li><li><a href="global.html#ARMS_DEFAULTS">ARMS_DEFAULTS</a></li><li><a href="global.html#ARM_KEYS">ARM_KEYS</a></li><li><a href="global.html#ARM_STATUS">ARM_STATUS</a></li><li><a href="global.html#CFG_KEYS">CFG_KEYS</a></li><li><a href="global.html#DEADLINE_WHY">DEADLINE_WHY</a></li><li><a href="global.html#DEFAULT_BUDGET">DEFAULT_BUDGET</a></li><li><a href="global.html#DEFAULT_FORBIDDEN">DEFAULT_FORBIDDEN</a></li><li><a href="global.html#DEFAULT_SIM">DEFAULT_SIM</a></li><li><a href="global.html#DOMAIN_KEYS">DOMAIN_KEYS</a></li><li><a href="global.html#DREAM_MUTEX">DREAM_MUTEX</a></li><li><a href="global.html#FRONTIER_BLOCKED">FRONTIER_BLOCKED</a></li><li><a href="global.html#FRONTIER_PATCH_KEYS">FRONTIER_PATCH_KEYS</a></li><li><a href="global.html#HEARTBEAT_FILE">HEARTBEAT_FILE</a></li><li><a href="global.html#HEARTBEAT_MS">HEARTBEAT_MS</a></li><li><a href="global.html#HEARTBEAT_STALE_MS">HEARTBEAT_STALE_MS</a></li><li><a href="global.html#HOOK_FAIL_HEAD">HOOK_FAIL_HEAD</a></li><li><a href="global.html#OCCUPIED">OCCUPIED</a></li><li><a href="global.html#PROC_STARTED_AT">PROC_STARTED_AT</a></li><li><a href="global.html#REALIZE_KINDS">REALIZE_KINDS</a></li><li><a href="global.html#REQUEST_MUST_HEAD">REQUEST_MUST_HEAD</a></li><li><a href="global.html#ROUND_NAME_SRC">ROUND_NAME_SRC</a></li><li><a href="global.html#STATUS">STATUS</a></li><li><a href="global.html#WRITE_ROOT_ENV">WRITE_ROOT_ENV</a></li><li><a href="global.html#accept">accept</a></li><li><a href="global.html#acquireSlots">acquireSlots</a></li><li><a href="global.html#aliasMapOf">aliasMapOf</a></li><li><a href="global.html#aliasMapOfNodes">aliasMapOfNodes</a></li><li><a href="global.html#aliasPreOf">aliasPreOf</a></li><li><a href="global.html#aliasShortOfDomain">aliasShortOfDomain</a></li><li><a href="global.html#allocateRound">allocateRound</a></li><li><a href="global.html#appendJsonl">appendJsonl</a></li><li><a href="global.html#applyDiff">applyDiff</a></li><li><a href="global.html#assertWriteRoot">assertWriteRoot</a></li><li><a href="global.html#atomicStats">atomicStats</a></li><li><a href="global.html#canonicalJson">canonicalJson</a></li><li><a href="global.html#carriersOfArm">carriersOfArm</a></li><li><a href="global.html#catalogArmsOf">catalogArmsOf</a></li><li><a href="global.html#catalogLayersOf">catalogLayersOf</a></li><li><a href="global.html#checkArmsCfg">checkArmsCfg</a></li><li><a href="global.html#checkCfg">checkCfg</a></li><li><a href="global.html#checkDomain">checkDomain</a></li><li><a href="global.html#checkPolicySource">checkPolicySource</a></li><li><a href="global.html#clearGenRequest">clearGenRequest</a></li><li><a href="global.html#createRsi">createRsi</a></li><li><a href="global.html#debtStreakOf">debtStreakOf</a></li><li><a href="global.html#earlyEmbedOf">earlyEmbedOf</a></li><li><a href="global.html#evaluatePolicy">evaluatePolicy</a></li><li><a href="global.html#extractTurning">extractTurning</a></li><li><a href="global.html#featureOf">featureOf</a></li><li><a href="global.html#frontierOutcomesOf">frontierOutcomesOf</a></li><li><a href="global.html#generationCheck">generationCheck</a></li><li><a href="global.html#hookErrText">hookErrText</a></li><li><a href="global.html#hookFailureOf">hookFailureOf</a></li><li><a href="global.html#isAliasShort">isAliasShort</a></li><li><a href="global.html#isGenerationFulfilled">isGenerationFulfilled</a></li><li><a href="global.html#isMainModule">isMainModule</a></li><li><a href="global.html#isRoundDir">isRoundDir</a></li><li><a href="global.html#jobKey">jobKey</a></li><li><a href="global.html#lastChangeAtOf">lastChangeAtOf</a></li><li><a href="global.html#lastDreamAt">lastDreamAt</a></li><li><a href="global.html#listRoundDirs">listRoundDirs</a></li><li><a href="global.html#loadPolicyFile">loadPolicyFile</a></li><li><a href="global.html#loadSummaries">loadSummaries</a></li><li><a href="global.html#maintenanceOf">maintenanceOf</a></li><li><a href="global.html#makeArms">makeArms</a></li><li><a href="global.html#makeAuto">makeAuto</a></li><li><a href="global.html#makeDream">makeDream</a></li><li><a href="global.html#makeExplore">makeExplore</a></li><li><a href="global.html#makeNode">makeNode</a></li><li><a href="global.html#makePaths">makePaths</a></li><li><a href="global.html#makeRegistry">makeRegistry</a></li><li><a href="global.html#makeStatus">makeStatus</a></li><li><a href="global.html#makeStore">makeStore</a></li><li><a href="global.html#makeView">makeView</a></li><li><a href="global.html#markerPidOf">markerPidOf</a></li><li><a href="global.html#markerRoundDirOf">markerRoundDirOf</a></li><li><a href="global.html#markerStale">markerStale</a></li><li><a href="global.html#maxOfDir">maxOfDir</a></li><li><a href="global.html#meta">meta</a></li><li><a href="global.html#newToken">newToken</a></li><li><a href="global.html#nodeIdOf">nodeIdOf</a></li><li><a href="global.html#noveltyDebtOf">noveltyDebtOf</a></li><li><a href="global.html#nowIso">nowIso</a></li><li><a href="global.html#omitMask">omitMask</a></li><li><a href="global.html#opsOfArm">opsOfArm</a></li><li><a href="global.html#originsOfArm">originsOfArm</a></li><li><a href="global.html#ownedBy">ownedBy</a></li><li><a href="global.html#ownerLine">ownerLine</a></li><li><a href="global.html#parentIdsOf">parentIdsOf</a></li><li><a href="global.html#parseCli">parseCli</a></li><li><a href="global.html#peekRound">peekRound</a></li><li><a href="global.html#pidAlive">pidAlive</a></li><li><a href="global.html#policyDevCheck">policyDevCheck</a></li><li><a href="global.html#policySourcesOf">policySourcesOf</a></li><li><a href="global.html#policyViewOfNode">policyViewOfNode</a></li><li><a href="global.html#readGenRequest">readGenRequest</a></li><li><a href="global.html#readHeartbeat">readHeartbeat</a></li><li><a href="global.html#readJson">readJson</a></li><li><a href="global.html#readJsonl">readJsonl</a></li><li><a href="global.html#readOwner">readOwner</a></li><li><a href="global.html#reclaimDeadSlots">reclaimDeadSlots</a></li><li><a href="global.html#reclaimJobDirs">reclaimJobDirs</a></li><li><a href="global.html#relativeImportsOf">relativeImportsOf</a></li><li><a href="global.html#releaseSlots">releaseSlots</a></li><li><a href="global.html#replanFillOf">replanFillOf</a></li><li><a href="global.html#reportOf">reportOf</a></li><li><a href="global.html#requestBaseOf">requestBaseOf</a></li><li><a href="global.html#requestMustOf">requestMustOf</a></li><li><a href="global.html#rescore">rescore</a></li><li><a href="global.html#roundDirs">roundDirs</a></li><li><a href="global.html#roundNameOf">roundNameOf</a></li><li><a href="global.html#roundNumOf">roundNumOf</a></li><li><a href="global.html#runJobs">runJobs</a></li><li><a href="global.html#selectableOf">selectableOf</a></li><li><a href="global.html#sha">sha</a></li><li><a href="global.html#simulate">simulate</a></li><li><a href="global.html#sleepMs">sleepMs</a></li><li><a href="global.html#slotAuxOf">slotAuxOf</a></li><li><a href="global.html#slotsInUse">slotsInUse</a></li><li><a href="global.html#slotsStatus">slotsStatus</a></li><li><a href="global.html#specDiff">specDiff</a></li><li><a href="global.html#specHash">specHash</a></li><li><a href="global.html#startHeartbeat">startHeartbeat</a></li><li><a href="global.html#tryAcquireSlots">tryAcquireSlots</a></li><li><a href="global.html#unusedOf">unusedOf</a></li><li><a href="global.html#usageOf">usageOf</a></li><li><a href="global.html#validateCatalog">validateCatalog</a></li><li><a href="global.html#waitNote">waitNote</a></li><li><a href="global.html#withLock">withLock</a></li><li><a href="global.html#writeAllowed">writeAllowed</a></li><li><a href="global.html#writeFileAtomic">writeFileAtomic</a></li><li><a href="global.html#writeJson">writeJson</a></li><li><a href="global.html#writeJsonl">writeJsonl</a></li><li><a href="global.html#writeRootsOf">writeRootsOf</a></li></ul>
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">tree/view.mjs</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import isFunction from 'lodash-es/isFunction.js'
+import omit from 'lodash-es/omit.js'
+import { aliasMapOf } from './alias.mjs'
+
+
+//策略視圖(遮蔽):探索策略與策略開發代理只看得到這個;領域以 mask(score, node) 決定哪些數值不給看(如留出段)
+/**
+ * 策略視圖(遮蔽):探索策略與策略開發代理只看得到這個;領域以 mask(score, node) 決定哪些數值不給看,maskNode(view, node) 再做節點層之遮蔽或附加
+ *
+ * @param {Object} node 輸入完整節點
+ * @param {String|null} aliasOf 輸入此節點之正本 id(非別名為 null)
+ * @param {Object} [domain={}] 輸入領域物件 { summarize, carrierOf, mask, maskNode }
+ * @returns {Object} 回傳視圖 { id, parent, round, status, spec, origin, carrier, summary, children, aliasOf, score, cost, evidence, notes }
+ * @example
+ * let node = { id: 'n1', spec: { a: 1 }, status: 'executed', score: { S: 3, hidden: 9 } }
+ * let v = policyViewOfNode(node, null, { mask: (s) => ({ S: s.S }) })
+ * console.log(JSON.stringify(v.score), v.parent, v.aliasOf)
+ * // => {"S":3} root null
+ */
+export let policyViewOfNode = (node, aliasOf, domain = {}) => {
+    let summarize = domain.summarize || ((spec) => JSON.stringify(spec).slice(0, 80))
+    let carrierOf = domain.carrierOf || (() => null)
+    let score = node.score ? (isFunction(domain.mask) ? domain.mask(node.score, node) : node.score) : null
+    let v = {
+        id: node.id, parent: node.parent || 'root', round: node.round || 0, status: node.status, spec: node.spec, origin: node.origin || null,
+        carrier: carrierOf(node.spec), summary: summarize(node.spec), children: node.children || [], aliasOf: aliasOf || null,
+        score, cost: node.cost || null, evidence: node.evidence || null, notes: node.notes || null,
+    }
+    //節點層遮蔽(2026-09-27;領域鉤子 maskNode):evidence / notes 可含被遮蔽之資訊(如被遮蔽之留出段、外部驗證結果)⇒ 由領域決定去留並可加標記
+    return isFunction(domain.maskNode) ? domain.maskNode(v, node) : v
+}
+
+//遮蔽輔助:依路徑清單 omit(深路徑)
+/**
+ * 遮蔽輔助:依路徑清單 omit(深路徑),回傳可直接當 domain.mask 之函數
+ *
+ * @param {Array} paths 輸入欲隱藏之路徑清單(lodash 路徑)
+ * @returns {Function} 回傳 (score) => 去除所列路徑後之分數
+ * @example
+ * let mask = omitMask(['heldOut', 'detail.raw'])
+ * console.log(JSON.stringify(mask({ S: 1, heldOut: 2, detail: { raw: 3, ok: 4 } })))
+ * // => {"S":1,"detail":{"ok":4}}
+ */
+export let omitMask = (paths) => (score) => omit(score, paths)
+
+//靜態檢查:策略碼不得寫樹、不得開子程序、不得讀暫存;領域可追加(如不得讀被遮蔽之欄位)
+//  2026-09-29:store 新增之前緣寫入 resolveFrontier 與 markFrontier 同列(兄弟寫入函式一併擋)
+/**
+ * 策略碼靜態檢查之預設禁用式:不得開子程序、不得寫樹(putNode、pushFrontier、markFrontier、resolveFrontier、claimNodes、setStatus)、不得讀暫存夾
+ *
+ * @type {Array}
+ */
+export const DEFAULT_FORBIDDEN = [/child_process/, /putNode|pushFrontier|markFrontier|resolveFrontier|claimNodes|setStatus/, /['"`]\.\/tmp\b/]
+/**
+ * 策略碼靜態檢查:原文命中任一禁用式即列入回傳(預設禁用式 + 領域追加)
+ *
+ * @param {String} src 輸入策略檔原文
+ * @param {Array} [forbidden=[]] 輸入領域追加之正規表示式
+ * @returns {Array} 回傳命中之正規表示式字串(空陣列 = 通過)
+ * @example
+ * console.log(checkPolicySource('export default () => 1').length)
+ * // => 0
+ *
+ * console.log(checkPolicySource("import cp from 'child_process'\nstore.putNode(x)").length)
+ * // => 2
+ *
+ * console.log(checkPolicySource('secretField', [/secretField/]).join(''))
+ * // => /secretField/
+ */
+export let checkPolicySource = (src, forbidden = []) => {
+    let bad = []
+    for (let re of [...DEFAULT_FORBIDDEN, ...forbidden]) { if (re.test(src)) { bad.push(String(re)) } }
+    return bad
+}
+
+/**
+ * 策略視圖工廠:取全樹視圖(別名以全樹判定,即使只取 ids 子集)
+ *
+ * @param {Object} store 輸入 makeStore 之回傳
+ * @param {Object} [domain={}] 輸入領域物件 { fingerprint, isAnchor, summarize, carrierOf, mask, maskNode }
+ * @returns {Object} 回傳 { policyView(ids?:Set) → 視圖陣列, policyViewOfNode(node, aliasOf), aliasOf(nodes) → Map }
+ * @example
+ * import fs from 'fs'
+ * import os from 'os'
+ * import path from 'path'
+ * import { makePaths } from 'w-recursi/src/core/paths.mjs'
+ * import { makeStore } from 'w-recursi/src/tree/store.mjs'
+ *
+ * let dir = fs.mkdtempSync(path.join(os.tmpdir(), 'w-recursi-'))
+ * let store = makeStore({ paths: makePaths(dir) })
+ * store.putNode({ id: 'n1', spec: { a: 1 }, status: 'executed', score: { S: 2, hidden: 7 } })
+ * let view = makeView(store, { mask: (s) => ({ S: s.S }) })
+ * console.log(view.policyView().length, JSON.stringify(view.policyView()[0].score))
+ * // => 1 {"S":2}
+ * fs.rmSync(dir, { recursive: true, force: true })
+ */
+export let makeView = (store, domain = {}) => {
+    let isAnchor = domain.isAnchor || (() => false)
+    let aliasOf = (nodes) => aliasMapOf(nodes, { fingerprint: domain.fingerprint, isAnchor })
+    //全樹視圖(別名以全樹判定, 即使只取 ids 子集)
+    let policyView = (ids = null) => {
+        let full = store.loadNodes()
+        let alias = aliasOf(full)
+        return full.filter((n) => !ids || ids.has(n.id)).map((n) => policyViewOfNode(n, alias.get(n.id) || null, domain))
+    }
+    return { policyView, policyViewOfNode: (n, a) => policyViewOfNode(n, a, domain), aliasOf }
+}
+
+export default { policyViewOfNode, omitMask, checkPolicySource, makeView }
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.5</a> on Sat Nov 07 2026 22:16:09 GMT+0800 (台北標準時間) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+
+</body>
+</html>

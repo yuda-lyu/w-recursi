@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>loop/generation.mjs - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="CliError.html">CliError</a></li></ul><h3>Global</h3><ul><li><a href="global.html#ARMS_CFG_KEYS">ARMS_CFG_KEYS</a></li><li><a href="global.html#ARMS_DEFAULTS">ARMS_DEFAULTS</a></li><li><a href="global.html#ARM_KEYS">ARM_KEYS</a></li><li><a href="global.html#ARM_STATUS">ARM_STATUS</a></li><li><a href="global.html#CFG_KEYS">CFG_KEYS</a></li><li><a href="global.html#DEADLINE_WHY">DEADLINE_WHY</a></li><li><a href="global.html#DEFAULT_BUDGET">DEFAULT_BUDGET</a></li><li><a href="global.html#DEFAULT_FORBIDDEN">DEFAULT_FORBIDDEN</a></li><li><a href="global.html#DEFAULT_SIM">DEFAULT_SIM</a></li><li><a href="global.html#DOMAIN_KEYS">DOMAIN_KEYS</a></li><li><a href="global.html#DREAM_MUTEX">DREAM_MUTEX</a></li><li><a href="global.html#FRONTIER_BLOCKED">FRONTIER_BLOCKED</a></li><li><a href="global.html#FRONTIER_PATCH_KEYS">FRONTIER_PATCH_KEYS</a></li><li><a href="global.html#HEARTBEAT_FILE">HEARTBEAT_FILE</a></li><li><a href="global.html#HEARTBEAT_MS">HEARTBEAT_MS</a></li><li><a href="global.html#HEARTBEAT_STALE_MS">HEARTBEAT_STALE_MS</a></li><li><a href="global.html#HOOK_FAIL_HEAD">HOOK_FAIL_HEAD</a></li><li><a href="global.html#OCCUPIED">OCCUPIED</a></li><li><a href="global.html#PROC_STARTED_AT">PROC_STARTED_AT</a></li><li><a href="global.html#REALIZE_KINDS">REALIZE_KINDS</a></li><li><a href="global.html#REQUEST_MUST_HEAD">REQUEST_MUST_HEAD</a></li><li><a href="global.html#ROUND_NAME_SRC">ROUND_NAME_SRC</a></li><li><a href="global.html#STATUS">STATUS</a></li><li><a href="global.html#WRITE_ROOT_ENV">WRITE_ROOT_ENV</a></li><li><a href="global.html#accept">accept</a></li><li><a href="global.html#acquireSlots">acquireSlots</a></li><li><a href="global.html#aliasMapOf">aliasMapOf</a></li><li><a href="global.html#aliasMapOfNodes">aliasMapOfNodes</a></li><li><a href="global.html#aliasPreOf">aliasPreOf</a></li><li><a href="global.html#aliasShortOfDomain">aliasShortOfDomain</a></li><li><a href="global.html#allocateRound">allocateRound</a></li><li><a href="global.html#appendJsonl">appendJsonl</a></li><li><a href="global.html#applyDiff">applyDiff</a></li><li><a href="global.html#assertWriteRoot">assertWriteRoot</a></li><li><a href="global.html#atomicStats">atomicStats</a></li><li><a href="global.html#canonicalJson">canonicalJson</a></li><li><a href="global.html#carriersOfArm">carriersOfArm</a></li><li><a href="global.html#catalogArmsOf">catalogArmsOf</a></li><li><a href="global.html#catalogLayersOf">catalogLayersOf</a></li><li><a href="global.html#checkArmsCfg">checkArmsCfg</a></li><li><a href="global.html#checkCfg">checkCfg</a></li><li><a href="global.html#checkDomain">checkDomain</a></li><li><a href="global.html#checkPolicySource">checkPolicySource</a></li><li><a href="global.html#clearGenRequest">clearGenRequest</a></li><li><a href="global.html#createRsi">createRsi</a></li><li><a href="global.html#debtStreakOf">debtStreakOf</a></li><li><a href="global.html#earlyEmbedOf">earlyEmbedOf</a></li><li><a href="global.html#evaluatePolicy">evaluatePolicy</a></li><li><a href="global.html#extractTurning">extractTurning</a></li><li><a href="global.html#featureOf">featureOf</a></li><li><a href="global.html#frontierOutcomesOf">frontierOutcomesOf</a></li><li><a href="global.html#generationCheck">generationCheck</a></li><li><a href="global.html#hookErrText">hookErrText</a></li><li><a href="global.html#hookFailureOf">hookFailureOf</a></li><li><a href="global.html#isAliasShort">isAliasShort</a></li><li><a href="global.html#isGenerationFulfilled">isGenerationFulfilled</a></li><li><a href="global.html#isMainModule">isMainModule</a></li><li><a href="global.html#isRoundDir">isRoundDir</a></li><li><a href="global.html#jobKey">jobKey</a></li><li><a href="global.html#lastChangeAtOf">lastChangeAtOf</a></li><li><a href="global.html#lastDreamAt">lastDreamAt</a></li><li><a href="global.html#listRoundDirs">listRoundDirs</a></li><li><a href="global.html#loadPolicyFile">loadPolicyFile</a></li><li><a href="global.html#loadSummaries">loadSummaries</a></li><li><a href="global.html#maintenanceOf">maintenanceOf</a></li><li><a href="global.html#makeArms">makeArms</a></li><li><a href="global.html#makeAuto">makeAuto</a></li><li><a href="global.html#makeDream">makeDream</a></li><li><a href="global.html#makeExplore">makeExplore</a></li><li><a href="global.html#makeNode">makeNode</a></li><li><a href="global.html#makePaths">makePaths</a></li><li><a href="global.html#makeRegistry">makeRegistry</a></li><li><a href="global.html#makeStatus">makeStatus</a></li><li><a href="global.html#makeStore">makeStore</a></li><li><a href="global.html#makeView">makeView</a></li><li><a href="global.html#markerPidOf">markerPidOf</a></li><li><a href="global.html#markerRoundDirOf">markerRoundDirOf</a></li><li><a href="global.html#markerStale">markerStale</a></li><li><a href="global.html#maxOfDir">maxOfDir</a></li><li><a href="global.html#meta">meta</a></li><li><a href="global.html#newToken">newToken</a></li><li><a href="global.html#nodeIdOf">nodeIdOf</a></li><li><a href="global.html#noveltyDebtOf">noveltyDebtOf</a></li><li><a href="global.html#nowIso">nowIso</a></li><li><a href="global.html#omitMask">omitMask</a></li><li><a href="global.html#opsOfArm">opsOfArm</a></li><li><a href="global.html#originsOfArm">originsOfArm</a></li><li><a href="global.html#ownedBy">ownedBy</a></li><li><a href="global.html#ownerLine">ownerLine</a></li><li><a href="global.html#parentIdsOf">parentIdsOf</a></li><li><a href="global.html#parseCli">parseCli</a></li><li><a href="global.html#peekRound">peekRound</a></li><li><a href="global.html#pidAlive">pidAlive</a></li><li><a href="global.html#policyDevCheck">policyDevCheck</a></li><li><a href="global.html#policySourcesOf">policySourcesOf</a></li><li><a href="global.html#policyViewOfNode">policyViewOfNode</a></li><li><a href="global.html#readGenRequest">readGenRequest</a></li><li><a href="global.html#readHeartbeat">readHeartbeat</a></li><li><a href="global.html#readJson">readJson</a></li><li><a href="global.html#readJsonl">readJsonl</a></li><li><a href="global.html#readOwner">readOwner</a></li><li><a href="global.html#reclaimDeadSlots">reclaimDeadSlots</a></li><li><a href="global.html#reclaimJobDirs">reclaimJobDirs</a></li><li><a href="global.html#relativeImportsOf">relativeImportsOf</a></li><li><a href="global.html#releaseSlots">releaseSlots</a></li><li><a href="global.html#replanFillOf">replanFillOf</a></li><li><a href="global.html#reportOf">reportOf</a></li><li><a href="global.html#requestBaseOf">requestBaseOf</a></li><li><a href="global.html#requestMustOf">requestMustOf</a></li><li><a href="global.html#rescore">rescore</a></li><li><a href="global.html#roundDirs">roundDirs</a></li><li><a href="global.html#roundNameOf">roundNameOf</a></li><li><a href="global.html#roundNumOf">roundNumOf</a></li><li><a href="global.html#runJobs">runJobs</a></li><li><a href="global.html#selectableOf">selectableOf</a></li><li><a href="global.html#sha">sha</a></li><li><a href="global.html#simulate">simulate</a></li><li><a href="global.html#sleepMs">sleepMs</a></li><li><a href="global.html#slotAuxOf">slotAuxOf</a></li><li><a href="global.html#slotsInUse">slotsInUse</a></li><li><a href="global.html#slotsStatus">slotsStatus</a></li><li><a href="global.html#specDiff">specDiff</a></li><li><a href="global.html#specHash">specHash</a></li><li><a href="global.html#startHeartbeat">startHeartbeat</a></li><li><a href="global.html#tryAcquireSlots">tryAcquireSlots</a></li><li><a href="global.html#unusedOf">unusedOf</a></li><li><a href="global.html#usageOf">usageOf</a></li><li><a href="global.html#validateCatalog">validateCatalog</a></li><li><a href="global.html#waitNote">waitNote</a></li><li><a href="global.html#withLock">withLock</a></li><li><a href="global.html#writeAllowed">writeAllowed</a></li><li><a href="global.html#writeFileAtomic">writeFileAtomic</a></li><li><a href="global.html#writeJson">writeJson</a></li><li><a href="global.html#writeJsonl">writeJsonl</a></li><li><a href="global.html#writeRootsOf">writeRootsOf</a></li></ul>
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">loop/generation.mjs</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import fs from 'fs'
+import path from 'path'
+import get from 'lodash-es/get.js'
+import isArray from 'lodash-es/isArray.js'
+import isFunction from 'lodash-es/isFunction.js'
+import _round from 'lodash-es/round.js'
+import size from 'lodash-es/size.js'
+import some from 'lodash-es/some.js'
+import { withLock } from '../core/lock.mjs'
+import { readJson, writeJson } from '../core/jsonl.mjs'
+import { nowIso } from '../core/canonical.mjs'
+import { pidAlive } from '../core/proc.mjs'
+import { assertWriteRoot } from '../core/writeRoot.mjs'
+
+
+//欠額觸發生成(novelty debt):策略之新區域額度填不滿(前緣無可評估之 arm、載體皆已入樹、轉折點提取亦無新臂)⇒ 本輪必須「生成」
+//  生成 = 生成代理寫新的生成型算子 / 新載體 / 新條件變數(領域決定), 不是換參數再跑一輪;請求寫 rounds/rNNN/GENERATION_REQUEST.md, 全域只留一份(policies/.gen_request.json, TTL)
+//  debt 連續累積 ≥ escalateRounds 輪且無新算子入樹 ⇒ 報告升級為「路線須重構」(只提示;裁示仍歸人)
+//冷啟動(樹中尚無可展開父)是播種, 不算欠額;之後每輪之新區域額度 = budget.novelty
+//  「得」= 新區域項 + 展開項中取自前緣提案者(如轉折點提案恰為某父之子臂, 會被展開先取走;仍是新區域之兌現)
+//  全域取樣臂(plan.global;計畫項 kindOf 'global')不計
+//  items(可省;2026-10-02, explore 之 cfg.generation.debtAfterClaims):以給定之項 [{ kindOf, specHash }] 計「得」
+//    —— explore 傳本 session 認領 / 重計畫後實際認領之臂(mine;被閘門拒絕或被他 session 先領走者不在其中);未給 ⇒ 由 plan 之 expand / novelty 轉成項(舊行為, 逐值同)
+//    「得」之判定只此一處(kindOf 'novelty' 者 + kindOf 'expand' 且 specHash ∈ frontierHashes 者), 計畫與認領共用;冷啟動與 need 恆由 plan 判
+let debtItemsOfPlan = (plan) => [...(plan.expand || []).map((x) => ({ kindOf: 'expand', specHash: get(x, 'specHash') })), ...(plan.novelty || []).map(() => ({ kindOf: 'novelty' }))]
+/**
+ * 新區域額度之欠額:「得」= 新區域項 + 展開項中取自前緣提案者(全域取樣臂不計);冷啟動(樹中尚無可展開父)是播種,不算欠額
+ *
+ * @param {Object} plan 輸入策略之計畫 { expand, novelty, notes }
+ * @param {Object} budget 輸入 { novelty }
+ * @param {Set|null} [frontierHashes=null] 輸入前緣 proposed arm 之 specHash 集合
+ * @param {Array|null} [items=null] 輸入以給定之項 [{ kindOf, specHash }] 計「得」(explore 傳認領後實得者);未給 ⇒ 由 plan 轉成項
+ * @returns {Object} 回傳 { need, got, debt, coldStart, fromFrontier }
+ * @example
+ * console.log(JSON.stringify(noveltyDebtOf({ expand: [], novelty: [{}] }, { novelty: 2 })))
+ * // => {"need":2,"got":1,"debt":1,"coldStart":false,"fromFrontier":0}
+ */
+export let noveltyDebtOf = (plan, budget, frontierHashes = null, items = null) => {
+    let coldStart = (plan.expand || []).length === 0 &amp;&amp; some(plan.notes || [], (s) => /冷啟動|cold/i.test(s))
+    let its = isArray(items) ? items : debtItemsOfPlan(plan)
+    let fromFrontier = frontierHashes ? its.filter((x) => x.kindOf === 'expand' &amp;&amp; frontierHashes.has(x.specHash)).length : 0
+    let got = its.filter((x) => x.kindOf === 'novelty').length + fromFrontier
+    let need = coldStart ? got : (budget.novelty || 0)
+    return { need, got, debt: Math.max(0, need - got), coldStart, fromFrontier }
+}
+
+//—— 全域生成請求標記之持有者判定(2026-09-29;含 pid 重用)——
+//  標記(policies/.gen_request.json)之欄:{ at, round, roundDir, fp, by, pid, pidStartedAt, debt, streak, replaced? }
+//    pid / pidStartedAt / roundDir 為本次所加;舊標記(無此三欄)⇒ pid 自 by(`pid&lt;數字>`)推得、輪夾自 fp 之所在夾(或 rounds/&lt;round>)推得
+//  輪次存活心跳:explore 自取得輪號起至寫出 summary.json 止, 每 heartbeatMs(預設 60 秒)重寫本輪夾之 .alive.json = { pid, pidStartedAt, beatAt }, 完成後刪除
+//    —— Windows 會回收 pid:死亡輪之 pid 被他程序重用時「pid 存活」為假象;心跳停止即可辨(不需查作業系統之行程啟動時刻)
+//  失效 = 輪夾無 summary.json 亦無 DONE.json(輪次未完成)∧(持有者 pid 已死 ∨ 心跳停止逾 heartbeatStaleMs(預設 2 小時)∨ 心跳之行程與標記不符)
+//    heartbeatStaleMs 須大於持有者可能之最長同步阻塞(如全域槽位之同步等待上限 cfg.slots.timeoutMs = 1 小時;期間事件迴圈停, 心跳不走)
+//    完成之輪(有 summary.json / DONE.json)其行程本就結束, 標記仍有效(由該輪之生成代理兌現);pid 不可得 ⇒ 不判失效(保守, 仍以 TTL)
+/**
+ * 輪次存活心跳檔名(寫於本輪夾;完成即刪)
+ *
+ * @type {String}
+ */
+export const HEARTBEAT_FILE = '.alive.json'
+/**
+ * 輪次心跳之重寫間隔(毫秒,預設 60000)
+ *
+ * @type {Number}
+ */
+export const HEARTBEAT_MS = 60000
+/**
+ * 心跳停止多久即視為標記持有者失效(毫秒,預設 2 小時;須大於持有者可能之最長同步阻塞)
+ *
+ * @type {Number}
+ */
+export const HEARTBEAT_STALE_MS = 2 * 3600000
+//本程序之啟動時刻(ISO;與 pid 合為「行程身分」)
+/**
+ * 本程序之啟動時刻(ISO;與 pid 合為「行程身分」,防 pid 被回收重用之假存活)
+ *
+ * @type {String}
+ */
+export const PROC_STARTED_AT = new Date(Date.now() - Math.round(process.uptime() * 1000)).toISOString()
+let readJsonSafe = (fp) => { try { return readJson(fp, null) } catch (e) { return null } }
+//輪次心跳:start(fdRound, { ms }) → { stop(remove = false) };寫入失敗不拋(心跳只作判讀之輔助)
+/**
+ * 起輪次心跳:立即寫一次本輪夾之 .alive.json = { pid, pidStartedAt, beatAt },其後每 ms 毫秒重寫(計時器 unref,不阻擋程序結束);寫入失敗不拋(心跳只作判讀之輔助)
+ *
+ * @param {String} fdRound 輸入本輪夾
+ * @param {Object} [opt={}] 輸入 { ms:Number(預設 HEARTBEAT_MS) }
+ * @returns {Object} 回傳 { fp, stop(remove=false) }(remove 為真 ⇒ 停止並刪心跳檔)
+ * @example
+ * import fs from 'fs'
+ * import os from 'os'
+ * import path from 'path'
+ *
+ * let dir = fs.mkdtempSync(path.join(os.tmpdir(), 'w-recursi-'))
+ * let hb = startHeartbeat(dir)
+ * console.log(fs.existsSync(hb.fp))
+ * // => true
+ * hb.stop(true)
+ * console.log(fs.existsSync(hb.fp))
+ * // => false
+ * fs.rmSync(dir, { recursive: true, force: true })
+ */
+export let startHeartbeat = (fdRound, { ms = HEARTBEAT_MS } = {}) => {
+    let fp = path.join(fdRound, HEARTBEAT_FILE)
+    let beat = () => { try { writeJson(fp, { pid: process.pid, pidStartedAt: PROC_STARTED_AT, beatAt: nowIso() }) } catch (e) {} }
+    beat()
+    let timer = setInterval(beat, Math.max(1000, Number(ms) || HEARTBEAT_MS))
+    if (timer &amp;&amp; timer.unref) { timer.unref() }
+    return { fp, stop: (remove = false) => { if (timer) { clearInterval(timer); timer = null } if (remove) { try { fs.rmSync(fp, { force: true }) } catch (e) {} } } }
+}
+/**
+ * 讀輪夾之心跳;無或非 JSON ⇒ null
+ *
+ * @param {String|null} fdRound 輸入輪夾
+ * @returns {Object|null} 回傳 { pid, pidStartedAt, beatAt } 或 null
+ * @example
+ * import fs from 'fs'
+ * import os from 'os'
+ * import path from 'path'
+ *
+ * let dir = fs.mkdtempSync(path.join(os.tmpdir(), 'w-recursi-'))
+ * console.log(readHeartbeat(dir))
+ * // => null
+ * startHeartbeat(dir).stop()
+ * console.log(readHeartbeat(dir).pid === process.pid)
+ * // => true
+ * fs.rmSync(dir, { recursive: true, force: true })
+ */
+export let readHeartbeat = (fdRound) => (fdRound ? readJsonSafe(path.join(fdRound, HEARTBEAT_FILE)) : null)
+//讀取容錯:檔不存在或非 JSON ⇒ null(非 JSON 之標記視同無標記, 由下一次寫入覆蓋;另印一行 stderr)
+/**
+ * 讀全域生成請求標記(policies/.gen_request.json);檔不存在或非 JSON ⇒ null(非 JSON 視同無標記,另印一行 stderr)
+ *
+ * @param {Object} paths 輸入 makePaths 之回傳
+ * @returns {Object|null} 回傳標記或 null
+ * @example
+ * import fs from 'fs'
+ * import os from 'os'
+ * import path from 'path'
+ * import { makePaths } from 'w-recursi/src/core/paths.mjs'
+ *
+ * let dir = fs.mkdtempSync(path.join(os.tmpdir(), 'w-recursi-'))
+ * console.log(readGenRequest(makePaths(dir)))
+ * // => null
+ * fs.rmSync(dir, { recursive: true, force: true })
+ */
+export let readGenRequest = (paths) => {
+    try { return readJson(paths.genRequest, null) }
+    catch (e) { try { fs.writeSync(2, `[w-recursi] 生成請求標記非 JSON, 視同無標記:${paths.genRequest}(${e.message})\n`) } catch (e2) {} return null }
+}
+/**
+ * 標記持有者之 pid:取 pid 欄;舊標記(無 pid 欄)自 by(`pid&lt;數字>`)推得
+ *
+ * @param {Object|null} m 輸入標記
+ * @returns {Number|null} 回傳 pid 或 null
+ * @example
+ * console.log(markerPidOf({ pid: 12 }), markerPidOf({ by: 'pid34' }), markerPidOf(null))
+ * // => 12 34 null
+ */
+export let markerPidOf = (m) => {
+    if (!m) { return null }
+    let p = Number(m.pid)
+    if (Number.isInteger(p) &amp;&amp; p > 0) { return p }
+    let mm = /^pid(\d+)$/.exec(String(m.by || ''))
+    return mm ? Number(mm[1]) : null
+}
+/**
+ * 標記所屬之輪夾:roundDir 欄,否則自 fp 之所在夾,否則 rounds/&lt;round>
+ *
+ * @param {Object|null} m 輸入標記
+ * @param {Object|null} paths 輸入 makePaths 之回傳(舊標記用)
+ * @returns {String|null} 回傳輪夾路徑或 null
+ * @example
+ * console.log(path.basename(markerRoundDirOf({ roundDir: path.join('x', 'r001') })), markerRoundDirOf(null))
+ * // => r001 null
+ */
+export let markerRoundDirOf = (m, paths) => {
+    if (!m) { return null }
+    if (m.roundDir) { return m.roundDir }
+    if (m.fp) { return path.dirname(m.fp) }
+    return m.round &amp;&amp; paths ? path.join(paths.rounds, String(m.round)) : null
+}
+//失效判定(純函式 + 讀輪夾):回理由字串(失效)或 null(有效);opt.alive(pid 存活判定)/ now / heartbeatStaleMs 供單元注入
+/**
+ * 標記是否失效(純函式 + 讀輪夾):輪夾無 summary.json 亦無 DONE.json(輪次未完成)∧(持有者 pid 已死 ∨ 心跳停止逾 heartbeatStaleMs ∨ 心跳之行程與標記不符)⇒ 失效;完成之輪之標記仍有效;pid 不可得 ⇒ 不判失效(保守)
+ *
+ * @param {Object|null} m 輸入標記
+ * @param {Object|null} paths 輸入 makePaths 之回傳
+ * @param {Object} [opt={}] 輸入 { alive:Function(pid 存活判定,預設 pidAlive), now:Number, heartbeatStaleMs:Number }(供單元注入)
+ * @returns {String|null} 回傳失效理由(失效)或 null(有效)
+ * @example
+ * let m = { pid: 12, roundDir: path.join('x', 'r001') }
+ * console.log(markerStale(m, null, { alive: () => false }).startsWith('持有者 pid 12 已死'))
+ * // => true
+ *
+ * console.log(markerStale(m, null, { alive: () => true }))
+ * // => null
+ */
+export let markerStale = (m, paths, { alive = pidAlive, now = Date.now(), heartbeatStaleMs = HEARTBEAT_STALE_MS } = {}) => {
+    if (!m) { return null }
+    let fd = markerRoundDirOf(m, paths)
+    if (fd &amp;&amp; (fs.existsSync(path.join(fd, 'summary.json')) || fs.existsSync(path.join(fd, 'DONE.json')))) { return null }
+    let pid = markerPidOf(m)
+    if (!pid) { return null }
+    let where = fd ? ` ${path.basename(fd)}` : ''
+    if (!alive(pid)) { return `持有者 pid ${pid} 已死且其輪夾${where}無 summary.json / DONE.json(輪次未完成即中斷)` }
+    let hb = readHeartbeat(fd)
+    if (!hb) { return null } //無心跳(舊標記)⇒ 只以 pid 判
+    if (Number(hb.pid) !== pid || (m.pidStartedAt &amp;&amp; hb.pidStartedAt &amp;&amp; hb.pidStartedAt !== m.pidStartedAt)) { return `輪夾${where}之心跳行程(pid ${hb.pid}, 啟動 ${hb.pidStartedAt || '?'})與標記之持有者(pid ${pid}, 啟動 ${m.pidStartedAt || '?'})不符` }
+    let t = Date.parse(hb.beatAt)
+    if (Number.isFinite(t) &amp;&amp; now - t > heartbeatStaleMs) { return `持有者 pid ${pid} 看似存活(可能為被回收重用之 pid), 但輪夾${where}之心跳已停 ${_round((now - t) / 60000)} 分(> ${_round(heartbeatStaleMs / 60000)} 分)且無 summary.json / DONE.json` }
+    return null
+}
+let sameMarker = (a, b) => !!a &amp;&amp; !!b &amp;&amp; a.at === b.at &amp;&amp; a.round === b.round
+//連續欠額(含本輪):sums(輪次摘要, 依輪序;loadSummaries)之末尾連續 noveltyDebt > 0 之輪數 + 1 —— 寫新標記與早退(他 session 已有有效標記)同一式(2026-10-04)
+/**
+ * 連續欠額(含本輪):輪次摘要之末尾連續 noveltyDebt > 0 之輪數 + 1;寫新標記與早退(他 session 已有有效標記)同一式
+ *
+ * @param {Array} [sums=[]] 輸入輪次摘要(依輪序;loadSummaries)
+ * @returns {Number} 回傳連續欠額輪數
+ * @example
+ * console.log(debtStreakOf([{ noveltyDebt: 0 }, { noveltyDebt: 1 }, { noveltyDebt: 2 }]), debtStreakOf([]))
+ * // => 3 1
+ */
+export let debtStreakOf = (sums = []) => {
+    let streak = 1
+    for (let s of [...(sums || [])].reverse()) { if ((s.noveltyDebt || 0) > 0) { streak++ } else { break } }
+    return streak
+}
+
+//請求文之引擎底稿(寫新請求與早退之現行文共用;2026-10-04 自 generationCheck 提出, 文字逐字不變)
+//  replaced:接手失效標記之紀錄(只寫新請求時有);escalateRounds:升級門檻(cfg.generation.escalateRounds)
+//  armsHint(2026-11-07;臂目錄):rsi.arms.menuLines 之列(狀態 sparse / proposed 且可選之臂)⇒ 另加一節「臂目錄之待探索臂」;未給 / 空 ⇒ 文字與改前逐字同
+/**
+ * 生成請求文之引擎底稿(寫新請求與早退之現行文共用):觸發原因、連續欠額與升級、接手失效標記之紀錄、本輪必須做的事、前緣之算子 / 終點請求、負向轉折、臂目錄之待探索臂
+ *
+ * @param {Object} [o={}] 輸入 { debt:Object(必填 { debt, need }), turning, plan, streak:Number(1), replaced, escalateRounds:Number(3), armsHint:Array }
+ * @returns {String} 回傳 markdown 文字
+ * @example
+ * let text = requestBaseOf({ debt: { debt: 1, need: 2 }, streak: 3 })
+ * console.log(text.includes('本輪必須做的事'), text.includes('路線須重構'))
+ * // => true true
+ */
+export let requestBaseOf = ({ debt, turning = null, plan = null, streak = 1, replaced = null, escalateRounds = 3, armsHint = null } = {}) => {
+    let requests = (plan &amp;&amp; plan.requests) || []
+    return [
+        `# 生成請求(R2;本輪之新區域額度欠 ${debt.debt} / ${debt.need};全域同時只有一份)`, '',
+        `- 觸發:策略之新區域額度填不滿(前緣無可評估 arm、載體皆已入樹${turning ? `、轉折點提取得 ${turning.proposals.length} 臂(邊 ${turning.nEdges}、有效轉折 ${turning.nProductive})` : ''});連續欠額 ${streak} 輪${streak >= escalateRounds ? ` ⇒ **已達 ${escalateRounds} 輪, 路線須重構(換載體 / 換終點層), 不得只換參數再跑**` : ''}`,
+        ...(replaced ? [`- 接手失效之全域標記:${replaced.round || '?'}(${replaced.at || '?'};${replaced.why})—— 該輪之請求未兌現, 由本輪承接`] : []), '',
+        '## 本輪必須做的事(缺一輪不算完成)', '',
+        '1. 由下列前緣請求(依優先)或 lore 之重啟條件, 實作 **至少一個** 新的生成型算子 / 新載體 / 新條件變數, 以規格入樹(不是既有算子換參數).',
+        '2. 入樹後在報告記:生成了什麼、依據哪個轉折 / 線索、預期它帶來哪一類新資訊.',
+        '3. 若判斷無可生成(空間已飽和), 在報告明寫理由並登前緣 `blocked`, 供裁示.', '',
+        '## 前緣之算子 / 終點請求', '',
+        ...(requests.length ? requests.map((q) => `- [${q.kind}] ${q.topic || ''} ${q.title || ''}(優先 ${q.priority ?? '-'};需 ${q.needs || '-'}):${q.reason || ''}`) : ['- (無;請自 lore 之重啟條件或本輪轉折點另立)']), '',
+        ...(turning &amp;&amp; turning.avoid &amp;&amp; turning.avoid.length ? ['## 負向轉折(施用後大幅變差;避免重複)', '', ...turning.avoid.map((a) => `- ${a.op} 於 ${a.parentId.slice(0, 6)} → ${a.childId.slice(0, 6)}(S ${a.gain > 0 ? '+' : ''}${_round(a.gain * 100)}%)`), ''] : []),
+        ...(size(armsHint) ? ['## 臂目錄之待探索臂(狀態 sparse / proposed 且可選;落成方式與未用格點見各列;限臂之輪以 --use-arms &lt;id,…>)', '', ...armsHint, ''] : []),
+    ].join('\n')
+}
+//臂目錄之提示列(generationCheck / earlyEmbedOf 共用;無目錄 ⇒ null)
+let armsHintOf = (rsi) => (rsi &amp;&amp; rsi.arms &amp;&amp; rsi.arms.size ? rsi.arms.menuLines({ statuses: ['sparse', 'proposed'], selectable: true, withHeader: false }) : null)
+//請求文之「本輪必須做的事」段:標題列(引擎底稿與領域之改寫皆以 REQUEST_MUST_HEAD 起頭, 如領域之飽和模式段)起至下一個「## 」標題之前, 去尾空白;無此段 ⇒ null
+/**
+ * 請求文「本輪必須做的事」段之標題(引擎底稿與領域之改寫皆以此起頭)
+ *
+ * @type {String}
+ */
+export const REQUEST_MUST_HEAD = '## 本輪必須做的事'
+/**
+ * 取請求文之「本輪必須做的事」段:標題列起至下一個「## 」標題之前,去尾空白;無此段 ⇒ null
+ *
+ * @param {*} text 輸入請求文
+ * @returns {String|null} 回傳該段或 null
+ * @example
+ * console.log(JSON.stringify(requestMustOf('# t\n\n## 本輪必須做的事\n\n1. a\n\n## 其他\n')))
+ * // => "## 本輪必須做的事\n\n1. a"
+ */
+export let requestMustOf = (text) => {
+    let s = String(text ?? '')
+    let i = s.indexOf(REQUEST_MUST_HEAD)
+    if (i &lt; 0) { return null }
+    let j = s.indexOf('\n## ', i + REQUEST_MUST_HEAD.length)
+    return (j >= 0 ? s.slice(i, j) : s.slice(i)).replace(/\s+$/, '')
+}
+//早退之現行文(2026-10-04):全域標記之請求文寫於持有輪(他輪夾;輪夾之所有權 ⇒ 不重寫, 標記之 at / round 亦不改),
+//  而其「本輪必須做的事」可早於本輪之升級(streak 跨過 escalateRounds)或領域之改寫(如前緣有 proposed 之 blocked 飽和標記 ⇒ 飽和模式)
+//  —— 某輪之文(第 1 級)至多輪後仍被各輪報告之升級行所指, 與通知之飽和模式相反
+//  ⇒ 以本輪之 debt / turning / plan / streak 組底稿(requestBaseOf), 經 domain.generationText 即時產生現行文, 取其「本輪必須做的事」段:
+//     escalate ∨ 領域改寫了該段(≠ 底稿之一般段)⇒ { must, domainMust }(報告內嵌);皆否 ⇒ null(報告與改前逐字同)
+//  不寫任何檔(本輪夾亦不寫:GENERATION_REQUEST.md 之有無 = 本輪持有全域請求與否);領域之文字拋錯 ⇒ { error }(報告一行;不影響本輪)
+/**
+ * 早退之現行文:全域標記之請求文寫於持有輪(他輪夾),其「本輪必須做的事」可早於本輪之升級或領域之改寫;以本輪之 debt / turning / plan / streak 組底稿,經 domain.generationText 即時產生現行文,取其該段。升級或領域改寫了該段 ⇒ { must, domainMust };皆否 ⇒ null;領域之文字拋錯 ⇒ { error };不寫任何檔
+ *
+ * @param {Object} domain 輸入領域物件(取 generationText)
+ * @param {Object} [o={}] 輸入 { debt, turning, plan, streak, escalate:Boolean, escalateRounds, fdRound, paths, armsHint }
+ * @returns {Object|null} 回傳 { must, domainMust } | { error } | null
+ * @example
+ * let debt = { debt: 1, need: 2 }
+ * console.log(earlyEmbedOf({}, { debt }), earlyEmbedOf({}, { debt, escalate: true }).domainMust)
+ * // => null false
+ */
+export let earlyEmbedOf = (domain, { debt, turning = null, plan = null, streak = 1, escalate = false, escalateRounds = 3, fdRound = null, paths = null, armsHint = null } = {}) => {
+    let base = null, text = null
+    try {
+        base = requestBaseOf({ debt, turning, plan, streak, escalateRounds, armsHint })
+        text = domain &amp;&amp; isFunction(domain.generationText) ? domain.generationText({ debt, turning, plan, streak, base, fdRound, paths }) : base
+    }
+    catch (e) { return { error: String((e &amp;&amp; e.message) || e).slice(0, 200) } }
+    let must = requestMustOf(text)
+    let domainMust = must !== requestMustOf(base)
+    if (!escalate &amp;&amp; !domainMust) { return null }
+    return must === null ? { error: '現行請求文無「本輪必須做的事」段' } : { must, domainMust }
+}
+
+//早退(他 session 已有有效標記;2026-10-04):不寫新請求(全域一份), 但連續欠額照以 debtStreakOf(sums) 計 ——
+//  鎖內把標記之 debt / streak 改為本輪值(at / round / pid / roundDir / fp 不改 ⇒ clearGenRequest 之 sameMarker 只比 at 與 round, 判定不受影響), 值未變則不寫;
+//  回傳 { fp: null, why(舊文逐字), existing(更新後之標記), streak, escalate: streak ≥ escalateRounds, escalateRounds } ⇒ 報告於 escalate 時加「連續欠額 N 輪 ⇒ 路線須重構」一行
+//  另 embed(earlyEmbedOf;2026-10-04;升級或領域改寫「本輪必須做的事」時才有)⇒ 報告內嵌現行文之該段, 升級行改指之
+//  原早退不讀 sums、不改標記 ⇒ 某次連續 6 輪欠額(第 3 輪已達門檻)而標記之 streak 停在 1、各輪報告只轉印「他 session 已有生成請求」(升級規則被早退遮蔽)
+/**
+ * 欠額觸發生成:新區域額度填不滿 ⇒ 寫 rounds/rNNN/GENERATION_REQUEST.md 與全域標記(policies/.gen_request.json;全域只留一份,policies 鎖內);他 session 已有有效標記 ⇒ 早退(不寫新請求,但連續欠額照計並更新標記之 debt / streak);失效標記 ⇒ 接手。無欠額 ⇒ null
+ *
+ * @param {Object} rsi 輸入實例
+ * @param {String} fdRound 輸入本輪夾
+ * @param {Object} [o={}] 輸入 { debt:Object(必填), turning, plan, sums:Array }
+ * @returns {Object|null} 回傳 { fp, streak, replaced, marker }(新請求)| { fp:null, why, existing, streak, escalate, escalateRounds, embed? }(早退)| null
+ * @example
+ * import fs from 'fs'
+ * import os from 'os'
+ * import path from 'path'
+ * import { createRsi } from 'w-recursi/src/index.mjs'
+ *
+ * let dir = fs.mkdtempSync(path.join(os.tmpdir(), 'w-recursi-'))
+ * let domain = {
+ *     name: 'toy',
+ *     score: (raw) => ({ S: raw.v, ladder: raw.v >= 2 ? 1 : 0, flags: {} }),
+ *     validateSpec: (s) => { if (typeof s.x !== 'number') { throw new Error('x 須為數字') } },
+ *     operators: [{ name: 'inc', family: 'f', applies: () => true, children: (s) => [{ spec: { x: s.x + 1 }, params: { by: 1 } }] }],
+ *     carriers: { root: { x: 0 } },
+ *     evaluator: { mode: 'inProcess', evaluate: async (spec) => ({ v: spec.x }) },
+ * }
+ * let rsi = createRsi({ root: dir, domain, budget: { arms: 2, novelty: 1 } }).init()
+ * let ex = await rsi.explore()
+ * let g = generationCheck(rsi, ex.fd, { debt: { need: 2, got: 0, debt: 2 } })
+ * console.log(path.basename(g.fp), g.streak)
+ * // => GENERATION_REQUEST.md 1
+ *
+ * let again = generationCheck(rsi, ex.fd, { debt: { need: 2, got: 0, debt: 2 } })
+ * console.log(again.fp, again.existing.round)
+ * // => null r001
+ * fs.rmSync(dir, { recursive: true, force: true })
+ */
+export let generationCheck = (rsi, fdRound, { debt, turning = null, plan = null, sums = [] } = {}) => {
+    let { paths, domain } = rsi
+    let O = { ttlMs: 24 * 3600000, escalateRounds: 3, heartbeatStaleMs: HEARTBEAT_STALE_MS, ...(get(rsi.cfg, 'generation', {}) || {}) }
+    if (!(debt.debt > 0)) { return null }
+    let armsHint = armsHintOf(rsi)
+    return withLock(() => {
+        let m = readGenRequest(paths)
+        let replaced = null
+        let streak = debtStreakOf(sums)
+        if (m &amp;&amp; Date.now() - Date.parse(m.at) &lt; O.ttlMs) {
+            let why = markerStale(m, paths, { heartbeatStaleMs: O.heartbeatStaleMs })
+            if (!why) {
+                let existing = m.debt === debt.debt &amp;&amp; m.streak === streak ? m : { ...m, debt: debt.debt, streak }
+                if (existing !== m) { writeJson(paths.genRequest, existing) }
+                let escalate = streak >= O.escalateRounds
+                let embed = earlyEmbedOf(domain, { debt, turning, plan, streak, escalate, escalateRounds: O.escalateRounds, fdRound, paths, armsHint })
+                return { fp: null, why: `他 session 已有生成請求(${m.round}, ${m.at})`, existing, streak, escalate, escalateRounds: O.escalateRounds, ...(embed ? { embed } : {}) }
+            }
+            //失效標記 ⇒ 接手(寫本輪之標記;原標記之輪夾內 GENERATION_REQUEST.md 保留為紀錄)
+            replaced = { round: m.round || null, at: m.at || null, by: m.by || null, pid: markerPidOf(m), why }
+        }
+        let fp = path.join(fdRound, 'GENERATION_REQUEST.md')
+        let base = requestBaseOf({ debt, turning, plan, streak, replaced, escalateRounds: O.escalateRounds, armsHint }) //底稿之單一來源(早退之現行文共用;文字逐字同改前;有臂目錄 ⇒ 另加待探索臂一節)
+        let text = isFunction(domain.generationText) ? domain.generationText({ debt, turning, plan, streak, base, fdRound, paths }) : base
+        assertWriteRoot(fp, { what: 'GENERATION_REQUEST.md' }) //寫域守門(2026-10-09;未設 ⇒ 不檢;標記之 writeJson 另經原語守)
+        fs.writeFileSync(fp, text)
+        let marker = { at: nowIso(), round: path.basename(fdRound), roundDir: fdRound, fp, by: `pid${process.pid}`, pid: process.pid, pidStartedAt: PROC_STARTED_AT, debt: debt.debt, streak, ...(replaced ? { replaced } : {}) }
+        writeJson(paths.genRequest, marker)
+        return { fp, streak, replaced, marker }
+    }, { dir: paths.policies, name: 'policies' })
+}
+
+//生成請求之清除(有新的非參數型節點入樹時由呼叫端清除;isGenerationFulfilled)
+//  2026-09-29:原無鎖且不驗擁有者 ⇒ A 輪兌現即刪全域標記, 可刪掉 B 輪剛寫之標記(B 之輪夾仍有 GENERATION_REQUEST.md, 標記卻消失 ⇒ C 輪可再寫一份)
+//  改為 policies 鎖內(與寫入同一把鎖:&lt;root>/policies/.lock_policies);opt:
+//    round(本輪夾名, 如 'r076')、seen(本輪計畫當下所見之標記;explore 於寫完本輪之生成請求後取)
+//    ⇒ 只刪「標記.round === round」或「與 seen 同一份(at 與 round 皆同)」者:本輪之節點於計畫時即定, 計畫之後才出現之他輪標記不可能由本輪兌現
+//    皆未給 ⇒ 無條件刪(舊行為;供人工 / 外部工具);作廢輪次:clearGenRequest(rsi, { round: 'rNNN' }) 只刪該輪之標記
+//  回 { cleared, why, marker }
+/**
+ * 清除全域生成請求標記(policies 鎖內):opt.round 給出 ⇒ 只刪該輪所寫者;opt.seen(本輪計畫當下所見之標記)⇒ 另刪與之同一份者;皆未給 ⇒ 無條件刪(供人工與外部工具);作廢輪次用 { round: "rNNN" }
+ *
+ * @param {Object} rsi 輸入實例
+ * @param {Object} [opt={}] 輸入 { round:String, seen:Object }
+ * @returns {Object} 回傳 { cleared, why, marker }
+ * @example
+ * import fs from 'fs'
+ * import os from 'os'
+ * import path from 'path'
+ * import { createRsi } from 'w-recursi/src/index.mjs'
+ *
+ * let dir = fs.mkdtempSync(path.join(os.tmpdir(), 'w-recursi-'))
+ * let domain = {
+ *     name: 'toy',
+ *     score: (raw) => ({ S: raw.v, ladder: raw.v >= 2 ? 1 : 0, flags: {} }),
+ *     validateSpec: (s) => { if (typeof s.x !== 'number') { throw new Error('x 須為數字') } },
+ *     operators: [{ name: 'inc', family: 'f', applies: () => true, children: (s) => [{ spec: { x: s.x + 1 }, params: { by: 1 } }] }],
+ *     carriers: { root: { x: 0 } },
+ *     evaluator: { mode: 'inProcess', evaluate: async (spec) => ({ v: spec.x }) },
+ * }
+ * let rsi = createRsi({ root: dir, domain, budget: { arms: 2, novelty: 1 } }).init()
+ * let ex = await rsi.explore()
+ * generationCheck(rsi, ex.fd, { debt: { need: 2, got: 0, debt: 2 } })
+ * let c1 = clearGenRequest(rsi, { round: 'r099' })
+ * console.log(c1.cleared)
+ * // => false
+ * let c2 = clearGenRequest(rsi)
+ * console.log(c2.cleared, c2.why)
+ * // => true 已清除(r001)
+ * fs.rmSync(dir, { recursive: true, force: true })
+ */
+export let clearGenRequest = (rsi, opt = {}) => {
+    let { paths } = rsi
+    let round = get(opt, 'round', null), seen = get(opt, 'seen', null)
+    return withLock(() => {
+        assertWriteRoot(paths.genRequest, { what: 'clearGenRequest(刪標記)' }) //寫域守門(2026-10-09;未設 ⇒ 不檢)
+        let m = readGenRequest(paths)
+        if (!m) { try { fs.rmSync(paths.genRequest, { force: true }) } catch (e) {} return { cleared: false, why: '無標記', marker: null } }
+        let mine = (round === null &amp;&amp; seen === null) || (round !== null &amp;&amp; m.round === round) || sameMarker(m, seen)
+        if (!mine) { return { cleared: false, why: `標記屬 ${m.round}(${m.at};非本輪${round ? ` ${round}` : ''}所見 / 所寫)⇒ 不刪`, marker: m } }
+        try { fs.rmSync(paths.genRequest, { force: true }) } catch (e) { return { cleared: false, why: `刪除失敗:${e.message}`, marker: m } }
+        return { cleared: true, why: `已清除(${m.round})`, marker: m }
+    }, { dir: paths.policies, name: 'policies' })
+}
+//生成是否兌現(輪末清除全域生成請求之判定;純函式):本輪執行之節點中有 origin.topic = generated 者, 或經新區域(計畫項 kindOf ≠ expand)進入之 operator kind 節點
+//  2026-09-27 收編使用端回報:原式「任一 operator kind 節點」在 operator kind 之父(如某組合層算子)被參數型算子展開後不再成立
+//    (參數型展開臂不是生成, 卻使生成請求於輪末被清除);kindOfById:節點 id → 計畫項之 kindOf('expand' | 'novelty');查無 ⇒ 視為非展開(舊行為)
+//  2026-09-27:全域取樣臂(kindOf 'global';如取樣器抽出之組合層 operator)同屬參數型之組合, 不是生成 ⇒ 與 expand 同不計
+/**
+ * 生成是否兌現(輪末清除全域生成請求之判定;純函式):本輪執行之節點中有 origin.topic = generated 者,或經新區域(計畫項 kindOf 不是 expand 與 global)進入之 operator kind 節點
+ *
+ * @param {Array} execNodes 輸入本輪已執行之節點
+ * @param {Map} [kindOfById=new Map()] 輸入 節點 id → 計畫項之 kindOf
+ * @returns {Boolean} 回傳是否兌現
+ * @example
+ * console.log(isGenerationFulfilled([{ id: 'a', origin: { topic: 'generated' } }]))
+ * // => true
+ *
+ * let op = [{ id: 'b', spec: { kind: 'operator' } }]
+ * console.log(isGenerationFulfilled(op, new Map([['b', 'expand']])), isGenerationFulfilled(op, new Map([['b', 'novelty']])))
+ * // => false true
+ */
+export let isGenerationFulfilled = (execNodes, kindOfById = new Map()) => (execNodes || []).some((n) => get(n, 'origin.topic') === 'generated'
+    || (get(n, 'spec.kind') === 'operator' &amp;&amp; !['expand', 'global'].includes(kindOfById.get(n.id))))
+
+export default { noveltyDebtOf, debtStreakOf, requestBaseOf, requestMustOf, earlyEmbedOf, REQUEST_MUST_HEAD, generationCheck, clearGenRequest, readGenRequest, markerStale, markerPidOf, markerRoundDirOf, isGenerationFulfilled, startHeartbeat, readHeartbeat, HEARTBEAT_FILE, PROC_STARTED_AT }
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.5</a> on Sat Nov 07 2026 22:16:09 GMT+0800 (台北標準時間) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+
+</body>
+</html>

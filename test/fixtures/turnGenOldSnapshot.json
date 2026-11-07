@@ -1,0 +1,28 @@
+{
+ "note": "改前(w-recursi/src/search/turning.mjs、loop/report.mjs、loop/generation.mjs 之現行版)之輸出快照;新版未給 proposalBlock / 無守門之列 / 無標記時須逐字同(opt 預設 = 舊行為)",
+ "at": "2026-10-03T22:06:01.099Z",
+ "src": {
+  "turning": "47c142c79cd1",
+  "report": "e546bb9e0db2",
+  "generation": "ca596ba04bce"
+ },
+ "turningJson": "{\"proposals\":[{\"kind\":\"arm\",\"spec\":{\"kind\":\"point\",\"x\":-4,\"y\":-2},\"specHash\":\"163f9e41df44298c\",\"topic\":\"turning\",\"title\":\"T.transfer\",\"priority\":1,\"reason\":\"搬移:P.y {\\\"y\\\":-2} 於 a0 使 S +50% ⇒ 施於 c1(S 90)\",\"origin\":{\"topic\":\"turning\",\"operator\":\"T.transfer\",\"op\":\"P.y\",\"params\":{\"y\":-2},\"from\":[\"a0\",\"b\",\"c1\"]},\"expect\":135},{\"kind\":\"arm\",\"spec\":{\"kind\":\"point\",\"x\":-6,\"y\":-2},\"specHash\":\"3462f5d4971d697b\",\"topic\":\"turning\",\"title\":\"T.transfer\",\"priority\":1,\"reason\":\"搬移:P.y {\\\"y\\\":-2} 於 a0 使 S +50% ⇒ 施於 p2(S 85)\",\"origin\":{\"topic\":\"turning\",\"operator\":\"T.transfer\",\"op\":\"P.y\",\"params\":{\"y\":-2},\"from\":[\"a0\",\"b\",\"p2\"]},\"expect\":127.5},{\"kind\":\"arm\",\"spec\":{\"kind\":\"point\",\"x\":2,\"y\":-2},\"specHash\":\"447927ca626bbdc7\",\"topic\":\"turning\",\"title\":\"T.transfer\",\"priority\":1,\"reason\":\"搬移:P.y {\\\"y\\\":-2} 於 a0 使 S +50% ⇒ 施於 a(S 70)\",\"origin\":{\"topic\":\"turning\",\"operator\":\"T.transfer\",\"op\":\"P.y\",\"params\":{\"y\":-2},\"from\":[\"a0\",\"b\",\"a\"]},\"expect\":105},{\"kind\":\"arm\",\"spec\":{\"kind\":\"point\",\"x\":-4,\"y\":-4},\"specHash\":\"9bc15930ffe2a49c\",\"topic\":\"turning\",\"title\":\"T.transfer\",\"priority\":1,\"reason\":\"搬移:P.x {\\\"x\\\":-4} 於 p1 使 S +13% ⇒ 施於 p2(S 85)\",\"origin\":{\"topic\":\"turning\",\"operator\":\"T.transfer\",\"op\":\"P.x\",\"params\":{\"x\":-4},\"from\":[\"p1\",\"c1\",\"p2\"]},\"expect\":95.625},{\"kind\":\"arm\",\"spec\":{\"kind\":\"point\",\"x\":0,\"y\":-4},\"specHash\":\"627d3760f43988b0\",\"topic\":\"turning\",\"title\":\"T.extrapolate\",\"priority\":2,\"reason\":\"外推:y 0 → -2(S +50%)⇒ -4\",\"origin\":{\"topic\":\"turning\",\"operator\":\"T.extrapolate\",\"path\":\"y\",\"step\":-2,\"from\":[\"a0\",\"b\"]},\"expect\":112.5},{\"kind\":\"arm\",\"spec\":{\"kind\":\"point\",\"x\":-2,\"y\":0},\"specHash\":\"019482b8063a5959\",\"topic\":\"turning\",\"title\":\"T.extrapolate\",\"priority\":2,\"reason\":\"外推:x -6 → -4(S +13%)⇒ -2\",\"origin\":{\"topic\":\"turning\",\"operator\":\"T.extrapolate\",\"path\":\"x\",\"step\":2,\"from\":[\"p1\",\"c1\"]},\"expect\":101.25},{\"kind\":\"arm\",\"spec\":{\"kind\":\"point\",\"x\":4,\"y\":0},\"specHash\":\"7ac03524824cc2f2\",\"topic\":\"turning\",\"title\":\"T.extrapolate\",\"priority\":2,\"reason\":\"外推:x 0 → 2(S +40%)⇒ 4\",\"origin\":{\"topic\":\"turning\",\"operator\":\"T.extrapolate\",\"path\":\"x\",\"step\":2,\"from\":[\"a0\",\"a\"]},\"expect\":98}],\"avoid\":[],\"blocked\":[{\"op\":\"P.x\",\"params\":{\"x\":-4},\"from\":[\"p1\",\"c1\",\"p3\"],\"specHash\":\"5ac220dcdfcce755\",\"why\":\"目標父 y > 4\"}],\"nBlocked\":1,\"nEdges\":3,\"nProductive\":3}",
+ "turningReportSection": "## 轉折點提取(由樹推導之新臂 → 前緣;策略之新區域額度取用)\n\n- 邊 3;有效轉折(S 提升 ≥ 門檻)3;提案 7\n- [T.transfer] P(-4,-2):搬移:P.y {\"y\":-2} 於 a0 使 S +50% ⇒ 施於 c1(S 90)\n- [T.transfer] P(-6,-2):搬移:P.y {\"y\":-2} 於 a0 使 S +50% ⇒ 施於 p2(S 85)\n- [T.transfer] P(2,-2):搬移:P.y {\"y\":-2} 於 a0 使 S +50% ⇒ 施於 a(S 70)\n- [T.transfer] P(-4,-4):搬移:P.x {\"x\":-4} 於 p1 使 S +13% ⇒ 施於 p2(S 85)\n- [T.extrapolate] P(0,-4):外推:y 0 → -2(S +50%)⇒ -4\n- [T.extrapolate] P(-2,0):外推:x -6 → -4(S +13%)⇒ -2\n- [T.extrapolate] P(4,0):外推:x 0 → 2(S +40%)⇒ 4\n- 搬移相容鉤子擋下 1:P.x {\"x\":-4} p1 ⇒ p3(目標父 y > 4)\n",
+ "genRequestMd": "# 生成請求(R2;本輪之新區域額度欠 2 / 2;全域同時只有一份)\n\n- 觸發:策略之新區域額度填不滿(前緣無可評估 arm、載體皆已入樹);連續欠額 3 輪 ⇒ **已達 3 輪, 路線須重構(換載體 / 換終點層), 不得只換參數再跑**\n\n## 本輪必須做的事(缺一輪不算完成)\n\n1. 由下列前緣請求(依優先)或 lore 之重啟條件, 實作 **至少一個** 新的生成型算子 / 新載體 / 新條件變數, 以規格入樹(不是既有算子換參數).\n2. 入樹後在報告記:生成了什麼、依據哪個轉折 / 線索、預期它帶來哪一類新資訊.\n3. 若判斷無可生成(空間已飽和), 在報告明寫理由並登前緣 `blocked`, 供裁示.\n\n## 前緣之算子 / 終點請求\n\n- [operator] t1 題一(優先 2;需 x):理由一\n",
+ "genMarker": {
+  "round": "r005",
+  "debt": 2,
+  "streak": 3
+ },
+ "genSums": [
+  {
+   "noveltyDebt": 0
+  },
+  {
+   "noveltyDebt": 2
+  },
+  {
+   "noveltyDebt": 1
+  }
+ ]
+}

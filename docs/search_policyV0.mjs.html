@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>search/policyV0.mjs - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="CliError.html">CliError</a></li></ul><h3>Global</h3><ul><li><a href="global.html#ARMS_CFG_KEYS">ARMS_CFG_KEYS</a></li><li><a href="global.html#ARMS_DEFAULTS">ARMS_DEFAULTS</a></li><li><a href="global.html#ARM_KEYS">ARM_KEYS</a></li><li><a href="global.html#ARM_STATUS">ARM_STATUS</a></li><li><a href="global.html#CFG_KEYS">CFG_KEYS</a></li><li><a href="global.html#DEADLINE_WHY">DEADLINE_WHY</a></li><li><a href="global.html#DEFAULT_BUDGET">DEFAULT_BUDGET</a></li><li><a href="global.html#DEFAULT_FORBIDDEN">DEFAULT_FORBIDDEN</a></li><li><a href="global.html#DEFAULT_SIM">DEFAULT_SIM</a></li><li><a href="global.html#DOMAIN_KEYS">DOMAIN_KEYS</a></li><li><a href="global.html#DREAM_MUTEX">DREAM_MUTEX</a></li><li><a href="global.html#FRONTIER_BLOCKED">FRONTIER_BLOCKED</a></li><li><a href="global.html#FRONTIER_PATCH_KEYS">FRONTIER_PATCH_KEYS</a></li><li><a href="global.html#HEARTBEAT_FILE">HEARTBEAT_FILE</a></li><li><a href="global.html#HEARTBEAT_MS">HEARTBEAT_MS</a></li><li><a href="global.html#HEARTBEAT_STALE_MS">HEARTBEAT_STALE_MS</a></li><li><a href="global.html#HOOK_FAIL_HEAD">HOOK_FAIL_HEAD</a></li><li><a href="global.html#OCCUPIED">OCCUPIED</a></li><li><a href="global.html#PROC_STARTED_AT">PROC_STARTED_AT</a></li><li><a href="global.html#REALIZE_KINDS">REALIZE_KINDS</a></li><li><a href="global.html#REQUEST_MUST_HEAD">REQUEST_MUST_HEAD</a></li><li><a href="global.html#ROUND_NAME_SRC">ROUND_NAME_SRC</a></li><li><a href="global.html#STATUS">STATUS</a></li><li><a href="global.html#WRITE_ROOT_ENV">WRITE_ROOT_ENV</a></li><li><a href="global.html#accept">accept</a></li><li><a href="global.html#acquireSlots">acquireSlots</a></li><li><a href="global.html#aliasMapOf">aliasMapOf</a></li><li><a href="global.html#aliasMapOfNodes">aliasMapOfNodes</a></li><li><a href="global.html#aliasPreOf">aliasPreOf</a></li><li><a href="global.html#aliasShortOfDomain">aliasShortOfDomain</a></li><li><a href="global.html#allocateRound">allocateRound</a></li><li><a href="global.html#appendJsonl">appendJsonl</a></li><li><a href="global.html#applyDiff">applyDiff</a></li><li><a href="global.html#assertWriteRoot">assertWriteRoot</a></li><li><a href="global.html#atomicStats">atomicStats</a></li><li><a href="global.html#canonicalJson">canonicalJson</a></li><li><a href="global.html#carriersOfArm">carriersOfArm</a></li><li><a href="global.html#catalogArmsOf">catalogArmsOf</a></li><li><a href="global.html#catalogLayersOf">catalogLayersOf</a></li><li><a href="global.html#checkArmsCfg">checkArmsCfg</a></li><li><a href="global.html#checkCfg">checkCfg</a></li><li><a href="global.html#checkDomain">checkDomain</a></li><li><a href="global.html#checkPolicySource">checkPolicySource</a></li><li><a href="global.html#clearGenRequest">clearGenRequest</a></li><li><a href="global.html#createRsi">createRsi</a></li><li><a href="global.html#debtStreakOf">debtStreakOf</a></li><li><a href="global.html#earlyEmbedOf">earlyEmbedOf</a></li><li><a href="global.html#evaluatePolicy">evaluatePolicy</a></li><li><a href="global.html#extractTurning">extractTurning</a></li><li><a href="global.html#featureOf">featureOf</a></li><li><a href="global.html#frontierOutcomesOf">frontierOutcomesOf</a></li><li><a href="global.html#generationCheck">generationCheck</a></li><li><a href="global.html#hookErrText">hookErrText</a></li><li><a href="global.html#hookFailureOf">hookFailureOf</a></li><li><a href="global.html#isAliasShort">isAliasShort</a></li><li><a href="global.html#isGenerationFulfilled">isGenerationFulfilled</a></li><li><a href="global.html#isMainModule">isMainModule</a></li><li><a href="global.html#isRoundDir">isRoundDir</a></li><li><a href="global.html#jobKey">jobKey</a></li><li><a href="global.html#lastChangeAtOf">lastChangeAtOf</a></li><li><a href="global.html#lastDreamAt">lastDreamAt</a></li><li><a href="global.html#listRoundDirs">listRoundDirs</a></li><li><a href="global.html#loadPolicyFile">loadPolicyFile</a></li><li><a href="global.html#loadSummaries">loadSummaries</a></li><li><a href="global.html#maintenanceOf">maintenanceOf</a></li><li><a href="global.html#makeArms">makeArms</a></li><li><a href="global.html#makeAuto">makeAuto</a></li><li><a href="global.html#makeDream">makeDream</a></li><li><a href="global.html#makeExplore">makeExplore</a></li><li><a href="global.html#makeNode">makeNode</a></li><li><a href="global.html#makePaths">makePaths</a></li><li><a href="global.html#makeRegistry">makeRegistry</a></li><li><a href="global.html#makeStatus">makeStatus</a></li><li><a href="global.html#makeStore">makeStore</a></li><li><a href="global.html#makeView">makeView</a></li><li><a href="global.html#markerPidOf">markerPidOf</a></li><li><a href="global.html#markerRoundDirOf">markerRoundDirOf</a></li><li><a href="global.html#markerStale">markerStale</a></li><li><a href="global.html#maxOfDir">maxOfDir</a></li><li><a href="global.html#meta">meta</a></li><li><a href="global.html#newToken">newToken</a></li><li><a href="global.html#nodeIdOf">nodeIdOf</a></li><li><a href="global.html#noveltyDebtOf">noveltyDebtOf</a></li><li><a href="global.html#nowIso">nowIso</a></li><li><a href="global.html#omitMask">omitMask</a></li><li><a href="global.html#opsOfArm">opsOfArm</a></li><li><a href="global.html#originsOfArm">originsOfArm</a></li><li><a href="global.html#ownedBy">ownedBy</a></li><li><a href="global.html#ownerLine">ownerLine</a></li><li><a href="global.html#parentIdsOf">parentIdsOf</a></li><li><a href="global.html#parseCli">parseCli</a></li><li><a href="global.html#peekRound">peekRound</a></li><li><a href="global.html#pidAlive">pidAlive</a></li><li><a href="global.html#policyDevCheck">policyDevCheck</a></li><li><a href="global.html#policySourcesOf">policySourcesOf</a></li><li><a href="global.html#policyViewOfNode">policyViewOfNode</a></li><li><a href="global.html#readGenRequest">readGenRequest</a></li><li><a href="global.html#readHeartbeat">readHeartbeat</a></li><li><a href="global.html#readJson">readJson</a></li><li><a href="global.html#readJsonl">readJsonl</a></li><li><a href="global.html#readOwner">readOwner</a></li><li><a href="global.html#reclaimDeadSlots">reclaimDeadSlots</a></li><li><a href="global.html#reclaimJobDirs">reclaimJobDirs</a></li><li><a href="global.html#relativeImportsOf">relativeImportsOf</a></li><li><a href="global.html#releaseSlots">releaseSlots</a></li><li><a href="global.html#replanFillOf">replanFillOf</a></li><li><a href="global.html#reportOf">reportOf</a></li><li><a href="global.html#requestBaseOf">requestBaseOf</a></li><li><a href="global.html#requestMustOf">requestMustOf</a></li><li><a href="global.html#rescore">rescore</a></li><li><a href="global.html#roundDirs">roundDirs</a></li><li><a href="global.html#roundNameOf">roundNameOf</a></li><li><a href="global.html#roundNumOf">roundNumOf</a></li><li><a href="global.html#runJobs">runJobs</a></li><li><a href="global.html#selectableOf">selectableOf</a></li><li><a href="global.html#sha">sha</a></li><li><a href="global.html#simulate">simulate</a></li><li><a href="global.html#sleepMs">sleepMs</a></li><li><a href="global.html#slotAuxOf">slotAuxOf</a></li><li><a href="global.html#slotsInUse">slotsInUse</a></li><li><a href="global.html#slotsStatus">slotsStatus</a></li><li><a href="global.html#specDiff">specDiff</a></li><li><a href="global.html#specHash">specHash</a></li><li><a href="global.html#startHeartbeat">startHeartbeat</a></li><li><a href="global.html#tryAcquireSlots">tryAcquireSlots</a></li><li><a href="global.html#unusedOf">unusedOf</a></li><li><a href="global.html#usageOf">usageOf</a></li><li><a href="global.html#validateCatalog">validateCatalog</a></li><li><a href="global.html#waitNote">waitNote</a></li><li><a href="global.html#withLock">withLock</a></li><li><a href="global.html#writeAllowed">writeAllowed</a></li><li><a href="global.html#writeFileAtomic">writeFileAtomic</a></li><li><a href="global.html#writeJson">writeJson</a></li><li><a href="global.html#writeJsonl">writeJsonl</a></li><li><a href="global.html#writeRootsOf">writeRootsOf</a></li></ul>
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">search/policyV0.mjs</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import isFunction from 'lodash-es/isFunction.js'
+import isNumber from 'lodash-es/isNumber.js'
+import orderBy from 'lodash-es/orderBy.js'
+import pick from 'lodash-es/pick.js'
+import sortBy from 'lodash-es/sortBy.js'
+import toPairs from 'lodash-es/toPairs.js'
+
+
+//通用預設探索策略(純函式:只讀策略視圖, 不碰評估器 / 樹寫入;領域規則一律經 ctx 注入)
+//  介面:policy(view, budget, ctx) → plan
+//    view   { round, nodes:[策略視圖(遮蔽後;別名節點已附 aliasOf)], frontier:[{ specHash, spec, origin, reason, status, kind, priority }] }
+//    budget { arms, novelty, workers }
+//    ctx    { childrenOf(spec, {ops}) → [{ op, family, spec, specHash, reason }], controlsFor(child) → [...], rankOf(op) → number,
+//             carriers:{ name: spec }, specHash(spec), executed:Set(specHash;含已認領), excludeParent?(nodeView) → bool }
+//    plan   { expand:[{ parentId, op, spec, specHash, reason, controlOf? }], novelty:[{ spec, specHash, reason, origin }], requests, stop:[nodeId], notes:[...] }
+//  規則:
+//    ① 父節點候選 = executed、非別名、非錨點(ctx.excludeParent 判)、未譜系停止、children &lt; MAX_CHILDREN;優先序 = ladder 高者、S 高者
+//    ② 譜系停止:連續兩代 ladder ≤ 1 且 S 未高於父 ⇒ 該譜系停止展開
+//    ③ 每父每輪最多 PER_PARENT 子;算子依 ctx.rankOf 排序
+//    ④ 對照臂整族計入 armsMain(放不進預算就跳過該子, 對照不可拆)
+//    ⑤ 新區域額度 ≥ budget.novelty:先取前緣之 proposed arm, 不足以未入樹之載體補;冷啟動(無可展開父)時全部給新區域
+/**
+ * 通用預設策略之識別(name、version、desc);init() 於策略夾缺 v0.mjs 時以本檔寫入
+ *
+ * @type {Object}
+ */
+export const meta = { name: 'v0', version: '0.2.0', desc: '通用預設策略:譜系停止 / 父節點優先序 / 每父上限 / 算子優先序 / 對照臂整族計入預算 / 新區域額度' }
+const PER_PARENT = 3
+const MAX_CHILDREN = 8
+
+/**
+ * 通用預設探索策略(純函式:只讀策略視圖,不碰評估器與樹寫入;領域規則一律經 ctx 注入):父節點候選 = executed、非別名、非錨點、未譜系停止、子數 &lt; 8,依階梯與 S 排序;每父每輪至多 3 子;對照臂整族計入預算;新區域額度先取前緣之 proposed arm、不足以未入樹之載體補;冷啟動(無可展開父)時全部給新區域
+ *
+ * @param {Object} view 輸入 { round, nodes:[策略視圖], frontier:[{ specHash, spec, origin, reason, status, kind, priority }] }
+ * @param {Object} budget 輸入 { arms, novelty, workers }
+ * @param {Object} ctx 輸入 { childrenOf(spec, { ops }), controlsFor(child), rankOf(op), carriers, specHash(spec), executed:Set, excludeParent?(view) }
+ * @returns {Object} 回傳 plan { policy, round, expand:[{ parentId, op, spec, specHash, reason, controlOf? }], novelty:[{ spec, specHash, reason, origin }], requests, stop:[nodeId], notes:[字串] }
+ * @example
+ * let ctx = { childrenOf: () => [], controlsFor: () => [], rankOf: () => 1, carriers: { root: { n: 0 } }, specHash: (s) => JSON.stringify(s), executed: new Set() }
+ * let plan = policy({ round: 1, nodes: [], frontier: [] }, { arms: 3, novelty: 1 }, ctx)
+ * console.log(plan.expand.length, plan.novelty.length, plan.notes[0])
+ * // => 0 1 冷啟動:無可展開之父節點;本輪全部給載體 / 前緣
+ */
+export default function policy(view, budget, ctx) {
+    let nodes = view.nodes || []
+    let byId = new Map(nodes.map((n) => [n.id, n]))
+    let executed = nodes.filter((n) => n.status === 'executed' &amp;&amp; n.score &amp;&amp; isNumber(n.score.S))
+    let planned = new Set()
+    let notes = []
+    let stalled = (n) => {
+        if (!n || n.parent === 'root') { return false }
+        let p = byId.get(n.parent)
+        if (!p || !p.score) { return false }
+        return (n.score.ladder || 0) &lt;= 1 &amp;&amp; n.score.S &lt;= (p.score.S || 0)
+    }
+    let stopped = new Set()
+    for (let n of executed) { if (stalled(n) &amp;&amp; stalled(byId.get(n.parent))) { stopped.add(n.id) } }
+    let exclude = isFunction(ctx.excludeParent) ? ctx.excludeParent : () => false
+    let parents = executed.filter((n) => !n.aliasOf &amp;&amp; !exclude(n) &amp;&amp; !stopped.has(n.id) &amp;&amp; (n.children || []).length &lt; MAX_CHILDREN)
+    parents = orderBy(parents, [(n) => n.score.ladder || 0, (n) => n.score.S, 'id'], ['desc', 'desc', 'asc'])
+    let coldStart = parents.length === 0
+    let armsMain = coldStart ? 0 : Math.max(0, (budget.arms || 8) - (budget.novelty || 0))
+    let expand = []
+    for (let p of parents) {
+        if (expand.length >= armsMain) { break }
+        let kids = ctx.childrenOf(p.spec).filter((k) => !ctx.executed.has(k.specHash) &amp;&amp; !planned.has(k.specHash))
+        kids = sortBy(kids, [(k) => ctx.rankOf(k.op), 'specHash'])
+        let taken = 0
+        for (let k of kids) {
+            if (taken >= PER_PARENT || expand.length >= armsMain) { break }
+            let ctrls = (ctx.controlsFor ? ctx.controlsFor(k) : []).filter((c) => !ctx.executed.has(c.specHash) &amp;&amp; !planned.has(c.specHash))
+            if (expand.length + 1 + ctrls.length > armsMain) { continue } //④ 對照不可拆
+            expand.push({ parentId: p.id, op: k.op, spec: k.spec, specHash: k.specHash, reason: k.reason })
+            planned.add(k.specHash); taken++
+            for (let c of ctrls) { expand.push({ parentId: p.id, op: c.op, spec: c.spec, specHash: c.specHash, reason: c.reason, controlOf: k.specHash }); planned.add(c.specHash) }
+        }
+    }
+    let novelty = []
+    let need = coldStart ? (budget.arms || 8) : (budget.novelty || 0)
+    let frontier = sortBy((view.frontier || []).filter((f) => f.status === 'proposed'), [(f) => f.priority ?? 5, 'proposedAt'])
+    for (let f of frontier.filter((f) => (f.kind || 'arm') === 'arm' &amp;&amp; f.spec)) {
+        if (novelty.length >= need) { break }
+        let h = f.specHash || ctx.specHash(f.spec)
+        if (ctx.executed.has(h) || planned.has(h)) { continue }
+        novelty.push({ spec: f.spec, specHash: h, reason: `前緣:${f.reason || ''}`, origin: f.origin || null })
+        planned.add(h)
+    }
+    let requests = frontier.filter((f) => ['operator', 'endpoint'].includes(f.kind)).slice(0, 5).map((f) => pick(f, ['kind', 'topic', 'title', 'needs', 'priority', 'reason']))
+    for (let [name, spec] of toPairs(ctx.carriers || {})) {
+        if (novelty.length >= need) { break }
+        let h = ctx.specHash(spec)
+        if (ctx.executed.has(h) || planned.has(h)) { continue }
+        novelty.push({ spec, specHash: h, reason: `載體 ${name} 未入樹`, origin: { topic: 'carrier', operator: 'root' } })
+        planned.add(h)
+    }
+    if (coldStart) { notes.push('冷啟動:無可展開之父節點;本輪全部給載體 / 前緣') }
+    if (stopped.size) { notes.push(`譜系停止 ${stopped.size} 節點`) }
+    if (requests.length) { notes.push(`前緣待實作:算子 / 終點請求 ${requests.length}`) }
+    return { policy: meta, round: view.round, expand, novelty, requests, stop: [...stopped], notes }
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.5</a> on Sat Nov 07 2026 22:16:09 GMT+0800 (台北標準時間) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+
+</body>
+</html>

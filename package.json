@@ -1,0 +1,28 @@
+{
+  "name": "w-recursi",
+  "version": "1.0.1",
+  "main": "dist/w-recursi.umd.js",
+  "dependencies": {
+    "wsemi": "^1.9.52"
+  },
+  "devDependencies": {
+    "w-package-tools": "^1.1.23"
+  },
+  "scripts": {
+    "test": "mocha --no-parallel \"test/*.test.mjs\" --timeout 180000",
+    "deploy": "gh-pages -d docs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yuda-lyu/w-recursi.git"
+  },
+  "keywords": [
+    "package",
+    "tool",
+    "recursive",
+    "self-improvement",
+    "nodejs"
+  ],
+  "author": "yuda-lyu(semisphere)",
+  "license": "MIT"
+}
