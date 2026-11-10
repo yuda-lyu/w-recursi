@@ -8,7 +8,7 @@ import { readJsonl, writeJsonl, writeJson, readJson, writeFileAtomic } from '../
 import { makeTmp, FD_TEST, FD_PACK } from './tools/tmpdir.mjs'
 
 
-let run = (args) => new Promise((resolve) => { let p = spawn(process.execPath, args, { stdio: ['ignore', 'pipe', 'pipe'] }); let out = '', err = ''; p.stdout.on('data', (d) => { out += d }); p.stderr.on('data', (d) => { err += d }); p.on('exit', (code) => resolve({ code, out, err })) })
+let run = (args) => new Promise((resolve) => { let p = spawn(process.execPath, args, { stdio: ['ignore', 'pipe', 'pipe'], windowsHide: true }); let out = '', err = ''; p.stdout.on('data', (d) => { out += d }); p.stderr.on('data', (d) => { err += d }); p.on('exit', (code) => resolve({ code, out, err })) })
 let tmpLeft = (dir) => fs.readdirSync(dir).filter((f) => f.endsWith('.tmp'))
 
 describe('core/jsonl:原子寫檔(2026-09-24;某次實測重現之鎖外讀競態)', function () {
@@ -77,7 +77,7 @@ describe('core/jsonl:原子寫檔(2026-09-24;某次實測重現之鎖外讀競�
         assert.deepEqual(readJsonl(path.join(t.dir, 'nope.jsonl'), { skipBad: true }), [])
         //真實呼叫端:子程序以 skipBad 讀之 ⇒ stdout 為好列、stderr 恰一行警示(含壞列數與列號)
         let code = `import { readJsonl } from ${JSON.stringify(pathToFileURL(path.join(FD_PACK, 'src', 'core', 'jsonl.mjs')).href)}; console.log(JSON.stringify(readJsonl(${JSON.stringify(fp)}, { skipBad: true })))`
-        let r = spawnSync(process.execPath, ['--input-type=module', '-e', code], { encoding: 'utf8' })
+        let r = spawnSync(process.execPath, ['--input-type=module', '-e', code], { encoding: 'utf8', windowsHide: true })
         assert.equal(r.status, 0, r.stderr)
         assert.deepEqual(JSON.parse(r.stdout.trim()), [{ a: 1 }, { a: 3 }, { a: 5 }])
         let lines = r.stderr.split(/\r?\n/).filter(Boolean)

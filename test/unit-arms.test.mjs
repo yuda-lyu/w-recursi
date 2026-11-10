@@ -154,7 +154,7 @@ describe('search/arms:臂目錄之注入、選臂、限臂、組合、覆蓋、�
         let toyPath = pathToFileURL(path.resolve(FD_PACK, 'test', 'tools', 'toy.mjs')).href //Windows 之絕對路徑須為 file URL(D: 會被當 scheme)
         let armsPath = pathToFileURL(path.resolve(FD_PACK, 'test', 'tools', 'toyArms.mjs')).href
         fs.writeFileSync(cfgPath, `import { makeDomain } from '${toyPath}'\nimport { CATALOG } from '${armsPath}'\nexport default { root: '${root.split(path.sep).join('/')}', domain: makeDomain(), budget: { arms: 6, novelty: 2, workers: 2 }, arms: { catalog: CATALOG } }\n`)
-        let run = (args) => spawnSync(process.execPath, [path.join(FD_PACK, 'src', 'cli.mjs'), '--config', cfgPath, ...args], { encoding: 'utf8', cwd: FD_PACK })
+        let run = (args) => spawnSync(process.execPath, [path.join(FD_PACK, 'src', 'cli.mjs'), '--config', cfgPath, ...args], { encoding: 'utf8', cwd: FD_PACK, windowsHide: true })
         let i = run(['--mode', 'init']); assert.equal(i.status, 0, i.stderr)
         //播種:空樹為冷啟動(全給載體)⇒ 先跑一輪真實探索(玩具評估, 秒級)使有可展開之父, 限臂之乾跑才有展開項
         let seed = run(['--mode', 'explore', '--arms', '4', '--novelty', '2', '--workers', '2', '--by', 'seed']); assert.equal(seed.status, 0, seed.stderr)

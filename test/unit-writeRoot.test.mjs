@@ -116,7 +116,7 @@ describe('core/writeRoot:寫域守門', function () {
         this.timeout(120000)
         let prod = path.join(t.dir, 'cliProd'), root = path.join(t.dir, 'cliRoot')
         fs.mkdirSync(root, { recursive: true })
-        let cli = (env, ...args) => { let r = spawnSync(process.execPath, [path.join(FD_PACK, 'src', 'cli.mjs'), '--config', path.join(FD_PACK, 'test', 'tools', 'toyConfig.mjs'), ...args], { env: { ...process.env, RSI_ROOT: prod, ...env }, encoding: 'utf8', cwd: FD_PACK }); return { code: r.status, out: `${r.stdout || ''}${r.stderr || ''}` } }
+        let cli = (env, ...args) => { let r = spawnSync(process.execPath, [path.join(FD_PACK, 'src', 'cli.mjs'), '--config', path.join(FD_PACK, 'test', 'tools', 'toyConfig.mjs'), ...args], { env: { ...process.env, RSI_ROOT: prod, ...env }, encoding: 'utf8', cwd: FD_PACK, windowsHide: true }); return { code: r.status, out: `${r.stdout || ''}${r.stderr || ''}` } }
         assert.equal(cli({ RSI_WRITE_ROOT: '' }, '--mode', 'init').code, 0)
         let G = { RSI_WRITE_ROOT: root }
         let e = cli(G, '--mode', 'explore', '--by', 'g')

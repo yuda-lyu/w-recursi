@@ -12,7 +12,7 @@ describe('cli:真實呼叫端用法(node src/cli.mjs --config <cfg.mjs> --mode �
     let t, cli, store
     before(() => {
         t = makeTmp('cli')
-        cli = (...args) => { let r = spawnSync(process.execPath, [path.join(FD_PACK, 'src', 'cli.mjs'), '--config', path.join(FD_TEST, 'tools', 'toyConfig.mjs'), ...args], { env: { ...process.env, RSI_ROOT: t.dir }, encoding: 'utf8', cwd: FD_PACK }); return { code: r.status, out: (r.stdout || '') + (r.stderr || '') } }
+        cli = (...args) => { let r = spawnSync(process.execPath, [path.join(FD_PACK, 'src', 'cli.mjs'), '--config', path.join(FD_TEST, 'tools', 'toyConfig.mjs'), ...args], { env: { ...process.env, RSI_ROOT: t.dir }, encoding: 'utf8', cwd: FD_PACK, windowsHide: true }); return { code: r.status, out: (r.stdout || '') + (r.stderr || '') } }
         store = makeStore({ paths: makePaths(t.dir), domain: makeDomain() })
     })
     after(() => { t.cleanup() })
@@ -76,7 +76,7 @@ describe('cli:真實呼叫端用法(node src/cli.mjs --config <cfg.mjs> --mode �
     it('auto 之領域鉤子失敗 ⇒ 離開碼 1、印錯誤, 報告仍落地(2026-09-26 審查:原離開碼 0)', function () {
         this.timeout(120000)
         let root = path.join(t.dir, 'hookfail')
-        let run = (...args) => { let r = spawnSync(process.execPath, [path.join(FD_PACK, 'src', 'cli.mjs'), '--config', path.join(FD_TEST, 'tools', 'toyConfig.mjs'), ...args], { env: { ...process.env, RSI_ROOT: root, RSI_TOY_HOOK_FAIL: '1' }, encoding: 'utf8', cwd: FD_PACK }); return { code: r.status, out: (r.stdout || '') + (r.stderr || '') } }
+        let run = (...args) => { let r = spawnSync(process.execPath, [path.join(FD_PACK, 'src', 'cli.mjs'), '--config', path.join(FD_TEST, 'tools', 'toyConfig.mjs'), ...args], { env: { ...process.env, RSI_ROOT: root, RSI_TOY_HOOK_FAIL: '1' }, encoding: 'utf8', cwd: FD_PACK, windowsHide: true }); return { code: r.status, out: (r.stdout || '') + (r.stderr || '') } }
         assert.equal(run('--mode', 'init').code, 0)
         let a = run('--mode', 'auto')
         assert.equal(a.code, 1, a.out)
@@ -87,7 +87,7 @@ describe('cli:真實呼叫端用法(node src/cli.mjs --config <cfg.mjs> --mode �
     it('寫入類模式之前置守門 cfg.beforeWrite:explore / evidence / reclaim 被擋(exit 3、未寫);乾跑與唯讀不經守門(2026-09-26)', function () {
         this.timeout(120000)
         let root = path.join(t.dir, 'guard')
-        let run = (env, ...args) => { let r = spawnSync(process.execPath, [path.join(FD_PACK, 'src', 'cli.mjs'), '--config', path.join(FD_TEST, 'tools', 'toyConfig.mjs'), ...args], { env: { ...process.env, RSI_ROOT: root, ...env }, encoding: 'utf8', cwd: FD_PACK }); return { code: r.status, out: (r.stdout || '') + (r.stderr || '') } }
+        let run = (env, ...args) => { let r = spawnSync(process.execPath, [path.join(FD_PACK, 'src', 'cli.mjs'), '--config', path.join(FD_TEST, 'tools', 'toyConfig.mjs'), ...args], { env: { ...process.env, RSI_ROOT: root, ...env }, encoding: 'utf8', cwd: FD_PACK, windowsHide: true }); return { code: r.status, out: (r.stdout || '') + (r.stderr || '') } }
         assert.equal(run({}, '--mode', 'init').code, 0)
         let G = { RSI_TOY_GUARD: '1' }
         let e = run(G, '--mode', 'explore', '--by', 'g')

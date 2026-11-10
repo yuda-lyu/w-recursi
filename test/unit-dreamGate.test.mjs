@@ -87,7 +87,7 @@ describe('sim/dream + loop/auto:維護中不寫分數、minIntervalMs 略過、�
         let rsi2 = fresh('mx2', cfgMx)
         let fdMtx2 = path.join(rsi2.paths.policies, DREAM_MUTEX)
         let slotsUrl = pathToFileURL(path.join(FD_PACK, 'src', 'core', 'slots.mjs')).href
-        let ch = spawnSync(process.execPath, ['--input-type=module', '-e', `import { tryAcquireSlots } from ${JSON.stringify(slotsUrl)}; let h = tryAcquireSlots(${JSON.stringify(fdMtx2)}, { want: 1, max: 1 }); console.log(h.length)`], { encoding: 'utf8' })
+        let ch = spawnSync(process.execPath, ['--input-type=module', '-e', `import { tryAcquireSlots } from ${JSON.stringify(slotsUrl)}; let h = tryAcquireSlots(${JSON.stringify(fdMtx2)}, { want: 1, max: 1 }); console.log(h.length)`], { encoding: 'utf8', windowsHide: true })
         assert.equal(String(ch.stdout).trim(), '1', ch.stderr)
         assert.equal(slotsStatus(fdMtx2, { max: 1 }).filter((s) => s.dead).length, 1, '子程序已退出 ⇒ 死槽')
         let b1 = await rsi2.auto({})

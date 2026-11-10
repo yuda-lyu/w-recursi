@@ -83,7 +83,7 @@
 ### REC-12 runner:job 鍵比對、動態佇列、工作夾提交界線
 
 - **規則**:job 鍵 = id + 規格 + 有效協定(續跑與讀回皆以鍵比對,舊列不污染);spawn 模式待辦依 `costOf` 由大到小入單一佇列,worker 以 mkdir 原子認領下一個,運行中每 `expandMs` 試取空槽加開(總數 ≤ 所求);worker 中途崩潰只失去進行中之 job;`keepDir: false` 時由 `commit()`(結果持久化後)才刪工作夾,刪前日誌歸檔,未提交者逾 `reclaimDays` 回收;`retryFailed` 開時續跑重算失敗列。
-- **測試**:`unit-worker`、`unit-runnerQueue`、`unit-runnerCleanup`、`unit-runnerRetry`。
+- **測試**:`unit-worker`、`unit-runnerQueue`、`unit-runnerCleanup`、`unit-runnerRetry`;worker 起程時隱藏視窗見 REC-20(`unit-runnerSpawnHide`)。
 
 ### REC-13 寫域守門(預寫沙箱之防誤寫)
 
@@ -121,6 +121,14 @@
 - **規則**:`src/` 下全部 32 檔(`index.mjs`、`protocol.mjs`、`WRecursi.mjs`、`cli.mjs`、`core/{canonical,cli,domainContract,hookResult,jsonl,lock,paths,proc,slots,writeRoot}.mjs`、`tree/{alias,node,store,view}.mjs`、`search/{arms,operators,policyV0,turning}.mjs`、`loop/{auto,explore,generation,policyDev,report,status}.mjs`、`sim/{dream,replay}.mjs`、`eval/{runner,worker}.mjs`)與 `test/tools/{toy,toyArms}.mjs` 之路徑不得改名、搬動(使用端以路徑深層匯入;另有大量封存腳本經轉發檔引用)。
 - **盤點指令**:`git ls-files src test/tools`(或尚未提交時 `ls -R src test/tools`)與本條清單逐一比對。
 - **測試**:`unit-package`(深層路徑案)。
+
+### REC-20 起子行程一律 `windowsHide: true`
+
+- **規則**:`src/`、`test/`、`toolg/` 內每一處起子行程之呼叫(`spawn`、`spawnSync`、`exec`、`execSync`、`execFile`、`execFileSync`、`fork`,含 `cp.` / `child_process.` 前綴寫法)之選項物件皆含 `windowsHide: true`,不論呼叫端是否有主控台、子行程是否再起孫行程。why:Windows 上由無主控台之行程(detached、排程、常駐服務)起子行程時,未設者每個各開一個終端機視窗(使用端 Gitea #127:`runJobs` 子程序模式每個 worker 各跳一個;本套件之跟跑測試由背景行程執行,同理)。非 Windows 平台此選項無作用,不設平台分支。新增起子行程之呼叫時同輪補上,不留待後。
+- **盤點指令**:`git grep -nP --untracked "(?<![.\w$])(spawn|spawnSync|exec|execSync|execFile|execFileSync|fork)\s*\(|\b(cp|child_process|childProcess)\.(spawn|spawnSync|exec|execSync|execFile|execFileSync|fork)\s*\(" -- src test toolg`(站點全集;前有 `.` 者如 `RegExp.exec` 不算;`test/unit-runnerSpawnHide.test.mjs` 自檢字串內之範例不算),逐筆核對選項含 `windowsHide: true`;對照 `git grep -n --untracked windowsHide -- src test toolg`。
+- **站點全集(2026-11-10)**:`src/eval/runner.mjs`(worker 起程,1 處);`test/` 內 17 處(`unit-arms`、`unit-atomic`×2、`unit-cli`×3、`unit-concurrency`、`unit-dreamGate`、`unit-lock`、`unit-package`×2〔`execSync`、`execFileSync`〕、`unit-slots`、`unit-slotsAtomic`×2、`unit-store`、`unit-writeRoot`、`tools/jsdocExamples`);`toolg/` 0 處。判準:18 處皆「已套」,無「刻意不套」。
+- **刻意不改**:`dist/`、`docs/` 為產製物(含 runner 之編譯後副本),隨發布流程重產,不手改。
+- **測試**:`unit-runnerSpawnHide`(①行為:以 `syncBuiltinESMExports` 換掉 `child_process.spawn` 記下 `runJobs` 子程序模式實際傳入之選項,每個 worker 皆 `windowsHide === true`;②盤點器自檢;③`src/` 盤點 ④`test/`、`toolg/` 盤點)。
 
 ## 站點全集與判準之補充
 

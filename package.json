@@ -1,12 +1,12 @@
 {
   "name": "w-recursi",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "main": "dist/w-recursi.umd.js",
   "dependencies": {
     "wsemi": "^1.9.54"
   },
   "devDependencies": {
-    "w-package-tools": "^1.1.24"
+    "w-package-tools": "^1.1.25"
   },
   "scripts": {
     "test": "mocha --no-parallel \"test/*.test.mjs\" --timeout 180000",

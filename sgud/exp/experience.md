@@ -93,3 +93,11 @@ main 指 `dist/w-recursi.umd.js`(CJS / UMD)時,`"type": "module"` 會使 `.js` �
 ### §21 已觀察之不穩定:`unit-atomic` 壓力案
 
 整理輪基準全套(約 2 分鐘)有 1 次 `unit-atomic`「他程序反覆整檔改寫時鎖外讀者……」失敗(`列數不足 1 / 5868`);同檔未改碼單跑 5 次皆綠,其後全套 3 次皆綠(全套共 4 次中 1 次)。該案屬壓力型(以讀寫次數門檻證試驗夠強),偶發;未證實根除,後續全套仍出現時以失敗率(n / 次數)記錄,不以放寬門檻處理。
+
+### §22 起子行程不設 `windowsHide`:Windows 無主控台時每個子行程各開一個視窗(2026-11-10,使用端 Gitea #127)
+
+`runJobs` 子程序模式以 `spawn` 起 worker 而未設 `windowsHide`;由 detached、排程、常駐服務等無主控台之行程呼叫時,每個 worker 各跳一個終端機視窗,前景 shell 呼叫則沿用其主控台而看不出。`test/` 內起子行程之呼叫同病(本庫之跟跑測試由背景行程執行)。處置見 REC-20。
+
+- **觀察「傳給 `spawn` 之選項」的作法**:runner 以具名匯入 `import { spawn } from 'child_process'` 取用,屬 live binding;測試對 `cp.spawn` 換一層記錄器後呼叫 `module.syncBuiltinESMExports()` 即生效,`finally` 還原並再同步一次(否則同程序之後續測試檔受影響;`--no-parallel` 下各檔同程序)。不需 stub 子行程本身,worker 照常執行,同時驗 job 完成。
+- **盤點器的坑**:①`RegExp.prototype.exec` 與起子行程之 `exec(` 同名,裸名須排除前有 `.` 者(`(?<![.\w$])`),具名匯入之裸名與 `cp.` 前綴分兩支式子;②括號配對須略過字串(測試內有 `-e` 傳入之程式字串與樣板字串);③整行註解不掃;④測試檔自身之自檢字串含無 `windowsHide` 之範例呼叫,須自盤點排除;⑤只掃有匯入 `child_process` 之檔,並斷言確有抓到 `runner.mjs` 之 spawn 與 `test/` 內 ≥ 10 處,避免掃描範圍壞掉時以空集合通過。
+- **原建議檔低估範圍**:建議檔稱 `test/` 內 13 處,實為 16 處未設(另有 `unit-package` 之 `execSync`、`execFileSync` 兩處;建議檔以 `spawn` / `spawnSync` 為式未涵蓋 `exec*`)。盤點式須含 `exec`、`execSync`、`execFile`、`execFileSync`、`fork` 全家。

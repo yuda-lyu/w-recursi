@@ -206,7 +206,8 @@ export let runJobs = async (jobs, opt = {}) => {
                 let fpLog = path.join(fd, `w${i}.log`)
                 let log = fs.openSync(fpLog, 'a')
                 let args = [WORKER, '--module', O.evaluatorModule, '--queue', fpQueue, '--claims', fdClaims, '--out', fpOut, '--ctx', JSON.stringify(O.ctxOpt || {}), '--protocol', JSON.stringify(O.protocol || {}), ...(O.retryFailed ? ['--retry-failed'] : [])]
-                let p = spawn(process.execPath, args, { stdio: ['ignore', log, log], cwd: O.cwd || process.cwd(), env: { ...process.env, ...(O.env || {}) } })
+                //windowsHide: 由無主控台之行程(detached / 排程 / 常駐服務)呼叫時, 未設即每個 worker 各開一個終端機視窗(Windows; 使用端 Gitea #127)
+                let p = spawn(process.execPath, args, { stdio: ['ignore', log, log], cwd: O.cwd || process.cwd(), env: { ...process.env, ...(O.env || {}) }, windowsHide: true })
                 live++
                 if (handle) { held.push(handle) }
                 //各 worker 結束即釋放自己那一格槽位(2026-09-24:原為整批結束才釋放 ⇒ 他 session 之 acquireSlots 只能乾等最慢那個 worker)

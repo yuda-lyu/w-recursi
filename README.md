@@ -289,6 +289,7 @@ runner 工作夾之生命週期(2026-09-29):`queue_<run>.json` / `claims_<run>/`
 | `unit-autoDeadline` | 輪之截止點(2026-10-09):`deadlineAt` 未給 ⇒ 舊行為(做夢照做、鉤子之參數無 `deadlineAt`、不呼叫 `mayStart`);已過 ⇒ 略過「輪截止點」(報告照現形、不寫分數、鉤子收 `deadlineAt`);注入之 `mayStart` 為準(臨界 / 遠);「--no-dream / 同批已做 / 同批進行中」不判截止點;`--accept` 亦受之;`deadlineAt` 非數 ⇒ 探索前拋錯 |
 | `unit-runnerCleanup` | runner 工作夾(2026-09-29):預設保留;`keepDir: false` 須 `commit()` 才刪(日誌歸檔);有失敗保留;同 tag 併行由最後提交者清;逾期回收只動 runner 夾;explore 入樹後自動提交 |
 | `unit-runnerRetry` | 續跑之失敗列(2026-10-02):預設失敗列視為已完成(舊行為);`retryFailed: true` 只重算失敗之 job、讀回以 ok 列為準 |
+| `unit-runnerSpawnHide` | 起子行程隱藏視窗(2026-11-10;使用端 Gitea #127):spawn 模式每個 worker 之 `spawn` 選項皆含 `windowsHide: true` 且 job 照常完成;`src/`、`test/`、`toolg/` 內每一處起子行程之呼叫(`spawn`、`spawnSync`、`exec*`、`fork`)皆含 `windowsHide: true`(附盤點器自檢) |
 | `unit-structural` | 做夢之結構保底(2026-10-02;sim/replay.mjs ⑥):`cfg.dream.structural(plan, { view, round })` → 違規數;違規(或拋錯)之重放輪計 structuralShort、evaluatePolicy 彙總、accept 與 dream 之升版皆拒、scores.jsonl 記之;未給 ⇒ 舊行為 |
 | `unit-roundPlanned` | 重計畫之 `ctx.roundPlanned`(2026-10-02;loop/explore.mjs):首次出計畫為 [];認領衝突後之重計畫收到本 session 本輪已認領之臂(策略之每輪上限可承接);不讀者行為不變 |
 | `unit-replanFill` | 認領衝突之重計畫只補被先領之額(2026-10-02;`cfg.claims.replanFillOnly`):純函式 `replanFillOf`(先補各流之缺、再依原序補足、總數已足 ⇒ []、新臂不足 ⇒ 全收);固定策略之真競態(第一次計畫 = 新區域 2 + 全域 4, 他 session 先領 2 全域臂)⇒ opt 開:實得 6(= 第一次計畫之臂數)且補回全域(依原序會補新區域)、plan.json 之 `notesReplans` 與 `replanFillOnly`、報告之重計畫行;opt 關:新臂全收(實得 8 > 預算);`reportExtra` 之第三參數(items = 實得、getNode)於 explore 與 auto 之重繪皆傳;無重計畫之輪 plan.json 無 `notesReplans` |

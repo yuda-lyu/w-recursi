@@ -1,4 +1,4 @@
-# 現況(w-recursi)— 2026-11-07
+# 現況(w-recursi)— 2026-11-10
 
 > 只記現況,不寫過程(過程在 `../exp/`)。接續工作先讀本檔;完成一項功能或結束一輪工作即更新。
 > **路徑基準**:原始碼在 `src/`,下文檔案路徑除已標 `src/`、`test/`、`toolg/` 者外皆相對 `src/`。
@@ -9,11 +9,12 @@
 - 依賴:`wsemi` ^1.9.52(`src/` 未直接引用;`src/` 所用之 `lodash-es` 由其依賴帶入,故不另宣告);devDependencies:`w-package-tools`(`toolg/`;mocha 隨之安裝)。
 - 被誰用:使用端專案以路徑深層匯入 `w-recursi/src/index.mjs`、`w-recursi/src/protocol.mjs`、`w-recursi/src/search/arms.mjs` 等(套件不設 `exports`;需求出處使用端 Gitea #95),另有大量封存腳本經轉發檔引用 `src/**` 全部檔案;`test/` 隨 npm 包發布(使用端以此夾之 mocha 測試守門),`test/tools/toy.mjs`、`toyArms.mjs` 亦被深層匯入。
 - 發布狀態:已依自有套件佈局整理(2026-11-07);**尚未提交與發布**,發布與推送由使用者與自動化流程處理。
+- 2026-11-10(使用端 Gitea #127):`eval/runner.mjs` 之 worker `spawn` 補 `windowsHide: true`,`test/` 內起子行程之呼叫同補(REC-20);`runJobs` 介面與其他行為未變。`dist/`、`docs/` 為產製物,仍是此改動前之編譯結果,待發布流程重產後才含此改動。
 
 ## 佈局
 
 - 原始碼全在 `src/`:根層 `index.mjs`(`createRsi` 組裝與 `CFG_KEYS`)、`protocol.mjs`(協定件 barrel)、`WRecursi.mjs`(聚合入口)、`cli.mjs`(通用 CLI),子目錄 `core/`(canonical、cli、domainContract、hookResult、jsonl、lock、paths、proc、slots、writeRoot)、`tree/`(store、view、node、alias)、`search/`(operators、policyV0、turning、arms)、`loop/`(explore、auto、status、report、generation、policyDev)、`sim/`(dream、replay)、`eval/`(runner、worker)。
-- `test/`:`unit-*.test.mjs`(47 檔)、`tools/`(玩具領域 `toy.mjs`、`toyArms.mjs`、`toyConfig.mjs`、子程序輔助件、`tmpdir.mjs`、`jsdocExamples.mjs`)、`fixtures/`(兩份舊版輸出快照)。
+- `test/`:`unit-*.test.mjs`(48 檔)、`tools/`(玩具領域 `toy.mjs`、`toyArms.mjs`、`toyConfig.mjs`、子程序輔助件、`tmpdir.mjs`、`jsdocExamples.mjs`)、`fixtures/`(兩份舊版輸出快照)。
 - `toolg/`:標準六支(`addVersion`、`modifyReadme`、`cleanFolder`、`gDocsExams`、`gDistRollup`、`genDocsDist`);`g.mjs`:離線範例(玩具領域跑 4 輪探索 + 狀態 + 做夢,不連網);`dist/`、`docs/` 為產製物(未追蹤)。
 - 編譯:`node toolg/gDistRollup.mjs` 產出 `dist/w-recursi.umd.js`(`runin: 'nodejs'`;external 為 node 內建七項 `fs path url crypto zlib child_process util`;`lodash-es/*` 單函數路徑打包進 dist);警告一條(umd 以 browser 環境編譯時提示 node 內建模組,皆已 external);dist 以 `require` 載入之鍵集合(84,含 `protocol`)與型別同 `src/WRecursi.mjs`,`protocol` 44 鍵同。
 - JSDoc:`src/` 匯出函數 110 個,說明、`@param`、`@returns`、`@example` 皆全;匯出常數 27/27;`@example` 110 則皆經 `unit-package` ⑤ 實跑核對。
@@ -26,6 +27,7 @@
 | 2026-11-07 | 打包清單(`npm pack --dry-run --json`) | 178 檔:根 11、`dist/` 2、`docs/` 62、`sgud/` 4、`src/` 32、`test/` 61(`test/tools/` 12);`CLAUDE*.md`、`tmp/`、`test/_tmp/`、`.npmignore` 皆 0 |
 | 2026-11-07 | 安裝後驗收(本地 tarball 裝入全新最小專案) | `typeof createRsi` = function、`CFG_KEYS` 含 `arms`;34 條深層路徑 32 條 `import` 成功、2 條(命令列與子程序入口)解析 + 實檔,`cli.mjs --help` 離開碼 0;兩入口 `withLock` 同一實例;`require('w-recursi')` 鍵集合與型別同聚合入口;包內 `g.mjs` 輸出與檔末相符;包內 `CLAUDE*.md` 為 0 |
 | 2026-11-07 | 建置與文件 | `gDistRollup` 無錯誤(警告一條,見上);`jsdoc -c .jsdoc` 無錯誤;`gDocsExams`、`genDocsDist` 可執行;dist 鍵集合與型別同聚合入口 |
+| 2026-11-10 | 起子行程隱藏視窗(使用端 Gitea #127)後全套(`npm test`,經測試鎖) | 272 通過／0 失敗(48 檔):原 268 + `unit-runnerSpawnHide` 4 案。新檔修前紅(4 案中 3 失敗:worker 選項 `windowsHide` 為 `[null,null]`、`src/` 1 處與 `test/` 16 處未設)、修後綠;`src/eval/runner.mjs` eslint 錯誤數 139 → 139(無新增)。Windows 視窗之實機觀察未做(負向對照會彈視窗,不在使用中之桌面做) |
 
 ## 功能現況(對應規則帳本)
 
@@ -42,6 +44,7 @@
 | 臂目錄(注入、選臂、限臂、組合、覆蓋、選單、CLI) | 落地 | REC-15;`unit-arms` |
 | 寫域守門、命令列統一解析器、鉤子失敗之結果形 | 落地 | REC-13、14;`unit-writeRoot`、`unit-cli`、`unit-cliArgsFile`、`unit-cliGiven`、`unit-hookResult` |
 | 公開面(兩入口、聚合入口、匯出快照)、發布面、依賴與按需引入、打包清單、JSDoc 覆蓋與範例實跑、去識別、深層路徑穩定 | 落地 | REC-16、18、19;`unit-protocol`、`unit-package` |
+| 起子行程一律 `windowsHide: true`(runner 之 worker 起程;`src/`、`test/`、`toolg/` 全站點盤點守門) | 落地 | REC-20;`unit-runnerSpawnHide` |
 
 ## 已知缺口與待辦
 

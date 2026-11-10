@@ -189,7 +189,7 @@ describe('unit-package', function() {
     describe('③ npm 打包清單', () => {
         it('npm pack --dry-run:含 sgud/ 四份索引與 test/tools/ 全部檔、聚合入口、README、LICENSE、package.json、toolg/;不含 CLAUDE*.md、tmp、test/_tmp、node_modules', () => {
             // 規則:npm 包＝git 版控內容(依 .gitignore);sgud/ 與 test/tools/ 隨包(下游之測試以「套件名/test/tools/…」取用),CLAUDE*.md 不入包
-            let raw = execSync('npm pack --dry-run --json --ignore-scripts', { cwd: ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], maxBuffer: 64 * 1024 * 1024, timeout: 120_000 })
+            let raw = execSync('npm pack --dry-run --json --ignore-scripts', { cwd: ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], maxBuffer: 64 * 1024 * 1024, timeout: 120_000, windowsHide: true })
             let parsed = JSON.parse(raw)
             let info = Array.isArray(parsed) ? parsed[0] : Object.values(parsed)[0]
             let packed = info.files.map((x) => x.path.replace(/\\/g, '/'))
@@ -220,7 +220,7 @@ describe('unit-package', function() {
             // 工作目錄 ./_test_recursi 落在 cwd;cwd 須在套件內(預設策略 v0.mjs 以套件名匯入 lodash-es,須能向上解析 node_modules)
             let tmp = makeTmp('package-g')
             try {
-                let out = execFileSync(process.execPath, [path.join(ROOT, 'g.mjs')], { cwd: tmp.dir, encoding: 'utf8', timeout: 120_000 })
+                let out = execFileSync(process.execPath, [path.join(ROOT, 'g.mjs')], { cwd: tmp.dir, encoding: 'utf8', timeout: 120_000, windowsHide: true })
                 assert.deepStrictEqual(out.replace(/\r\n/g, '\n').trimEnd().split('\n'), want)
                 assert.strictEqual(fs.existsSync(path.join(tmp.dir, '_test_recursi')), false, '範例結束須清掉工作目錄')
             }

@@ -6,7 +6,7 @@ import { acquireSlots, tryAcquireSlots, releaseSlots, slotsInUse, pidAlive, maxO
 import { makeTmp, FD_TEST, FD_PACK } from './tools/tmpdir.mjs'
 
 
-let run = (args) => new Promise((resolve) => { let p = spawn(process.execPath, args, { stdio: ['ignore', 'pipe', 'pipe'] }); let out = '', err = ''; p.stdout.on('data', (d) => { out += d }); p.stderr.on('data', (d) => { err += d }); p.on('exit', (code) => resolve({ code, out, err })) })
+let run = (args) => new Promise((resolve) => { let p = spawn(process.execPath, args, { stdio: ['ignore', 'pipe', 'pipe'], windowsHide: true }); let out = '', err = ''; p.stdout.on('data', (d) => { out += d }); p.stderr.on('data', (d) => { err += d }); p.on('exit', (code) => resolve({ code, out, err })) })
 
 describe('core/slots:全域 worker 槽位(跨 session 計數信號量)', function () {
     let t

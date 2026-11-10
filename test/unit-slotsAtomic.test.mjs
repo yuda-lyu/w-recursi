@@ -17,7 +17,7 @@ import { makeTmp, FD_TEST, FD_PACK } from './tools/tmpdir.mjs'
 //  SA06 輔助夾之殘留:名內 pid 已死者於 reclaimDeadSlots / 取槽時刪(不依時間);存活者之輔助夾不論多舊皆不動;不計入占用與上限;slotAuxOf 列之
 //  SA07 rename 之暫時失敗(Windows 之 EPERM:暫存內之檔被他程序短暫開啟)而目標不存在 ⇒ 重試後取得;持續失敗 ⇒ 本輪不取(不拋錯)、不留暫存
 //  SA08 釋放:先移走再刪 ⇒ 無 s{i} 與輔助夾殘留;CLI --status 另印輔助夾一行
-let run = (args, env = {}) => new Promise((resolve) => { let p = spawn(process.execPath, args, { stdio: ['ignore', 'pipe', 'pipe'], env: { ...process.env, ...env } }); let out = '', err = ''; p.stdout.on('data', (d) => { out += d }); p.stderr.on('data', (d) => { err += d }); p.on('exit', (code) => resolve({ code, out, err })) })
+let run = (args, env = {}) => new Promise((resolve) => { let p = spawn(process.execPath, args, { stdio: ['ignore', 'pipe', 'pipe'], env: { ...process.env, ...env }, windowsHide: true }); let out = '', err = ''; p.stdout.on('data', (d) => { out += d }); p.stderr.on('data', (d) => { err += d }); p.on('exit', (code) => resolve({ code, out, err })) })
 let sleep = (ms) => new Promise((r) => setTimeout(r, ms))
 let waitFor = async (pred, ms) => { let t0 = Date.now(); while (!pred()) { if (Date.now() - t0 > ms) { throw new Error('等待逾時') } await sleep(20) } }
 let readLog = (fp) => fs.readFileSync(fp, 'utf8').trim().split('\n').filter(Boolean).map((l) => { let [pid, t0, t1, n] = l.split(' ').map(Number); return { pid, t0, t1, n } })
@@ -180,7 +180,7 @@ describe('core/slots:原子建槽', function () {
         assert.match(r.out, /占用 0 \/ 4/)
         assert.match(r.out, /輔助夾 1/, r.out)
         fs.rmSync(aux, { recursive: true, force: true })
-        let r2 = spawnSync(process.execPath, [path.join(FD_PACK, 'src', 'core', 'slots.mjs'), '--status', dir], { encoding: 'utf8' })
+        let r2 = spawnSync(process.execPath, [path.join(FD_PACK, 'src', 'core', 'slots.mjs'), '--status', dir], { encoding: 'utf8', windowsHide: true })
         assert(!/輔助夾/.test(r2.stdout), '無輔助夾 ⇒ 不印')
     })
 })

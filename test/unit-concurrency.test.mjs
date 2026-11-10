@@ -9,7 +9,7 @@ import { makeDomain } from './tools/toy.mjs'
 import { makeTmp, FD_TEST } from './tools/tmpdir.mjs'
 
 
-let run = (args) => new Promise((resolve) => { let p = spawn(process.execPath, args, { stdio: ['ignore', 'pipe', 'pipe'] }); let out = '', err = ''; p.stdout.on('data', (d) => { out += d }); p.stderr.on('data', (d) => { err += d }); p.on('exit', (code) => resolve({ code, out, err })) })
+let run = (args) => new Promise((resolve) => { let p = spawn(process.execPath, args, { stdio: ['ignore', 'pipe', 'pipe'], windowsHide: true }); let out = '', err = ''; p.stdout.on('data', (d) => { out += d }); p.stderr.on('data', (d) => { err += d }); p.on('exit', (code) => resolve({ code, out, err })) })
 let CHILD = path.join(FD_TEST, 'tools', 'exploreChild.mjs')
 let parse = (out) => out.trim().split('\n').filter((l) => l.startsWith('{')).map((l) => JSON.parse(l))
 
