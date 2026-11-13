@@ -18,6 +18,7 @@ import { specHash, nodeIdOf, nowIso } from '../core/canonical.mjs'
 import { readJson, writeJson } from '../core/jsonl.mjs'
 import { listRoundDirs, roundNumOf, roundNameOf } from '../core/paths.mjs'
 import { assertWriteRoot } from '../core/writeRoot.mjs'
+import { withLock } from '../core/lock.mjs'
 import { makeNode } from '../tree/node.mjs'
 import { OCCUPIED, STATUS } from '../tree/store.mjs'
 import { runJobs } from '../eval/runner.mjs'
@@ -225,10 +226,10 @@ export let replanFillOf = (fresh, target, got) => {
 //  新區域欠額之計數時點(2026-10-02):預設於第一次計畫之後(舊行為);cfg.generation.debtAfterClaims === true ⇒ 於認領 / 重計畫之後以實得(mine)計,
 //    生成判定(寫請求 / streak)隨之移至認領之後;summary.noveltyDebtPlan 另記第一次計畫之值(僅 opt 開時有此欄);乾跑無認領 ⇒ 恆為計畫值
 /**
- * 一輪探索工廠(createRsi 以之組 rsi.explore):回收遺留認領 → 轉折點提取 → 策略出計畫 → 驗證 / 閘門 → 認領(鎖內,他 session 已領者跳過並重計畫)→ 平行評估 → 入樹 → 前緣結案 → 報告。選臂(opt.useArms 或 cfg.arms.use)被拒 ⇒ 於取輪號前拋 RSI_ARMS_REJECTED,不開輪
+ * 一輪探索工廠(createRsi 以之組 rsi.explore):回收遺留認領 → 轉折點提取 → 策略出計畫 → 驗證 / 閘門 → 認領(鎖內,他 session 已領者跳過並重計畫)→ 平行評估 → 入樹 → 前緣結案 → 報告。選臂(opt.useArms 或 cfg.arms.use)被拒 ⇒ 於取輪號前拋 RSI_ARMS_REJECTED,不開輪;cfg.governance.requireReview 為真而有逾期待審之提案 ⇒ 於取輪號前拋 RSI_GOVERNANCE_PENDING(乾跑與 opt.ackPending 不擋)
  *
  * @param {Object} rsi 輸入 createRsi 組出之實例
- * @returns {Function} 回傳 async (opt) => 結果;opt: { arms, novelty, workers, dry, by, protocol, useArms, reopen, global }
+ * @returns {Function} 回傳 async (opt) => 結果;opt: { arms, novelty, workers, dry, by, protocol, useArms, reopen, global, ackPending }
  * @example
  * import fs from 'fs'
  * import os from 'os'
@@ -262,26 +263,57 @@ export let makeExplore = (rsi) => async (opt = {}) => {
 let exploreOnce = async (rsi, opt, hbBox) => {
     let { paths, store, view, domain, budget } = rsi
     let O = { ...budget, dry: false, by: `pid${process.pid}`, ...opt }
+    //治理(2026-11-14):他實例之審定已改擴充檔 ⇒ 先重載本實例之目錄(不以過期之目錄選臂 / 開輪;擴充檔損壞 ⇒ 於此拋, 不開輪);未用治理 ⇒ 只查無檔
+    if (isFunction(rsi.syncArms)) { rsi.syncArms() }
     //臂限制(2026-11-07;search/arms.mjs):opt.useArms(陣列)或 cfg.arms.use ⇒ 本輪只用所選臂之算子(展開與對照)與載體(新區域);全域取樣臂與他臂之前緣 / 載體一律略過(記計畫備註)
     //  選臂被拒(封鎖 / 不可選 / done 未附 reopen / 衝突 / 依賴缺)⇒ 拋錯(code RSI_ARMS_REJECTED), 於取輪號之前 ⇒ 不開輪、不寫任何檔;未給 ⇒ 逐字不變
     let useArms = isArray(O.useArms) && O.useArms.length ? O.useArms : (size(get(rsi.cfg, 'arms.use')) ? rsi.cfg.arms.use : null)
     let armsReopen = O.reopen || get(rsi.cfg, 'arms.defaults.reopen', null) || null
     let R = null
-    if (useArms) {
+    let pickArms = () => {
+        if (!useArms) { return }
         let pk = rsi.arms.pick(useArms, { reopen: armsReopen })
         if (pk.rejected.length) { throw Object.assign(new Error(`explore: 選臂(useArms)被拒:${pk.rejected.map((r) => `${r.id}(${r.why})`).join('、')}`), { code: 'RSI_ARMS_REJECTED', rejected: pk.rejected }) }
         useArms = pk.ok.map((a) => a.id)
         R = rsi.arms.restrict(useArms)
     }
+    pickArms()
+    //取輪號之前再比對一次擴充檔(起跑後、取號前完成之審定 ⇒ 重載並重驗選臂;被拒 ⇒ 不開輪)
+    let resyncArms = () => { if (isFunction(rsi.syncArms) && rsi.syncArms()) { pickArms() } }
     //計畫項 ⇒ 所屬之臂 id(有目錄時才記;無目錄 ⇒ [] 不寫 ⇒ plan.json 與節點之 origin 與改前逐字同)
     let armsOfItem = (it) => (!rsi.arms.size ? [] : R ? R.armsOfItem(it) : (it.op ? rsi.arms.armsOfOp(it.op) : []))
+    //治理之把關(2026-11-14;search/governance.mjs;cfg.governance.requireReview, 預設 false ⇒ 不進入此段, 逐字不變):逾期未審之提案 ⇒ 拋錯(code RSI_GOVERNANCE_PENDING),
+    //  於取輪號之前 ⇒ 不開輪、不寫任何檔;乾跑不經此;呼叫端明示 opt.ackPending = true 可越過(主控已知悉而決定先跑)
+    //  此為早檢(不寫檔即擋);取輪號時另於 governance 鎖內以實得之輪號再判一次(與 propose 同鎖 ⇒ 提案與開輪有先後, 早檢後才提交之提案不會漏擋)
+    let gateOn = !O.dry && O.ackPending !== true && rsi.governance && rsi.governance.opt.requireReview === true
+    let gateErr = (g) => Object.assign(new Error(`explore: 治理待審:${g.why}`), { code: 'RSI_GOVERNANCE_PENDING', pending: g.pending.map((p) => p.id) })
+    if (gateOn) {
+        let g = rsi.governance.gate({ round: peekRound(paths) })
+        if (g) { throw gateErr(g) }
+    }
     paths.ensure()
     let reclaimed = O.dry ? [] : store.reclaimStale()
     let pol = await rsi.loadPolicy()
     let nodesAll = view.policyView()
     let nodesView = nodesAll.filter((n) => !n.aliasOf)
     let executed = new Set(nodesAll.filter((n) => OCCUPIED.has(n.status)).map((n) => specHash(n.spec)))
-    let alloc = O.dry ? { round: peekRound(paths), fd: null } : allocateRound(paths)
+    //把關開啟時:擴充檔之再比對、終檢與取號於同一 governance 鎖內(與 propose / decide 線性化:取號前已提交之提案與審定必納入)
+    //  終檢先於建輪夾(以鎖內之 peekRound;把關開啟之他實例亦經此鎖取號);實得之輪號與終檢時不同(未經此鎖之他實例搶號)⇒ 以實得者再判, 被擋則刪剛建之空輪夾
+    let allocGated = () => withLock(() => {
+        resyncArms()
+        let g = rsi.governance.gate({ round: peekRound(paths) })
+        if (g) { throw gateErr(g) }
+        let a = allocateRound(paths)
+        let g2 = rsi.governance.gate({ round: a.round })
+        if (g2) {
+            let left = null
+            try { fs.rmSync(a.fd, { recursive: true, force: true }) } catch (e) { left = a.fd }
+            throw Object.assign(gateErr(g2), left ? { roundDirLeft: left } : {})
+        }
+        return a
+    }, { dir: paths.governance, name: 'governance' })
+    let allocPlain = () => { resyncArms(); return allocateRound(paths) }
+    let alloc = O.dry ? { round: peekRound(paths), fd: null } : (gateOn ? allocGated() : allocPlain())
     let { round, fd } = alloc
     if (!O.dry) { hbBox.hb = startHeartbeat(fd, { ms: get(rsi.cfg, 'generation.heartbeatMs', HEARTBEAT_MS) }) }
     //轉折點提取:由樹推導新臂(搬移 / 外推 / 交叉)→ 前緣 arm(策略之新區域額度取用);乾跑只併入本次視圖不寫前緣

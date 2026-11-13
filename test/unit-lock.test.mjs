@@ -36,6 +36,25 @@ describe('core/lock:跨程序寫入鎖', function () {
         assert.equal(withLock(() => 42, { dir: t.dir, name: 'y', timeoutMs: 2000, staleMs: 1000 }), 42)
         assert(!fs.existsSync(fd))
     })
+    it('建鎖夾回 EPERM / EACCES / EBUSY(Windows:同名夾刪除待決)⇒ 視同被占用而等候重試;持續則逾時拋錯並附錯誤碼;非暫時性錯誤即時拋出(2026-11-14;第 429 項同族)', () => {
+        //注入:攔截 fs.mkdirSync 對指定鎖夾之呼叫(真實之刪除待決無法決定性重現;次數由注入決定, 不依時間)
+        let orig = fs.mkdirSync
+        let inject = (name, plan) => { let n = 0; fs.mkdirSync = function (p, ...rest) { if (String(p).endsWith(`.lock_${name}`) && n < plan.length) { let code = plan[n++]; throw Object.assign(new Error(`${code}: injected, mkdir`), { code }) } return orig.call(this, p, ...rest) }; return () => n }
+        try {
+            let nOf = inject('busy', ['EPERM', 'EACCES', 'EBUSY'])
+            assert.equal(withLock(() => 7, { dir: t.dir, name: 'busy' }), 7, '暫時性失敗後取得鎖並執行臨界區')
+            assert.equal(nOf(), 3)
+            assert(!fs.existsSync(path.join(t.dir, '.lock_busy')), '鎖應已釋放')
+            let ran = false
+            inject('busy2', Array(100000).fill('EPERM'))
+            assert.throws(() => withLock(() => { ran = true }, { dir: t.dir, name: 'busy2', timeoutMs: 200 }), (e) => /逾時/.test(e.message) && /EPERM/.test(e.message))
+            assert.equal(ran, false, '未取得鎖 ⇒ 臨界區未執行')
+            inject('busy3', ['ENOTDIR'])
+            assert.throws(() => withLock(() => { ran = true }, { dir: t.dir, name: 'busy3' }), (e) => e.code === 'ENOTDIR')
+            assert.equal(ran, false)
+        }
+        finally { fs.mkdirSync = orig }
+    })
     it('臨界區拋錯仍釋放鎖', () => {
         assert.throws(() => withLock(() => { throw new Error('boom') }, { dir: t.dir, name: 'z' }), /boom/)
         assert(!fs.existsSync(path.join(t.dir, '.lock_z')))
@@ -49,6 +68,16 @@ describe('core/lock:跨程序寫入鎖', function () {
         assert(Date.now() - t0 < 2000, '死持有者立即回收')
         fs.mkdirSync(fd); fs.writeFileSync(path.join(fd, 'owner'), `${process.pid} ${new Date().toISOString()} tokY`)
         assert.throws(() => withLock(() => 1, { dir: t.dir, name: 'd', timeoutMs: 300, staleMs: 1e9 }), /逾時.*存活/)
+        fs.rmSync(fd, { recursive: true, force: true })
+    })
+    it('死鎖回收時刪不掉鎖夾(持續 EPERM)⇒ 仍依 timeoutMs 逾時拋錯、臨界區未執行(2026-11-14;外審 terra #13:原無視逾時而持續重試)', () => {
+        let fd = path.join(t.dir, '.lock_s2')
+        fs.mkdirSync(fd); fs.writeFileSync(path.join(fd, 'owner'), `999999 ${new Date().toISOString()} tokS`)
+        let orig = fs.rmSync, n = 0, ran = false
+        fs.rmSync = function (p, ...rest) { if (String(p) === fd) { n++; throw Object.assign(new Error('EPERM: injected, rmdir'), { code: 'EPERM' }) } return orig.call(this, p, ...rest) }
+        try { assert.throws(() => withLock(() => { ran = true }, { dir: t.dir, name: 's2', timeoutMs: 300, staleMs: 1e9 }), /逾時/) }
+        finally { fs.rmSync = orig }
+        assert.ok(n >= 5 && ran === false, `刪除嘗試 ${n} 次`)
         fs.rmSync(fd, { recursive: true, force: true })
     })
     it('釋放只刪自己的鎖:臨界區內鎖被他方回收並取得 ⇒ 本方結束時不刪其鎖(2026-09-26)', () => {

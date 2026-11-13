@@ -57,10 +57,16 @@ export let makeStatus = (rsi) => async (opt = {}) => {
         let top8 = orderBy(toPairs(cov.byArm).filter(([, c]) => c.n > 0), [([, c]) => c.n, ([id]) => id], ['desc', 'asc']).slice(0, 8)
         out.arms = { n: rsi.arms.size, selectable: rsi.arms.list({ selectable: true }).length, top: top8.map(([id, c]) => ({ id, ...pick(c, ['n', 'ge1', 'ge4', 'feature']) })) }
     }
+    //治理之收件匣(2026-11-14;search/governance.mjs;提案帳或擴充檔存在才列 ⇒ 未用治理者輸出與改前相同):待審之提案數與類別、擴充之筆數;檔損壞 ⇒ error 欄(不中斷 status)
+    if (rsi.governance && rsi.governance.exists()) {
+        try { let ib = rsi.governance.inbox(), ext = rsi.governance.extensions(); out.governance = { pending: ib.proposals.length, byKind: ib.byKind, extensions: ext.layers.length + ext.arms.length } }
+        catch (e) { out.governance = { error: String((e && e.message) || e).slice(0, 300) } }
+    }
     if (opt.print !== false) {
         console.log(`樹:${idx.length} 節點 ${JSON.stringify(byStatus)};階梯 ${JSON.stringify(ladders)};載體 ${JSON.stringify(carriers)};前緣 proposed ${fr.length}(${JSON.stringify(out.frontier.kinds)});認領中 ${claims.length};全域槽位使用 ${out.slotsInUse}/${rsi.budget.maxGlobalWorkers}`)
         console.log(`評估器 ${rsi.domain.evaluatorVersion ?? '-'};策略 ${pol.meta.name} ${pol.meta.version || ''};已完成輪次 ${sums.length};lore ${out.lore} 列`)
         if (out.arms) { console.log(`臂目錄 ${out.arms.n} 臂(可選 ${out.arms.selectable});覆蓋(節點 / 階 ≥ 1 / 階 ≥ 4)前 ${out.arms.top.length}:${out.arms.top.map((a) => `${a.id} ${a.n}/${a.ge1}/${a.ge4}`).join('、')}(選單:--mode arms)`) }
+        if (out.governance) { console.log(out.governance.error ? `治理:提案帳或擴充檔無法讀取(${out.governance.error})` : `治理:待審之提案 ${out.governance.pending} 筆${out.governance.pending ? `(${JSON.stringify(out.governance.byKind)})` : ''};臂目錄之擴充 ${out.governance.extensions} 筆(提案帳:--mode proposals;審定:--mode decide)`) }
         for (let s of sums.slice(-5)) { console.log(`  r${String(s.round).padStart(3, '0')} ${String(s.at).slice(0, 16)} ${s.by || ''} 計畫 ${s.nPlanned} 跳過 ${s.nSkipped ?? 0} 執行 ${s.nExecuted} 錯 ${s.nError} 拒 ${s.nRejected} 階梯≥1 ${s.ladderGe1} 最佳 S ${fmt(s.bestS && s.bestS.S)} 回放 ${s.replays} 牆鐘 ${fmt(s.wallSec / 60, 1)} 分`) }
         console.log('最佳節點:')
         for (let r of top) { console.log(`  ${r.id} L${r.ladder} S ${fmt(r.S)} veto ${r.vetoed}  ${r.summary}`) }

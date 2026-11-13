@@ -156,11 +156,31 @@ await test()
 - **載體自動登錄**:`domain.carriers` 可為函式(每次出計畫時求值),領域可自既有工件推導新區域之根候選,不靠人手登(如自既有工件推導);策略之新區域額度自此取用(`unit-explore` 有案).**推導出的等價宣稱須經驗證**:領域宜把推導出之載體回放與既有節點逐位比對,ok 者才取得等價身分(某次實測 41 個中 39 個逐位相同,2 個因設定解析遺失一欄而不同 ⇒ 驗證即為擋此類事而設;修解析後 43 / 43 逐位相同;驗證後才准用於後續之排除 / 清單同步).
 - **做夢飽和判定**(`sim/dream.mjs`):全部策略於全部時間切分皆提不出樹外之臂(unknown = 0),或全部候選之留出分數與當前相差 < 1% ⇒ `saturated`;`--accept` 時拒絕升版(理由「飽和 ⇒ 不升版,轉生成」),由欠額觸發生成承接,不以人工升版補(`unit-auto` 有案).
 
+## 2c. 治理:代理之三層與臂目錄之演進(2026-11-14;使用端 Gitea #138)
+
+§1 之三層(資料 / 搜尋 / 評估)是引擎之構造;**代理之分工是另一個軸,也分三層**:
+
+| 代理層 | 做什麼 | 於引擎之落點 |
+|---|---|---|
+| 節點層 | 依所選臂產出規格並評估 | 評估器(`domain.evaluator`;可為代理) |
+| 做夢層 | 審計本輪、彙整、給下一輪之方向 | `hooks.afterRound`(領域注入;可為代理) |
+| **主控層** | 審定搜尋詞彙之變更、處置下層上呈之事項、啟動下一輪 | `rsi.governance`(`search/governance.mjs`) |
+
+再廣之臂目錄也是限制;迴圈須能自己調整它,而調整須經審定.原引擎只有兩種「下層 → 外部代理」之單向請求(欠額觸發生成、策略開發;§2b、§2 第 8 點),臂目錄則為組裝期注入之靜態資料.治理補上其餘:
+
+- **提案**(任一層皆可):`rsi.governance.propose({ round, from, items })`.類別 `PROPOSAL_KINDS`:`new`(新臂)、`layer`(新的一層,即新的臂之種類)、`revise`(修訂既有臂)、`retire`(停用既有臂)、`note`(詞彙以外之上呈事項;只記錄與審定,引擎不代為施行).每筆 `{ kind, arm?, layer?, title?, mechanism, boundary?, evidence?, sources? }`(`mechanism` = 機制之中性描述;`checkProposals` 檢形,不合者列於回傳之 `invalid`、不入帳).與帳上待審者同鍵(類別 + 臂 + 層 + 名稱,空白與大小寫不計;`revise` 另含修訂內容)者不另立,只在原列補記「再提」;`items` 給了而非陣列 ⇒ 拋錯.提案帳 `governance/proposals.json`,渲染 `governance/PROPOSALS.md`(每次寫入重產;重產失敗不使呼叫失敗,回 `renderError`);提案帳存在而損壞(非 JSON,或逐列之 `seq` / `id` / `kind` / `status` / `decision`〔已審定須有 `at` / `by` / `why`,待審須無〕不合)⇒ 拋錯(不當成空帳而覆寫);編號達安全整數上限 ⇒ 入帳前拒.
+- **審定**(主控):`rsi.governance.decide(id, { accept, why, by?, arm?, layer? })`,通過或不採皆須附理由;已審定者不得再審.通過之 `new` 須給目錄條目 `arm`(至少 `realize`;`id` 未給時以選項 `name` 由引擎於鎖內依最新目錄配號 = `nextArmId`),`layer` 可給 `{ id, title }`(未給 ⇒ 下一個未用之字母與提案之名),`revise` 以 `arm` 給要改之欄(`id` / `n` / `origin` 與未知欄 ⇒ 拒),`retire` 與 `note` 不必另給.寫入前先以「基底 + 新擴充」試建目錄(結構檢查,並核對 `cfg.arms.use`:預設選臂被停用或變不可選 ⇒ 拒,免下一次組裝即拋),不合 ⇒ 拋錯且提案帳、擴充檔皆不變.**提交點 = 擴充檔之原子寫**;其後寫提案帳(失敗 ⇒ 拋 `RSI_GOVERNANCE_PARTIAL`:已生效,重跑同一審定即補記)、重載本程序之目錄(失敗 ⇒ 回 `reloadError`)、重產 `PROPOSALS.md`(失敗 ⇒ 回 `renderError`).擴充項之 `origin` 記完整之審定(提案、輪、提出者、審定者、時間、理由).前次審定中斷而擴充檔已有本提案之項者,重審之通過只補記提案帳(`recovered`;擴充檔不重寫、不搬動,其後依賴之審定不受影響;`decision` 取 `origin` 所記之原決定,本次呼叫記於 `decision.recovered`),改判不採、或另給與已生效內容不同之 `arm` / `layer` / `name` ⇒ 拋 `RSI_GOVERNANCE_COMMITTED`(已生效者以另提 `retire` / `revise` 撤回).
+- **生效之目錄 = 基底 + 擴充**:通過之變更寫入 `governance/extensions.json`;`createRsi` 組裝時把它套在注入之 `cfg.arms.catalog` 上(`applyArmExtensions`,純函式),`rsi.reloadArms()` 於同一程序內重載(`decide` 通過後自動呼叫).基底是使用端給的起點,擴充是這個狀態根自己長出來的;臂之 `origin` 欄記出處(哪筆提案、哪一輪、誰提、誰審;修訂記於 `origin.revised`、停用記於 `origin.retired`).停用之臂留在目錄(改為 `blocked`、不可選),樹上之節點仍引用得到.擴充檔損壞(非 JSON、結構不合、指向不存在之臂)⇒ 組裝拋錯(不靜默當成無擴充).**擴充所加之臂、或修訂了 `realize` 之臂,其落成名(算子、片段、生成模組、載體)尚未登錄 ⇒ 組裝不拋錯,該臂不可選**(`rsi.arms.warnings` 列之;`pick` 拒並說明)——由目錄推導算子之領域於下一次組裝即登錄,而擴充之資料不會使迴圈無法啟動;基底之臂(含只改其他欄之修訂)仍嚴格(與改前同).**同一狀態根之他實例**(組裝較早)於 `explore` 起跑時與取輪號前各比對擴充檔一次,有變即重載並重驗選臂(`rsi.syncArms()`;擴充檔損壞 ⇒ 拋、不開輪),不以過期之目錄選臂.擴充檔為合法 JSON 而套用後之目錄結構不合者,`governance.extensions()` / `effectiveCatalog()` / `status` / 輪報告一致視為損壞.由目錄推導算子與載體之領域,以 `effectiveCatalogOf(paths, 基底)`(套用後另做結構檢查,不合即拋)於組裝領域之前取得同一份生效之目錄.
+- **起跑之把關**:`cfg.governance.requireReview = true` 時,待審之提案(類別 ∈ `gateKinds`,預設為四種詞彙類)逾 `maxPendingRounds`(預設 0)輪未審 ⇒ `explore` 於取輪號前拋 `RSI_GOVERNANCE_PENDING`(不開輪、不寫任何檔;輪號不明之提案一律視為逾期);取輪號時另於 `governance` 鎖內(與 `propose` / `decide` 同鎖)再比對擴充檔並終檢,終檢先於建輪夾——早檢之後才提交之提案或審定亦納入;此情形下被擋者不建輪夾,但起跑時之遺留認領回收(維運寫入)可能已做;乾跑不經此,呼叫端明示 `opt.ackPending`(CLI `--ack-pending`)可越過.「下層提、主控審、審過才續跑」由引擎守,不靠呼叫端記得.預設 `false` ⇒ 行為逐字同改前.
+- **收件匣**:`rsi.governance.inbox()` = 待審之提案 + 生成請求與策略開發請求之標記(主控之單一入口);`status` 於提案帳或擴充檔存在時多一列,輪報告於有待審時多一行(檔損壞 ⇒ 各列一行說明,不中斷).CLI:`--mode proposals`(唯讀,不初始化狀態根;`--out` 不得指向 `governance` 夾——字面路徑與經 junction / 符號連結解析之實際路徑皆比對,給了即經 `beforeWrite`)、`--mode decide --id <提案> --accept | --reject --why <理由> […]`(不初始化狀態根;修訂只改明給之欄,一欄皆未給 ⇒ `desc` 取提案之機制描述;`--name` 由引擎於鎖內配號).
+
+未用治理(無提案帳、無擴充檔、`requireReview` 未設)者,目錄(即基底之同一物件)、計畫、報告、`status` 與狀態根佈局皆與改前相同(`unit-governance` GV09).
+
 ## 3. 多 agent 併行之保證(皆有測試)
 
 | 風險 | 機制 | 測試 |
 |---|---|---|
-| 共用檔互相蓋掉 | 所有「讀 → 改 → 整檔重寫」在跨程序鎖(mkdir 原子;逾時拋錯;死鎖自動清) | `unit-lock`(5 程序 × 40 次 = 200 無遺失)、`unit-store`(6 程序併行 putNode) |
+| 共用檔互相蓋掉 | 所有「讀 → 改 → 整檔重寫」在跨程序鎖(mkdir 原子;逾時拋錯;死鎖自動清;建鎖夾回 EPERM / EACCES / EBUSY ⇒ 視同被占用而等候,死鎖夾刪不掉時亦依逾時拋錯,2026-11-14) | `unit-lock`(5 程序 × 40 次 = 200 無遺失)、`unit-store`(6 程序併行 putNode) |
 | 兩 session 出同一份計畫、重複評估 | 認領(鎖內原子)+ 認領衝突後重新出計畫 | `unit-explore`(真競態注入)、`unit-concurrency`(3 程序 × 2 波:規格不重複評估、各 session 執行節點互斥) |
 | 輪號重複、報告互蓋;r1000 起字典序取錯末輪 / 摘要序亂 | `allocateRound` 以 mkdir 非遞迴搶號;輪夾之名與數值序之單一來源 `core/paths.mjs`(`isRoundDir` / `roundNumOf` / `listRoundDirs`;2026-10-09) | `unit-concurrency`(輪號 r003 ~ r008 唯一接續)、`unit-roundId`(r998 ~ r1001 之序、peekRound、取號、摘要序與連續欠額) |
 | 子程序總數超過機器上限;建槽者寫 owner 被延遲 > 2 秒 ⇒ 他方判死重取而同持一槽(已觀察某次驗收 peak 5 > 4) | 全域槽位(持有者存活即不回收);**原子建槽**(暫存夾內寫 owner 後 rename 為 `s{i}` ⇒ 槽出現即帶 owner)、釋放 / 回收先移走再刪、回收核對 owner 未變(不同則移回)、輔助夾之殘留依名內 pid 掃除(2026-10-09) | `unit-slots`(跨程序峰值 ≤ max)、`unit-slotsAtomic`(延遲寫 owner 之決定性重現、多程序併搶、回收之核對、殘留)、`unit-concurrency`(spawn 模式三 session 峰值 ≤ 3) |
@@ -172,7 +192,7 @@ await test()
 | 只經前緣進入之臂評估錯誤後永不重試 | `resolveFrontier`:錯誤維持 proposed 並記 retries,達上限 status blocked(2026-09-29) | `unit-frontierOutcome` |
 | 同 tag 重複呼叫 `runJobs`,worker 追加寫出之舊列蓋掉新結果(同 id 換桶 / 換協定) | job 鍵 = id + 規格 + 有效協定:worker 續跑與 runner 讀回皆以鍵比對(2026-09-23 實際踩到) | `unit-worker`(同 tag 兩次呼叫,舊列不污染、不在本次之 id 不出現) |
 | runner 工作夾永不清(某領域累積 369 夾 193 MB);讀回結果後、持久化前被殺即無可續 | `keepDir: false` 時由呼叫端於持久化後 `commit()` 才刪(全部 ok ∧ 無他方同 tag 進行中;刪前日誌歸檔);未提交者保留, 逾 `reclaimDays` 日回收(2026-09-29) | `unit-runnerCleanup` |
-| 整檔重寫中途被鎖外讀者讀到截斷 / 空檔(index / 節點檔) | `writeFileAtomic`(同目錄暫存檔 + rename;Windows 之 EPERM / EACCES / EBUSY 重試,重試用盡才直寫)(2026-09-24 實測:舊寫法讀者 671 / 5018 次解析錯) | `unit-atomic`(他程序反覆改寫時讀者 0 解析錯、列數恆完整) |
+| 整檔重寫中途被鎖外讀者讀到截斷 / 空檔(index / 節點檔) | `writeFileAtomic`(同目錄暫存檔 + rename;Windows 之 EPERM / EACCES / EBUSY 以有界重試等候(`opt.retryMs`,預設 15 秒),**用盡即拋 `ERSI_ATOMIC_RENAME`、目標檔不變,不退回直接覆寫**——2026-11-14 改:原於約 2 秒後退回直寫 = 截斷再寫,高負載下讀者讀到截斷檔;時限以單調時鐘計;拋錯前盡力刪暫存檔,刪不掉者錯誤之 `tmpLeft` 列其路徑;觀察回調 `opt.onTrace`)(2026-09-24 實測:舊寫法讀者 671 / 5018 次解析錯) | `unit-atomic`(他程序反覆改寫時讀者 0 解析錯、列數恆完整;目標被持有時不直寫、拋錯而目標不變) |
 | 只追加之紀錄檔中間一列損壞 ⇒ 全部讀者失敗(單點故障) | `readJsonl(fp, { skipBad: true })`:中間壞列略過並 stderr 一行警示(預設仍拋錯;只給唯讀之消費端)(2026-09-29) | `unit-atomic` |
 | 重 job 落同一 worker、他 worker 做完即閒置;爭用時晚到者只拿到少數槽位整批序列跑 | 2026-09-25 起 runner 為**動態佇列**:待辦 job 依 `costOf` 由大到小寫成單一佇列,worker 以 `mkdir(claims/<序>)` 原子認領下一個;**運行中補槽**:每 `expandMs`(5 秒)試取空槽加開 worker(總數 ≤ 所求;全部 worker 已結束即停,壞評估器不無限重開)(原:起跑時靜態輪流分桶且不擴增;某次實例閒置 18 分、另一實例 8 臂單 worker 84 分) | `unit-runnerQueue`(慢 1 快 5 × 2 worker ⇒ 1 / 5,靜態分桶為 3 / 3;3 槽剩 1 ⇒ 釋放後加開至 3) |
 | worker 中途崩潰 | 動態佇列下只失去進行中之那個 job(記「worker 無結果」),其餘由他 worker 認領完成(原:同桶之後續 job 全失) | `unit-runnerQueue` |
@@ -186,6 +206,8 @@ await test()
 ## 4. 依賴注入契約(`createRsi({ root, domain, budget, claims, dream, policyDev, generation, frontier, turning, slots, runner, maintenance, tmpDir, arms })`)
 
 **臂目錄**(`arms`;2026-11-07 使用端需求:套件須能由外部注入指定多臂, 讓節點 agent 於探索 / 測試 / 計算時自選單臂或多臂去寫程式;`src/search/arms.mjs`):臂 = 探索之「可選方向」之一級概念(原只有 operators / carriers / frontier arm, 臂種與狀態散在 lore / 前緣 / 策略碼 / 派工說明). `cfg.arms = { catalog, defaults?, use?, known? }`(已知鍵 `ARMS_CFG_KEYS`;未知鍵 / 形不合 / 目錄不合 / `use` 被拒 ⇒ **組裝期拋錯**;無目錄 ⇒ `rsi.arms` 為空目錄, 行為與無此功能前逐字同). 目錄為**資料**(JSON 可;他專案換一份即用):`{ layers?: { 代號: 名 }, arms: [{ id, layer, title, desc?, status: done|partial|sparse|proposed|blocked, selectable?(預設非 blocked 即可選), realize: [{ kind: operator|fragment|spec|carrier|generative|manual|origin, op|mech|path|name|module|how|op }](`origin` 只供覆蓋對應:節點 `origin.operator` 為此值者計入, 如全域取樣 / 轉折 / 生成之來源名, 不可限臂), grid?, used?, verdict?, reopen?, blockedBy?(blocked 必填), requires?, conflicts?, n?, refs? }] }`(條目鍵 `ARM_KEYS`, 未知鍵拋錯;`realize` 之算子須在登錄表, 片段 / 生成模組 / 載體之名給了 `known` 才核對). 實例 `rsi.arms`:`validate / get / list / pick(ids, { reopen })`(封鎖、不可選、`defaults.requireReopenFor`(預設 `['done']`)之狀態未附重啟理由、`conflicts`、`requires` 缺 ⇒ 拒)、`restrict(ids)`(本輪只用所選臂之算子與載體)、`compose(ids, parentSpec, { childrenOf, validateSpec, max })`(多臂依序施用產子規格, 去重、過 validateSpec)、`coverage(nodes)`(每臂之節點 / 階 ≥ 1 / 階 ≥ 4, 依 `origin.arms` ∪ `origin.operator`;另 `feature` = 規格含該臂特徵之節點)、`menu({ coverage, statuses, selectable })`(markdown 選單)、`unusedOf(a)`(grid − used = 待探索空間). 接線:`explore` 之 `opt.useArms` / `cfg.arms.use`(選臂被拒 ⇒ 於取輪號前拋 `RSI_ARMS_REJECTED`, 不開輪;計畫項與節點記 `origin.arms`;策略仍可能自行取樣 ⇒ 計畫後濾只留所選臂之算子 / 載體, 略過數記計畫備註「臂限制」;plan.json / summary / 報告記 `useArms`)、`makeCtx(…, { useArms })`(childrenOf / controlsFor / carriers 限所選臂, `ctx.useArms`)、生成請求文加一節「臂目錄之待探索臂」(sparse / proposed 且可選者)、`status` 印覆蓋前 8、CLI `--use-arms <id,…> [--reopen <理由>]` 與 `--mode arms [--out]`. 測試 `unit-arms`(玩具目錄 `test/tools/toyArms.mjs`).
+
+**治理**(`governance`;2026-11-14,使用端 Gitea #138;`src/search/governance.mjs`;§2c):`cfg.governance = { requireReview?(預設 false), maxPendingRounds?(預設 0), gateKinds?(預設 new / layer / revise / retire) }`(已知鍵 `GOVERNANCE_CFG_KEYS`;未知鍵 / 型別不符 ⇒ **組裝期拋錯**;值為 `undefined` / `null` 之鍵取預設).實例之入口 `rsi.governance`(`propose` / `decide` / `list` / `pending` / `ledger` / `extensions` / `effectiveCatalog` / `gate` / `inbox` / `render` / `exists` / `opt`)與 `rsi.reloadArms()`、`rsi.syncArms()`(擴充檔有變即重載,回是否重載)、`rsi.baseCatalog`、`rsi.checkCatalog(catalog, { lenient })`(試建:結構與 `cfg.arms.use`);`explore` 之 `opt.ackPending`;錯誤碼 `RSI_GOVERNANCE_PENDING`、`RSI_GOVERNANCE_PARTIAL`、`RSI_GOVERNANCE_COMMITTED`.臂目錄條目另有 `origin` 欄(出處;物件),`makeArms` / `validateCatalog` 另有 `lenient` 選項(所列之臂之落成名未登錄 ⇒ 警告且不可選;`search/governance.mjs` 之 `lenientIdsOf(擴充)` 取擴充所加或修訂了 `realize` 之臂).具名匯出:`makeGovernance`、`checkGovernanceCfg`、`checkProposals`、`applyArmExtensions`、`readArmExtensions`、`effectiveCatalogOf`、`nextArmId`、`nextLayerId`、`renderProposals`、`PROPOSAL_KINDS`、`PROPOSAL_STATUS`、`GOVERNANCE_DEFAULTS`、`GOVERNANCE_CFG_KEYS`.
 
 `domain` 之已知鍵、型別與簽名以 `src/core/domainContract.mjs` 之 `DOMAIN_KEYS` 為單一來源(本表由其抄錄;`unit-domainContract` 驗兩者一致,且套件原始碼讀取之 `domain.<鍵>` 全數已登錄).`createRsi` 開機即檢:缺必填或型別不符 ⇒ 拋錯;未知鍵(多為拼錯,套件不讀 ⇒ 該鉤子靜默失效)⇒ 警告(同鍵每程序一次),`cfg.strictDomain = true` 時拋錯.新增鉤子:先登錄 `DOMAIN_KEYS`,再於使用處讀 `domain.<鍵>`,並補本表.
 
@@ -246,6 +268,7 @@ CLI:`node w-recursi/src/cli.mjs --config <cfg.mjs> --mode init|status|explore|dr
 <root>/tree/nodes/{id}.json.gz  index.jsonl  frontier.jsonl  lore.jsonl  .lock_*  .slots/
 <root>/rounds/r{nnn}/plan.json  summary.json  report.md  [POLICY_DEV_REQUEST.md]  [GENERATION_REQUEST.md]  [.alive.json(探索期間之心跳, 完成即刪)]
 <root>/policies/current.mjs  v{n}.mjs  candidates/*.mjs  scores.jsonl  changelog.md  .dev_request.json  .gen_request.json
+<root>/governance/proposals.json  PROPOSALS.md  extensions.json  .lock_governance  (治理, §2c;首次提案或審定時才建 —— 未用治理之狀態根無此夾)
 <tmpDir>/jobs/<tag>/  (runner 工作夾;tmpDir 未給 ⇒ <root>/tmp;領域另設 tmpDir 時 ⇒ <tmpDir>/jobs/<tag>)
 <logDir>/<tag>.log    (runner.logDir 有給時:提交 / 回收刪夾前之 worker 日誌;如 <tmpDir>/jobs/_logs)
 ```
@@ -261,7 +284,7 @@ runner 工作夾之生命週期(2026-09-29):`queue_<run>.json` / `claims_<run>/`
 | 檔 | 驗什麼 |
 |---|---|
 | `unit-canonical` | 正規化、雜湊、id 與領域既有公式相容(領域端宜自備對拍測試) |
-| `unit-lock` / `unit-slots` | 多程序鎖無遺失;槽位跨程序峰值 ≤ max;逾時 / 死鎖 / 死行程回收;owner 空檔 / 每個截斷位置之半寫皆不回收(寬限後才回收);上限記錄 `.max` 與 CLI 據之顯示 / 回收 |
+| `unit-lock` / `unit-slots` | 多程序鎖無遺失;槽位跨程序峰值 ≤ max;逾時 / 死鎖 / 死行程回收;建鎖夾之 EPERM / EACCES / EBUSY 視同被占用(持續則逾時拋錯附碼、非暫時性錯誤即拋);owner 空檔 / 每個截斷位置之半寫皆不回收(寬限後才回收);上限記錄 `.max` 與 CLI 據之顯示 / 回收 |
 | `unit-store` | 覆寫、反向連結、認領 / 跳過 / 釋放 / 回收、前緣、lore、併行寫入 |
 | `unit-operators` / `unit-policy` | 算子閉包與對照臂;策略預算(對照整族)、不重提、每父上限、譜系停止、別名不作父、決定性、新區域 |
 | `unit-view` | 遮蔽、靜態檢查、別名(全樹判定) |
@@ -277,7 +300,7 @@ runner 工作夾之生命週期(2026-09-29):`queue_<run>.json` / `claims_<run>/`
 | `unit-turning` | specDiff / applyDiff;搬移 / 外推(越界被擋)/ 交叉(同路徑不合併、去重);占用 / 別名 / 否決 / 排除來源;整合(前緣出現 turning 臂並被取用);欠額 → 生成請求全域一份 → 生成節點入樹後清除;冷啟動不算欠額 |
 | `unit-proposalBlock` | 三種提案之產生端守門(2026-10-04;`opt.proposalBlock`):未給 / 回 null ⇒ 提案與回傳逐字同舊版(無 `nProposalBlocked`);搬移 / 外推 / 交叉三分支皆呼叫且 ctx 之 `op` / `origin` / `byId` / `parent` / `parents` / `kidOp` 正確;擋下者入 `blocked`(`by: 'proposalBlock'`)、不入去重集(他路徑之同規格再判)、已占用 / 不合法者不問鉤子;報告分列兩種擋下(無守門之列時與舊版逐字同);`createRsi().turning` 與 `explore` 皆傳 `domain.proposalBlock` |
 | `unit-genStreak` | 早退之連續欠額(2026-10-04;`loop/generation.mjs`):有效標記 + 本輪欠 ⇒ 回傳之 `streak` = `debtStreakOf(sums)`、標記之 `at` / `round` / `pid` 不變而 `debt` / `streak` 更新、達門檻 `escalate` 且報告有升級行;無標記 ⇒ 寫檔內容與舊版逐字同;`clearGenRequest` 之 `seen` 判定不受 streak 更新影響 |
-| `unit-atomic` | 原子寫檔:內容完整、可覆寫、不留暫存檔;他程序反覆改寫時鎖外讀者 0 解析錯;`readJsonl` 之 `skipBad`(中間壞列略過 + stderr 警示;預設仍拋錯) |
+| `unit-atomic` | 原子寫檔:內容完整、可覆寫、不留暫存檔;他程序反覆改寫時鎖外讀者 0 解析錯;目標被持有而改名持續失敗 ⇒ 拋 `ERSI_ATOMIC_RENAME`、目標不變、從未直接覆寫(AT10)、於重試事件中釋放 ⇒ 改名成功(AT11)、觀察回調五種結果相同與 `retryMs`(AT12)(2026-11-14);`readJsonl` 之 `skipBad`(中間壞列略過 + stderr 警示;預設仍拋錯) |
 | `unit-childBlock` | 展開鉤子:未給鉤子 / 未傳視圖時逐字不變;擋下之子不回傳並記 `blockedChildren`;鉤子拋錯視同不擋;explore 與做夢重放皆生效;譜系 `byId`(給 lineage 以之建、否則以 views 建, 同一 ctx 共用;重放傳 lineage ⊇ views);規格級(同一子規格經兩父可達、只在其一路徑被擋 ⇒ 兩路徑皆不出, 同一列只記一次) |
 | `unit-replayAlias` | 做夢重放之別名揭露:正本已可見 ⇒ 只記成本(duplicates);正本未可見 ⇒ 以正本計揭露;回溯目標不含別名 |
 | `unit-runnerQueue` | 動態派工:佇列認領(慢 1 快 5 ⇒ 1 / 5)、運行中補槽加開、崩潰隔離、壞評估器不無限重開、續跑不開 worker、槽位工具(不等待取槽 / 死槽回收 / 狀態) |
@@ -303,6 +326,7 @@ runner 工作夾之生命週期(2026-09-29):`queue_<run>.json` / `claims_<run>/`
 | `unit-excludeArm` | 生成端之臂排除(2026-10-09;`domain.excludeArm`):未給 ⇒ 計畫 / plan.json 逐字同;排除者入 `rejected`(`excluded`)、寫拒絕存根(`notes.excluded`)、不評估、前緣 `rejectedByGate`、重計畫與下一輪不再提;`ctx` 之欄;拋錯 ⇒ 不排除並記備註 |
 | `unit-hookResult` | 鉤子失敗之結果形(2026-10-09):`hookFailureOf` 之形與 auto 之 `hook` 欄 / 報告節同一來源 |
 | `unit-arms` | 臂目錄(2026-11-07;§4):目錄檢查之每一類錯誤;`pick` 之拒 / 放行 / 衝突 / 依賴;`explore` 之 `useArms`(計畫只含所選臂、`origin.arms`、plan.json / summary / 報告、`cfg.arms.use` 預設、被拒不開輪;無 useArms 與無目錄者逐欄同);`compose` 之去重與 path;`coverage` 兩口徑與 `menu`;CLI `--mode arms` / `--use-arms` / 封鎖 ⇒ exit 2 不寫檔;cfg 契約(`CFG_KEYS` 含 arms、未知鍵拋錯) |
+| `unit-governance` | 治理(2026-11-14;§2c):`checkProposals` 之每一類錯誤;`applyArmExtensions` 之新層 / 新臂 / 修訂 / 停用與結構不合;提案帳(入帳、不合格、同鍵再提、同臂之不同修訂另立、渲染、損壞即拋不覆寫〔含逐列之形〕);審定(不採、通過各類、已審定不得再審、結構不合不寫檔、提交點與中斷後之補記、改判不採被拒、渲染失敗不影響);生效之目錄 = 基底 + 擴充(另一實例、`effectiveCatalogOf`、擴充檔損壞即拋、擴充之臂之落成名未登錄 ⇒ 不拋且不可選、只改 title 不放寬基底);起跑之把關(預設不擋、逾期拋 `RSI_GOVERNANCE_PENDING`、`ackPending` / 乾跑 / 審定後放行、`maxPendingRounds`、`gateKinds`、取號時之終檢);收件匣、`status`、報告;未用治理者之可觀察面不變;`cfg.governance` 之形;CLI `proposals` / `decide` / `--ack-pending`;他實例起跑即重載、停用預設選臂之審定被拒、`name` 於鎖內配號 |
 | `unit-genEmbed` | 生成請求早退分支內嵌現行文(2026-10-04;`earlyEmbedOf`):`requestBaseOf` 為改前寫新請求之底稿、`requestMustOf` 取「本輪必須做的事」段;早退 + 未升級 + 領域未改寫該段 ⇒ 無 embed 且報告與改前逐字同;早退 + 升級 ⇒ embed 為一般段、報告改指內嵌段(引用區塊);早退 + 領域改寫(玩具飽和模式)⇒ 內嵌領域之段、不寫任何輪夾、標記只更新 debt / streak;領域文字拋錯 ⇒ `embed.error`(不拋);explore 整合 |
 | `unit-replayCarrier` | 做夢重放之載體時間切分(2026-09-25):`ctx.carriers` 由領域自現存工件推導、不依時間切分;由搜尋所得(`origin.topic` 非 carrier)而於切分時尚不可見之節點,其規格不提供(否則提前揭露未來之發現);carrier 起源之節點與不在樹上之規格照常提供 |
 | `unit-package` | 套件結構與發布面:`package.json`(scripts / 欄位 / 不設 exports、files、type)、無 `.npmignore`、根目錄範本檔與 `toolg/`、深層路徑穩定、依賴對帳與 `lodash-es` 按需引入、`gDistRollup` 之 external 一致、`npm pack --dry-run` 打包清單、`g.mjs` 輸出與 README Example、README §6 與 `test/` 一致、JSDoc 覆蓋與全部 `@example` 實跑、發布內容去識別 |

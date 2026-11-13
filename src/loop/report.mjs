@@ -64,6 +64,15 @@ export let reportOf = (rsi, round, plan, nodes, rejected, extra = {}) => {
     if (plan.notes && plan.notes.length) { L.push('- 策略備註:' + plan.notes.join(';'), '') }
     //臂限制(2026-11-07;search/arms.mjs):本輪只用所選臂(explore 之 opt.useArms / cfg.arms.use)
     if (size(extra.useArms)) { L.push(`- 臂限制:${extra.useArms.join(', ')}${extra.armsReopen ? `(重啟理由:${extra.armsReopen})` : ''}`, '') }
+    //治理(2026-11-14;search/governance.mjs):有待審之提案才列(無提案帳 / 無待審 ⇒ 報告與改前逐字同);提案帳或擴充檔損壞 ⇒ 各列一行(不中斷報告;與 status 同)
+    if (rsi.governance && rsi.governance.exists()) {
+        let gp = [], perr = null, xerr = null
+        try { gp = rsi.governance.pending() } catch (e) { perr = String((e && e.message) || e).split('\n')[0].slice(0, 200) }
+        try { rsi.governance.extensions() } catch (e) { xerr = String((e && e.message) || e).split('\n')[0].slice(0, 200) }
+        if (perr) { L.push(`- 治理:提案帳無法讀取(${perr})`, '') }
+        else if (gp.length) { L.push(`- 治理:待審之提案 ${gp.length} 筆(${gp.map((p) => `${p.id} ${p.kind}`).join('、')});主控審定後生效(提案帳 governance/PROPOSALS.md)`, '') }
+        if (xerr) { L.push(`- 治理:擴充檔無法讀取(${xerr})`, '') }
+    }
     //認領衝突之重計畫(2026-10-02):上一行之計畫與備註為第一次計畫 ⇒ 另列實得之組成(extra.items = 本 session 實得之計畫項);各次重計畫之策略備註在 plan.json 之 notesReplans
     if (extra.replans) { let its = extra.items || [], k = countBy(its, 'kindOf'); L.push(`- 重計畫 ${extra.replans} 次(認領衝突;${get(rsi.cfg, 'claims.replanFillOnly', false) === true ? '只補被他 session 先領之額' : '新計畫之臂全收'}):實得 ${its.length} 臂(展開 ${k.expand || 0} / 新區域 ${k.novelty || 0} / 全域 ${k.global || 0});各次重計畫之策略備註見 plan.json 之 notesReplans`, '') }
     if (plan.requests && plan.requests.length) { L.push('## 前緣待實作(策略無法自行執行)', '', ...plan.requests.map((q) => `- [${q.kind}] ${q.topic || ''} ${q.title || ''}(優先 ${q.priority ?? '-'};需 ${q.needs || '-'}):${q.reason || ''}`), '') }

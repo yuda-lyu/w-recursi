@@ -20,16 +20,16 @@
 
 ### REC-01 所有「讀 → 改 → 整檔重寫」皆在跨程序鎖內;釋放只刪自己的鎖
 
-- **規則**:樹、前緣、lore、policies 之共用檔,凡讀後整檔重寫者須在 `withLock`(`core/lock.mjs`,mkdir 原子)內;逾時拋錯不靜默;持有者已死 ⇒ 立即回收,持有逾 `staleMs` ⇒ 回收;釋放只刪 owner token 相符之鎖(鎖被回收並由他方取得後,原持有者不刪新鎖)。
+- **規則**:樹、前緣、lore、policies、governance 之共用檔,凡讀後整檔重寫者須在 `withLock`(`core/lock.mjs`,mkdir 原子)內;逾時拋錯不靜默;持有者已死 ⇒ 立即回收,持有逾 `staleMs` ⇒ 回收;釋放只刪 owner token 相符之鎖(鎖被回收並由他方取得後,原持有者不刪新鎖);建鎖夾回 EPERM / EACCES / EBUSY(Windows:同名夾刪除待決)⇒ 視同被占用而等候,逾時拋錯並附錯誤碼;**每一條取鎖路徑皆受 `timeoutMs` 約束**(死鎖夾刪不掉時同經逾時檢查,不無限重試)(2026-11-14)。
 - **盤點指令**:`git grep -nE "withLock\(" -- src`(站點全集)、`git grep -nE "writeJsonl\(|writeJson\(|writeFileAtomic\(" -- src`(寫入站點;每處須在上列鎖內,或為單一寫者且無鎖外讀後寫)。
 - **判準**:寫入站點皆「已套鎖」或「刻意不套」(僅追加之 jsonl 以 `appendJsonl` 單次追加;槽位與鎖之 owner 檔屬協調狀態)。
-- **測試**:`unit-lock`(5 程序 × 40 次 = 200 無遺失;死鎖回收;釋放只刪自己的鎖)、`unit-store`(6 程序併行 `putNode`)。
+- **測試**:`unit-lock`(5 程序 × 40 次 = 200 無遺失;死鎖回收;釋放只刪自己的鎖;建鎖夾之暫時性錯誤)、`unit-store`(6 程序併行 `putNode`)。
 
 ### REC-02 整檔重寫為原子寫;只追加之紀錄檔容忍半列
 
-- **規則**:`writeFileAtomic`(同目錄暫存檔 + rename;Windows 之 EPERM / EACCES / EBUSY 遞增等待重試,用盡才直寫)為整檔寫入之唯一原語(`writeJson`、`writeJsonl`、節點檔皆經它);`readJsonl` 最後一列解析失敗視為追加中之半列而略過,中間列壞 ⇒ 拋錯(`skipBad` 僅供唯讀之只追加紀錄檔之消費端)。
-- **盤點指令**:`git grep -nE "fs\.(writeFileSync|appendFileSync)\(" -- src`(直寫站點;須為暫存檔、owner 檔、報告 md、請求文,或 `appendJsonl` 本體)。
-- **測試**:`unit-atomic`(他程序反覆改寫時鎖外讀者 0 解析錯、列數恆完整;`skipBad`)。
+- **規則**:`writeFileAtomic`(同目錄暫存檔 + rename)為整檔寫入之唯一原語(`writeJson`、`writeJsonl`、節點檔皆經它);Windows 之 EPERM / EACCES / EBUSY(目標正被讀者開啟)以帶亂數之短間隔有界重試(`opt.retryMs`,預設 15 秒),**用盡即拋 `ERSI_ATOMIC_RENAME`、目標檔不變,不得退回直接覆寫目標**(2026-11-14,第 429 項:原退回直寫 = 截斷再寫,高負載下讀者讀到截斷檔;時限以單調時鐘計,等待不越過時限);任何拋錯路徑(寫暫存檔失敗、非暫時性錯誤、用盡)皆先盡力刪暫存檔,刪不掉者錯誤帶 `tmpLeft`(不靜默);重試以觀察回調 `opt.onTrace`(wsemi `getTrace`;`retry` / `renamed` / `giveUp`)告知;`readJsonl` 最後一列解析失敗視為追加中之半列而略過,中間列壞 ⇒ 拋錯(`skipBad` 僅供唯讀之只追加紀錄檔之消費端)。
+- **盤點指令**:`git grep -nE "fs\.(writeFileSync|appendFileSync)\(" -- src`(直寫站點;須為暫存檔、owner 檔、報告 md、請求文,或 `appendJsonl` 本體;`core/jsonl.mjs` 內對目標路徑之直寫須為 0)。
+- **測試**:`unit-atomic`(他程序反覆改寫時鎖外讀者 0 解析錯、列數恆完整;AT10 目標被持有 ⇒ 拋錯而目標不變、從未直寫;AT11 於重試事件中釋放 ⇒ 改名成功;AT12 觀察回調五種、`retryMs`、非暫時性錯誤;`skipBad`)。
 
 ### REC-03 身分雜湊為凍結契約
 
@@ -112,13 +112,13 @@
 
 ### REC-18 發布面、依賴與去識別(本套件為公開庫)
 
-- **規則**:`package.json` 不設 `exports` / `files` / `type`,`main` 指 dist UMD,scripts 只有 `test` 與 `deploy`;不提供 `.npmignore`(npm 包＝git 版控內容,`sgud/`、`test/`〔含 `test/tools/`〕、`docs/` 隨包,`CLAUDE*.md` 由 `.gitignore` 排除);依賴只宣告 `wsemi`(`lodash-es` 由其依賴帶入,`src/` 一律 `lodash-es/<函數>.js` 單函數路徑,不整包匯入);node 內建模組在 `src/` 一律無前綴,且與 `toolg/gDistRollup.mjs` 之 external / globals 一致;`src/` 每個匯出皆有 JSDoc(說明、`@param`、`@returns`、`@example`),範例實跑;**發布內容(程式、測試、`sgud/`、README、註解)不得出現宿主專案之路徑、檔名、內部輪號、工單編號與業務領域字樣**,需求出處只寫「使用端」與 Gitea 編號。
+- **規則**:`package.json` 不設 `exports` / `files` / `type`,`main` 指 dist UMD,scripts 只有 `test` 與 `deploy`;不提供 `.npmignore`(npm 包＝git 版控內容,`sgud/`、`test/`〔含 `test/tools/`〕、`docs/` 隨包,`CLAUDE*.md` 由 `.gitignore` 排除);依賴只宣告 `wsemi`(`lodash-es` 由其依賴帶入,`src/` 一律 `lodash-es/<函數>.js` 單函數路徑,不整包匯入;`src/` 之 wsemi 只引用觀察回調之單一實作 `wsemi/src/getTrace.mjs`〔2026-11-14〕,打包進 dist);node 內建模組在 `src/` 一律無前綴,且與 `toolg/gDistRollup.mjs` 之 external / globals 一致;`src/` 每個匯出皆有 JSDoc(說明、`@param`、`@returns`、`@example`),範例實跑;**發布內容(程式、測試、`sgud/`、README、註解)不得出現宿主專案之路徑、檔名、內部輪號、工單編號與業務領域字樣**,需求出處只寫「使用端」與 Gitea 編號。
 - **盤點指令**:不手寫式,以守門測試為準——判準與具名例外見 `test/unit-package.test.mjs` 之 `HOST_PATTERNS` / `HOST_EXCEPTIONS`;`git grep -nE "from 'lodash-es'" -- src` 應無輸出。
 - **測試**:`unit-package`(①發布面 ②依賴與按需引入 ③打包清單 ④g.mjs 與 README ⑤JSDoc 覆蓋與範例實跑 ⑥去識別)。
 
 ### REC-19 深層路徑穩定
 
-- **規則**:`src/` 下全部 32 檔(`index.mjs`、`protocol.mjs`、`WRecursi.mjs`、`cli.mjs`、`core/{canonical,cli,domainContract,hookResult,jsonl,lock,paths,proc,slots,writeRoot}.mjs`、`tree/{alias,node,store,view}.mjs`、`search/{arms,operators,policyV0,turning}.mjs`、`loop/{auto,explore,generation,policyDev,report,status}.mjs`、`sim/{dream,replay}.mjs`、`eval/{runner,worker}.mjs`)與 `test/tools/{toy,toyArms}.mjs` 之路徑不得改名、搬動(使用端以路徑深層匯入;另有大量封存腳本經轉發檔引用)。
+- **規則**:`src/` 下全部 33 檔(`index.mjs`、`protocol.mjs`、`WRecursi.mjs`、`cli.mjs`、`core/{canonical,cli,domainContract,hookResult,jsonl,lock,paths,proc,slots,writeRoot}.mjs`、`tree/{alias,node,store,view}.mjs`、`search/{arms,governance,operators,policyV0,turning}.mjs`(`governance` 2026-11-14 新增)、`loop/{auto,explore,generation,policyDev,report,status}.mjs`、`sim/{dream,replay}.mjs`、`eval/{runner,worker}.mjs`)與 `test/tools/{toy,toyArms}.mjs` 之路徑不得改名、搬動(使用端以路徑深層匯入;另有大量封存腳本經轉發檔引用)。
 - **盤點指令**:`git ls-files src test/tools`(或尚未提交時 `ls -R src test/tools`)與本條清單逐一比對。
 - **測試**:`unit-package`(深層路徑案)。
 
@@ -126,9 +126,17 @@
 
 - **規則**:`src/`、`test/`、`toolg/` 內每一處起子行程之呼叫(`spawn`、`spawnSync`、`exec`、`execSync`、`execFile`、`execFileSync`、`fork`,含 `cp.` / `child_process.` 前綴寫法)之選項物件皆含 `windowsHide: true`,不論呼叫端是否有主控台、子行程是否再起孫行程。why:Windows 上由無主控台之行程(detached、排程、常駐服務)起子行程時,未設者每個各開一個終端機視窗(使用端 Gitea #127:`runJobs` 子程序模式每個 worker 各跳一個;本套件之跟跑測試由背景行程執行,同理)。非 Windows 平台此選項無作用,不設平台分支。新增起子行程之呼叫時同輪補上,不留待後。
 - **盤點指令**:`git grep -nP --untracked "(?<![.\w$])(spawn|spawnSync|exec|execSync|execFile|execFileSync|fork)\s*\(|\b(cp|child_process|childProcess)\.(spawn|spawnSync|exec|execSync|execFile|execFileSync|fork)\s*\(" -- src test toolg`(站點全集;前有 `.` 者如 `RegExp.exec` 不算;`test/unit-runnerSpawnHide.test.mjs` 自檢字串內之範例不算),逐筆核對選項含 `windowsHide: true`;對照 `git grep -n --untracked windowsHide -- src test toolg`。
-- **站點全集(2026-11-10)**:`src/eval/runner.mjs`(worker 起程,1 處);`test/` 內 17 處(`unit-arms`、`unit-atomic`×2、`unit-cli`×3、`unit-concurrency`、`unit-dreamGate`、`unit-lock`、`unit-package`×2〔`execSync`、`execFileSync`〕、`unit-slots`、`unit-slotsAtomic`×2、`unit-store`、`unit-writeRoot`、`tools/jsdocExamples`);`toolg/` 0 處。判準:18 處皆「已套」,無「刻意不套」。
+- **站點全集(2026-11-14)**:`src/eval/runner.mjs`(worker 起程,1 處);`test/` 內 18 處(`unit-arms`、`unit-atomic`×2、`unit-cli`×3、`unit-concurrency`、`unit-dreamGate`、`unit-governance`〔2026-11-14〕、`unit-lock`、`unit-package`×2〔`execSync`、`execFileSync`〕、`unit-slots`、`unit-slotsAtomic`×2、`unit-store`、`unit-writeRoot`、`tools/jsdocExamples`);`toolg/` 0 處。判準:19 處皆「已套」,無「刻意不套」。
 - **刻意不改**:`dist/`、`docs/` 為產製物(含 runner 之編譯後副本),隨發布流程重產,不手改。
 - **測試**:`unit-runnerSpawnHide`(①行為:以 `syncBuiltinESMExports` 換掉 `child_process.spawn` 記下 `runJobs` 子程序模式實際傳入之選項,每個 worker 皆 `windowsHide === true`;②盤點器自檢;③`src/` 盤點 ④`test/`、`toolg/` 盤點)。
+
+### REC-21 治理:提案帳、主控審定、臂目錄以擴充演進、起跑之把關(2026-11-14,使用端 Gitea #138)
+
+- **規則**:代理之分工為三層 —— 節點層(評估器)、做夢層(`hooks.afterRound`)、主控層(`rsi.governance`)。任一層以 `propose` 提案(`PROPOSAL_KINDS`:`new` / `layer` / `revise` / `retire` / `note`;形不合者不入帳、同鍵之待審者不另立),主控以 `decide` 審定(通過或不採皆須附理由;已審定者不得再審)。通過之詞彙變更寫入狀態根之 `governance/extensions.json`;**生效之目錄 = `cfg.arms.catalog`(基底)+ 該擴充**(`applyArmExtensions`,純函式、不改入參;組裝時套用,`rsi.reloadArms()` 於同程序重載)。寫入前先試建目錄(結構檢查),不合 ⇒ 提案帳與擴充檔皆不變。以下為「資料、中斷與他實例不得使狀態根無法使用、靜默遺失或以過期之目錄開輪」:①提案帳 / 擴充檔存在而損壞(提案帳逐列核對 `seq` ≥ 最大編號、`id` 唯一合式、`kind` / `status` 在值域、已審定附 `decision`)⇒ 拋錯(不當成空帳或無擴充;status 與報告則列一行不中斷);②**審定之提交點 = 擴充檔之原子寫**,其後寫提案帳(失敗 ⇒ `RSI_GOVERNANCE_PARTIAL`)、重載、重產 md(後兩者失敗只回錯誤字串);前次中斷而擴充檔已有本提案之項 ⇒ 重審之通過只補記(不重寫、不搬動該項),改判不採 ⇒ `RSI_GOVERNANCE_COMMITTED`;③擴充所加之臂、修訂了 `realize` 之臂之落成名未登錄 ⇒ 組裝不拋錯、該臂不可選並列入 `rsi.arms.warnings`(`lenientIdsOf` → `makeArms` / `validateCatalog` 之 `lenient`),基底之臂(含只改其他欄之修訂)仍嚴格;④修訂之 patch 有不可改(`id` / `n` / `origin`)或未知之欄 ⇒ 拒;⑤試建目錄另核對 `cfg.arms.use`(預設選臂被停用或變不可選 ⇒ 審定被拒;組裝與 `reloadArms` 共用同一核對);⑥`explore` 起跑時與取輪號前各 `rsi.syncArms()` 一次:擴充檔自上次組裝 / 重載後有變 ⇒ 重載並重驗選臂(他實例之審定立即生效;損壞即拋不開輪);⑦把關開啟時,再比對、終檢與取輪號於 `governance` 鎖內(與 `propose` / `decide` 線性化),終檢先於建輪夾;⑧新臂之 `name` 配號於鎖內;⑨擴充項之 `origin` 記完整審定(含 `why`),中斷後之補記以之為原決定,另給不同內容 ⇒ `RSI_GOVERNANCE_COMMITTED`;⑩提案帳之已審定列須有 `decision.at` / `by` / `why`,編號達安全整數上限即拒;擴充之深層結構不合於 `extensions()` 即拋(status / 報告 / 生效目錄一致)。**已知未解(改前即有,REC-01)**:死鎖回收之「判定 stale → 刪除」非原子,另一程序於其間取得新鎖時可被誤刪(外審 terra 第二輪 #1 實測);待另輪以「改名後核對持有者」或 fencing 處理。停用之臂留在目錄(`blocked`、`blockedBy` 以「停用(治理)」起首、不可選);臂之 `origin` 記出處。`cfg.governance.requireReview = true` 時,逾 `maxPendingRounds` 輪未審之提案(類別 ∈ `gateKinds`)使 `explore` 於取輪號前拋 `RSI_GOVERNANCE_PENDING`(不開輪、不寫檔;乾跑與 `opt.ackPending` 不擋)。`cfg.governance` 之未知鍵 / 型別不符 ⇒ **組裝期拋錯**(`undefined` / `null` 取預設)。**未用治理者(無提案帳、無擴充檔、`requireReview` 未設)之目錄(基底之同一物件)、計畫、報告、`status` 與狀態根佈局逐字同改前**(`governance/` 夾於首次寫入時才建)。寫入皆於 `governance` 鎖內。
+- **why**:再廣之目錄也是限制;原引擎之目錄為組裝期注入之靜態資料,下層發現之新機制只能掛在範圍很寬之臂之下(目錄之「已試 / 未試」因此失真),也無處提出「某臂有問題」;而「下層提、主控審、審過才續跑」若只靠呼叫端自律,漏審時迴圈照跑。
+- **盤點指令**:`git grep -n "rsi\.arms\b" -- src`(引擎各處一律經 `rsi.arms` 取用,不留組裝期之舊參照;`index.mjs` 內除組裝期之 `cfg.arms.use` 預驗一處外不得以區域變數 `arms` 取用);`git grep -nE "writeJson\(paths\.gov|writeFileAtomic\(paths\.gov" -- src`(治理之寫入站點皆在 `makeGovernance` 之 `withLock` 內)。
+- **刻意之取捨(主責判斷)**:停用沿用 `blocked`(不另立 `retired` 狀態);`note` 類留在引擎(主控單一收件匣),預設不計入把關;把關預設關閉;生成請求之底稿不加治理之提示(領域可經 `domain.generationText` 加);README §4 標題列不加 `governance`(標題本非全鍵清單,改標題會變錨點)。
+- **測試**:`unit-governance`(GV01 ~ GV12);匯出名快照 `unit-protocol`;未用者逐字不變另由既有之 `unit-arms`、`unit-explore`、`unit-auto`、`unit-genRequest`、`unit-genEmbed`(含快照)守,改動時另以改前改後對拍(同一玩具領域跑 auto / explore / 乾跑 / status,狀態根全部檔與輸出遮蔽時間後比對)佐證。
 
 ## 站點全集與判準之補充
 

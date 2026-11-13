@@ -10,7 +10,8 @@ let fdTar = './dist'
 //   rollup之external與globals以import字串逐字比對, 'fs'不涵蓋'node:fs', 若日後引用node:前綴須另行列入
 //2. 本套件不直接引用任何第三方套件之主入口: lodash-es一律以單函數路徑(lodash-es/<函數>.js)引用, 列於npm依賴之wsemi帶入(package.json不另宣告),
 //   屬純函式之ESM小檔且互相只含相對引用, 不剔除而打包進dist(與自有套件對lodash-es/*之處理一致);
-//   wsemi本身於src中未被引用, 故無wsemi之剔除清單(tree-kill、dayjs等)需列入
+//   wsemi於src中只引用src/getTrace.mjs(2026-11-14, core/jsonl.mjs之觀察回調;單檔, 其相依僅lodash-es/get.js與同套件之isfun.mjs, 皆純函式ESM), 同樣打包進dist,
+//   故無wsemi之剔除清單(tree-kill、dayjs等)需列入
 //3. globals右側為引入後的名稱, 不能包含小數點「.」
 //4. runin須為nodejs: 本套件僅能於nodejs執行(child_process、fs、zlib、process.kill與Atomics.wait), 未給時rollupFiles預設browser,
 //   會以browser欄位解析被打包之相依並警告依賴node內建模組

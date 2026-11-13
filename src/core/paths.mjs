@@ -70,7 +70,7 @@ export let listRoundDirs = (fd) => (fs.existsSync(fd) ? fs.readdirSync(fd).filte
  *
  * @param {String} root 輸入狀態根目錄
  * @param {Object} [opt={}] 輸入選項 { tmp:String(評估 job 暫存夾,未給 ⇒ <root>/tmp) }
- * @returns {Object} 回傳 { root, tree, nodes, index, frontier, lore, slots, rounds, policies, candidates, scores, changelog, current, devRequest, genRequest, tmp, ensure(), fdRound(r) }
+ * @returns {Object} 回傳 { root, tree, nodes, index, frontier, lore, slots, rounds, policies, candidates, scores, changelog, current, devRequest, genRequest, governance, govProposals, govProposalsMd, govExtensions, tmp, ensure(), fdRound(r) }(governance 夾只在治理首次寫入時才建,ensure 不建)
  * @throws {Error} 缺 root 時拋出
  * @example
  * let p = makePaths('./demo-root')
@@ -96,7 +96,12 @@ export let makePaths = (root, { tmp = null } = {}) => {
         current: path.join(R, 'policies', 'current.mjs'),
         devRequest: path.join(R, 'policies', '.dev_request.json'),
         genRequest: path.join(R, 'policies', '.gen_request.json'),
-        tmp: tmp ? path.resolve(tmp) : path.join(R, 'tmp'), //評估 job 暫存(可另指, 如領域自訂之暫存夾)
+        //治理(2026-11-14;search/governance.mjs):提案帳、其渲染、臂目錄之擴充;夾於首次寫入時才建(ensure 不建 ⇒ 未用治理之狀態根佈局與改前相同)
+        governance: path.join(R, 'governance'),
+        govProposals: path.join(R, 'governance', 'proposals.json'),
+        govProposalsMd: path.join(R, 'governance', 'PROPOSALS.md'),
+        govExtensions: path.join(R, 'governance', 'extensions.json'),
+        tmp:tmp ? path.resolve(tmp) : path.join(R, 'tmp'), //評估 job 暫存(可另指, 如領域自訂之暫存夾)
     }
     P.ensure = () => { for (let d of [P.tree, P.nodes, P.rounds, P.policies, P.candidates, P.tmp]) { fs.mkdirSync(d, { recursive: true }) } }
     P.fdRound = (r) => path.join(P.rounds, roundNameOf(r))

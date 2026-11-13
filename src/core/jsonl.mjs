@@ -1,28 +1,38 @@
 import fs from 'fs'
 import path from 'path'
+import getTrace from 'wsemi/src/getTrace.mjs'
 import { assertWriteRoot } from './writeRoot.mjs'
 
 
 //原子寫檔(2026-09-24;某次實測重現之競態:整檔覆寫 = 先截斷再寫, 鎖外之讀者可讀到截斷 / 空檔而 JSON.parse 拋錯或靜默少列)
 //  先寫同目錄暫存檔(`.{檔名}.{pid}.{時戳}.{亂碼}.tmp`, 字尾 .tmp ⇒ 不被 *.jsonl / *.json.gz 之列舉誤取)再 rename 覆蓋 ⇒ 讀者只見舊檔或新檔之完整內容
-//  Windows:目標檔正被他程序開啟時 rename 可能 EPERM / EACCES / EBUSY ⇒ 遞增等待重試(合計約 2 秒);仍失敗則退回直接覆寫(不比舊行為差)並刪暫存檔
+//  Windows:目標檔正被他程序開啟(讀者持有 handle)時 rename 回 EPERM / EACCES / EBUSY ⇒ 以短而帶亂數之間隔重試(有界:opt.retryMs, 預設 RETRY_MS)
+//    **不退回直接覆寫**(2026-11-14;第 429 項):原於重試約 2 秒用盡後退回 writeFileSync(目標) = 截斷再寫, 高負載下鎖外讀者因此讀到截斷檔(列數不足);
+//    用盡 ⇒ 刪暫存檔並拋錯(code ERSI_ATOMIC_RENAME), 目標檔維持原內容 —— 交呼叫端處置(多在鎖內:鎖隨例外釋放)
+//  觀察回調 opt.onTrace(wsemi getTrace;計時器相關函數之制式):retry / renamed / giveUp 三種事件, 測試以事件同步(不以延時)
 //  寫域守門(2026-10-09;core/writeRoot.mjs):環境變數 RSI_WRITE_ROOT 有值 ⇒ 目標須在其根之下, 否則拋錯(先判再寫 ⇒ 不留暫存檔);未設 ⇒ 逐位不變
 //    writeJson / writeJsonl 經本函式;appendJsonl 同守
 /**
- * 原子寫檔之累計(本程序):writes(次數)、retries(Windows EPERM / EACCES / EBUSY 之重試)、fallbacks(重試用盡退回直寫)
+ * 原子寫檔之累計(本程序):writes(次數)、retries(Windows EPERM / EACCES / EBUSY 之重試)、giveUps(重試用盡而拋錯;不退回非原子之直寫)
  *
  * @type {Object}
  */
-export let atomicStats = { writes: 0, retries: 0, fallbacks: 0 }
+export let atomicStats = { writes: 0, retries: 0, giveUps: 0 }
 let RETRY_CODES = ['EPERM', 'EACCES', 'EBUSY']
+//改名重試之總時限預設(毫秒):讀者之 handle 每次只持有一次讀檔之久, 有界重試足以等到空檔;逾此仍被占用(如長期開啟之外部程式)⇒ 拋錯
+const RETRY_MS = 15000
 let sleepSync = (ms) => { try { Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms) } catch (e) {} }
+//第 i 次重試前之等待:1 ~ 50 毫秒漸增, 乘 0.5 ~ 1.5 之亂數(錯開讀者之週期, 增加命中空檔之次數)
+let waitOf = (i) => Math.max(1, Math.round(Math.min(50, 1 + i * 2) * (0.5 + Math.random())))
 /**
- * 原子寫檔:先寫同目錄暫存檔再 rename 覆蓋,鎖外之讀者只見舊檔或新檔之完整內容;Windows 目標檔被占用時遞增等待重試,仍失敗退回直寫;受寫域守門(RSI_WRITE_ROOT)約束
+ * 原子寫檔:先寫同目錄暫存檔再 rename 覆蓋,鎖外之讀者只見舊檔或新檔之完整內容;Windows 目標檔被占用(EPERM / EACCES / EBUSY)時以有界重試等候(時限以單調時鐘計,於每次失敗後判定;等待不越過時限),用盡即拋錯(目標檔維持原內容,不退回非原子之直接覆寫);拋錯前盡力刪除暫存檔,刪不掉者錯誤之 tmpLeft 列其路徑;受寫域守門(RSI_WRITE_ROOT)約束。
+ * 觀察回調 opt.onTrace 之事件:retry({ attempt, code, waitMs }:第 attempt 次改名失敗,將等 waitMs 毫秒再試)、renamed({ attempts }:改名成功)、giveUp({ attempts, code, elapsedMs }:重試用盡,隨即拋錯)
  *
  * @param {String} fp 輸入目標檔
  * @param {String|Buffer} data 輸入內容
+ * @param {Object} [opt={}] 輸入選項 { retryMs:Number(改名重試之總時限毫秒,非負數;預設 15000,非預期之值改用預設;於每次改名失敗後判定,未到即等待〔不越過時限〕並必再試一次 ⇒ 總耗時可略超過時限:一次等待、一次改名與回調之時間), onTrace:Function(觀察回調,同步呼叫、拋錯忽略) }
  * @returns {undefined} 無回傳
- * @throws {Error} 目標不在允許之寫入根下(code ERSI_WRITE_ROOT)、非暫時性之 rename 失敗時拋出
+ * @throws {Error} 目標不在允許之寫入根下(code ERSI_WRITE_ROOT)、改名重試用盡(code ERSI_ATOMIC_RENAME;目標檔不變)、寫暫存檔失敗或非暫時性之 rename 失敗(原錯)時拋出;暫存檔刪不掉時錯誤另帶 tmpLeft
  * @example
  * import fs from 'fs'
  * import os from 'os'
@@ -36,22 +46,53 @@ let sleepSync = (ms) => { try { Atomics.wait(new Int32Array(new SharedArrayBuffe
  * // => v2 a.txt
  * fs.rmSync(dir, { recursive: true, force: true })
  */
-export let writeFileAtomic = (fp, data) => {
+export let writeFileAtomic = (fp, data, opt = {}) => {
     assertWriteRoot(fp, { what: 'writeFileAtomic' })
+    let trace = getTrace(opt)
+    let rm = opt && opt.retryMs
+    let retryMs = typeof rm === 'number' && Number.isFinite(rm) && rm >= 0 ? rm : RETRY_MS
     let tmp = path.join(path.dirname(fp), `.${path.basename(fp)}.${process.pid}.${Date.now()}.${Math.random().toString(36).slice(2, 8)}.tmp`)
-    fs.writeFileSync(tmp, data)
+    //拋錯前之暫存檔清理(盡力:有界重試;仍刪不掉 ⇒ 錯誤之 tmpLeft 列其路徑, 不靜默)
+    let fail = (e) => { if (!rmTmp(tmp)) { e.tmpLeft = tmp } return e }
+    //寫暫存檔失敗(如磁碟滿)⇒ 刪半寫之暫存檔再拋原錯(目標檔未動)
+    try { fs.writeFileSync(tmp, data) }
+    catch (e) { throw fail(e) }
     atomicStats.writes++
-    for (let i = 0; i < 20; i++) {
-        try { fs.renameSync(tmp, fp); return }
-        catch (e) {
-            if (!RETRY_CODES.includes(e.code)) { try { fs.rmSync(tmp, { force: true }) } catch (e2) {} throw e }
-            atomicStats.retries++
-            sleepSync(10 + i * 10)
+    //時限以單調時鐘計(不受系統時鐘調整影響);每次改名失敗後判定:未到時限 ⇒ 等待(不越過時限)後必再試一次(retry 事件即此承諾), 已到 ⇒ 拋錯
+    let t0 = performance.now()
+    let elapsed = () => Math.round(performance.now() - t0)
+    for (let i = 0; ; i++) {
+        let e = null
+        try {
+            fs.renameSync(tmp, fp)
+            if (trace) { trace('renamed', { attempts: i + 1 }) }
+            return
         }
+        catch (err) { e = err }
+        let retryable = RETRY_CODES.includes(e.code)
+        if (!retryable) { throw fail(e) }
+        let remain = retryMs - elapsed()
+        if (remain > 0) {
+            atomicStats.retries++
+            let waitMs = Math.min(waitOf(i), Math.max(1, Math.ceil(remain)))
+            if (trace) { trace('retry', { attempt: i + 1, code: e.code, waitMs }) }
+            sleepSync(waitMs)
+            continue
+        }
+        atomicStats.giveUps++
+        let elapsedMs = elapsed()
+        if (trace) { trace('giveUp', { attempts: i + 1, code: e.code, elapsedMs }) }
+        throw fail(Object.assign(new Error(`writeFileAtomic: 改名覆蓋失敗(${e.code}), 嘗試 ${i + 1} 次、${elapsedMs} ms 目標仍被占用;目標檔維持原內容(不退回非原子之直接覆寫):${fp}`), { code: 'ERSI_ATOMIC_RENAME', cause: e }))
     }
-    atomicStats.fallbacks++
-    try { fs.writeFileSync(fp, data) }
-    finally { try { fs.rmSync(tmp, { force: true }) } catch (e2) {} }
+}
+//刪暫存檔(有界重試;Windows 上暫存檔被他程序短暫開啟時刪除可能失敗)⇒ 回是否已不存在
+let rmTmp = (tmp) => {
+    for (let k = 0; k < 5; k++) {
+        try { fs.rmSync(tmp, { force: true }); if (!fs.existsSync(tmp)) { return true } }
+        catch (e) {}
+        sleepSync(10 + k * 10)
+    }
+    return !fs.existsSync(tmp)
 }
 
 //stderr 同步寫一行(與 core/proc.mjs 之 waitNote 同格式;程序隨即結束時亦不遺失)

@@ -116,18 +116,18 @@ describe('unit-package', function() {
             assert.ok(!gi.some((l) => /^\/?(src|dist|toolg|docs)\/?$/.test(l) || /^\/?test(\/tools)?\/?$/.test(l)), '.gitignore 不得排除 src、dist、toolg、docs、test、test/tools')
         })
 
-        it('REC-19 深層路徑穩定:src/ 全部 32 檔與 test/tools/toy.mjs、toyArms.mjs 皆在原路徑(使用端以路徑深層匯入,不得改名、搬動)', () => {
+        it('REC-19 深層路徑穩定:src/ 全部 33 檔與 test/tools/toy.mjs、toyArms.mjs 皆在原路徑(使用端以路徑深層匯入,不得改名、搬動)', () => {
             const STABLE = [
                 'src/index.mjs', 'src/protocol.mjs', 'src/WRecursi.mjs', 'src/cli.mjs',
                 ...['canonical', 'cli', 'domainContract', 'hookResult', 'jsonl', 'lock', 'paths', 'proc', 'slots', 'writeRoot'].map((n) => `src/core/${n}.mjs`),
                 ...['alias', 'node', 'store', 'view'].map((n) => `src/tree/${n}.mjs`),
-                ...['arms', 'operators', 'policyV0', 'turning'].map((n) => `src/search/${n}.mjs`),
+                ...['arms', 'governance', 'operators', 'policyV0', 'turning'].map((n) => `src/search/${n}.mjs`),
                 ...['auto', 'explore', 'generation', 'policyDev', 'report', 'status'].map((n) => `src/loop/${n}.mjs`),
                 ...['dream', 'replay'].map((n) => `src/sim/${n}.mjs`),
                 ...['runner', 'worker'].map((n) => `src/eval/${n}.mjs`),
                 'test/tools/toy.mjs', 'test/tools/toyArms.mjs',
             ]
-            assert.strictEqual(STABLE.length, 34)
+            assert.strictEqual(STABLE.length, 35)
             assert.deepStrictEqual(STABLE.filter((f) => !fs.existsSync(path.join(ROOT, f))), [])
         })
 
@@ -142,10 +142,13 @@ describe('unit-package', function() {
     })
 
     describe('② 依賴對帳與按需引入', () => {
-        it('src/ 之 npm 套件僅 lodash-es(單函數路徑,由 wsemi 之依賴帶入);dependencies 只宣告 wsemi、devDependencies 只宣告 w-package-tools;toolg/ 與 g.mjs 之 import 皆在宣告內', () => {
+        it('src/ 之 npm 套件僅 lodash-es(單函數路徑,由 wsemi 之依賴帶入)與 wsemi(只 getTrace);dependencies 只宣告 wsemi、devDependencies 只宣告 w-package-tools;toolg/ 與 g.mjs 之 import 皆在宣告內', () => {
             let bare = bareOf(srcFiles())
             let pkgs = new Set([...bare.keys()].filter((s) => !isBuiltin(s)).map(pkgNameOf))
-            assert.deepStrictEqual([...pkgs], ['lodash-es'], 'src/ 只應引用 lodash-es')
+            //2026-11-14:wsemi 只用觀察回調之單一實作 wsemi/src/getTrace.mjs(計時器相關函數之制式;core/jsonl 之 writeFileAtomic)
+            assert.deepStrictEqual([...pkgs].sort(), ['lodash-es', 'wsemi'], 'src/ 只應引用 lodash-es 與 wsemi(getTrace)')
+            assert.deepStrictEqual([...bare.keys()].filter((s) => pkgNameOf(s) === 'wsemi'), ['wsemi/src/getTrace.mjs'], 'wsemi 只引用 getTrace')
+            assert.doesNotThrow(() => import.meta.resolve('wsemi/src/getTrace.mjs'))
             let wsemi = JSON.parse(read('node_modules/wsemi/package.json'))
             assert.ok(wsemi.dependencies && wsemi.dependencies['lodash-es'], '前提:wsemi 之依賴含 lodash-es(package.json 因此不另宣告)')
             assert.deepStrictEqual(Object.keys(pkg.dependencies), ['wsemi'])

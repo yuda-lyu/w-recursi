@@ -9,6 +9,7 @@ import { pidAlive, readOwner, newToken, ownerLine, ownedBy, waitNote } from './p
 //    owner 不可讀(剛建 / 損壞)⇒ 以鎖目錄 mtime 逾 staleMs 回收
 //  - **釋放只刪自己的鎖**(owner token 相符;2026-09-26):原本 finally 無條件刪鎖 ⇒ 鎖被回收並由他方取得後, 原持有者會刪掉新持有者之鎖
 //  - 等待逾 waitLogMs 起, 每 waitLogMs 以 stderr 同步寫一行(持有者 pid / 已等秒數), 免「沉默等於卡住」
+//  - 建鎖夾回 EPERM / EACCES / EBUSY(Windows:同名夾正被他程序刪除;2026-11-14)⇒ 視同被占用而等候, 逾 timeoutMs 拋錯並附錯誤碼(原即時拋出 ⇒ 高負載下併行之寫者偶發失敗)
 //  - 同步阻塞(Atomics.wait), 只包「讀 → 改 → 整檔重寫」這類短臨界區
 /**
  * 同步睡眠(Atomics.wait;會阻塞事件迴圈,僅用於短暫之鎖與槽輪詢)
@@ -23,6 +24,8 @@ import { pidAlive, readOwner, newToken, ownerLine, ownedBy, waitNote } from './p
  */
 export let sleepMs = (ms) => Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms)
 
+//建鎖夾之暫時性失敗(Windows:同名夾刪除待決)⇒ 視同鎖被占用
+let BUSY_CODES = ['EPERM', 'EACCES', 'EBUSY']
 let rmDir = (fd) => {
     for (let k = 0; k < 5; k++) {
         try { fs.rmSync(fd, { recursive: true, force: true }); return true }
@@ -61,15 +64,21 @@ export let withLock = (fn, { dir, name = 'tree', timeoutMs = 120000, staleMs = 3
     let token = newToken()
     let t0 = Date.now(), lastNote = t0
     for (;;) {
-        try { fs.mkdirSync(fd, { recursive: false }); fs.writeFileSync(path.join(fd, 'owner'), ownerLine(token)); break }
+        let busy = null
+        try { fs.mkdirSync(fd, { recursive: false }) }
         catch (e) {
-            if (e.code !== 'EEXIST') { throw e }
-            if (isStaleLock(fd, staleMs)) { rmDir(fd); continue }
-            let now = Date.now()
-            if (now - t0 > timeoutMs) { let o = readOwner(fd); throw new Error(`寫入鎖 ${name} 逾時 ${timeoutMs} ms(另一程序持鎖:${fd}${o ? `;持有者 pid ${o.pid}${pidAlive(o.pid) ? ' 存活' : ' 已死'}` : ''})`) }
-            if (now - lastNote >= waitLogMs) { lastNote = now; let o = readOwner(fd); waitNote(`等待寫入鎖 ${name} 已 ${Math.round((now - t0) / 1000)} 秒(持有者 ${o ? `pid ${o.pid}` : '未知'})`) }
-            sleepMs(15 + Math.floor(Math.random() * 60))
+            //Windows(2026-11-14;第 429 項之同族症狀):同名鎖夾正被他程序刪除(刪除待決)時 mkdir 回 EPERM / EACCES / EBUSY ⇒ 視同鎖被占用而等候重試(不拋);
+            //  非暫時性之權限問題則於 timeoutMs 逾時拋錯(訊息附錯誤碼)
+            if (e.code !== 'EEXIST' && !BUSY_CODES.includes(e.code)) { throw e }
+            busy = e.code
         }
+        if (busy === null) { fs.writeFileSync(path.join(fd, 'owner'), ownerLine(token)); break }
+        //死鎖回收:刪除成功即重試取鎖;刪不掉(Windows 之占用等)⇒ 與一般等候同經逾時檢查(2026-11-14:原直接 continue, 刪除持續失敗時無視 timeoutMs)
+        if (busy === 'EEXIST' && isStaleLock(fd, staleMs) && rmDir(fd)) { continue }
+        let now = Date.now()
+        if (now - t0 > timeoutMs) { let o = readOwner(fd); throw new Error(`寫入鎖 ${name} 逾時 ${timeoutMs} ms(另一程序持鎖:${fd}${o ? `;持有者 pid ${o.pid}${pidAlive(o.pid) ? ' 存活' : ' 已死'}` : ''}${busy !== 'EEXIST' ? `;最後一次建鎖夾回 ${busy}` : ''})`) }
+        if (now - lastNote >= waitLogMs) { lastNote = now; let o = readOwner(fd); waitNote(`等待寫入鎖 ${name} 已 ${Math.round((now - t0) / 1000)} 秒(持有者 ${o ? `pid ${o.pid}` : '未知'}${busy !== 'EEXIST' ? `;建鎖夾回 ${busy}` : ''})`) }
+        sleepMs(15 + Math.floor(Math.random() * 60))
     }
     try { return fn() }
     finally {

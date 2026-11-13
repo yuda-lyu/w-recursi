@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>search/governance.mjs - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="CliError.html">CliError</a></li></ul><h3>Global</h3><ul><li><a href="global.html#ARMS_CFG_KEYS">ARMS_CFG_KEYS</a></li><li><a href="global.html#ARMS_DEFAULTS">ARMS_DEFAULTS</a></li><li><a href="global.html#ARM_KEYS">ARM_KEYS</a></li><li><a href="global.html#ARM_STATUS">ARM_STATUS</a></li><li><a href="global.html#CFG_KEYS">CFG_KEYS</a></li><li><a href="global.html#DEADLINE_WHY">DEADLINE_WHY</a></li><li><a href="global.html#DEFAULT_BUDGET">DEFAULT_BUDGET</a></li><li><a href="global.html#DEFAULT_FORBIDDEN">DEFAULT_FORBIDDEN</a></li><li><a href="global.html#DEFAULT_SIM">DEFAULT_SIM</a></li><li><a href="global.html#DOMAIN_KEYS">DOMAIN_KEYS</a></li><li><a href="global.html#DREAM_MUTEX">DREAM_MUTEX</a></li><li><a href="global.html#FRONTIER_BLOCKED">FRONTIER_BLOCKED</a></li><li><a href="global.html#FRONTIER_PATCH_KEYS">FRONTIER_PATCH_KEYS</a></li><li><a href="global.html#GOVERNANCE_CFG_KEYS">GOVERNANCE_CFG_KEYS</a></li><li><a href="global.html#GOVERNANCE_DEFAULTS">GOVERNANCE_DEFAULTS</a></li><li><a href="global.html#HEARTBEAT_FILE">HEARTBEAT_FILE</a></li><li><a href="global.html#HEARTBEAT_MS">HEARTBEAT_MS</a></li><li><a href="global.html#HEARTBEAT_STALE_MS">HEARTBEAT_STALE_MS</a></li><li><a href="global.html#HOOK_FAIL_HEAD">HOOK_FAIL_HEAD</a></li><li><a href="global.html#OCCUPIED">OCCUPIED</a></li><li><a href="global.html#PROC_STARTED_AT">PROC_STARTED_AT</a></li><li><a href="global.html#PROPOSAL_KINDS">PROPOSAL_KINDS</a></li><li><a href="global.html#PROPOSAL_STATUS">PROPOSAL_STATUS</a></li><li><a href="global.html#REALIZE_KINDS">REALIZE_KINDS</a></li><li><a href="global.html#REQUEST_MUST_HEAD">REQUEST_MUST_HEAD</a></li><li><a href="global.html#ROUND_NAME_SRC">ROUND_NAME_SRC</a></li><li><a href="global.html#STATUS">STATUS</a></li><li><a href="global.html#WRITE_ROOT_ENV">WRITE_ROOT_ENV</a></li><li><a href="global.html#accept">accept</a></li><li><a href="global.html#acquireSlots">acquireSlots</a></li><li><a href="global.html#aliasMapOf">aliasMapOf</a></li><li><a href="global.html#aliasMapOfNodes">aliasMapOfNodes</a></li><li><a href="global.html#aliasPreOf">aliasPreOf</a></li><li><a href="global.html#aliasShortOfDomain">aliasShortOfDomain</a></li><li><a href="global.html#allocateRound">allocateRound</a></li><li><a href="global.html#appendJsonl">appendJsonl</a></li><li><a href="global.html#applyArmExtensions">applyArmExtensions</a></li><li><a href="global.html#applyDiff">applyDiff</a></li><li><a href="global.html#assertWriteRoot">assertWriteRoot</a></li><li><a href="global.html#atomicStats">atomicStats</a></li><li><a href="global.html#canonicalJson">canonicalJson</a></li><li><a href="global.html#carriersOfArm">carriersOfArm</a></li><li><a href="global.html#catalogArmsOf">catalogArmsOf</a></li><li><a href="global.html#catalogLayersOf">catalogLayersOf</a></li><li><a href="global.html#checkArmsCfg">checkArmsCfg</a></li><li><a href="global.html#checkCfg">checkCfg</a></li><li><a href="global.html#checkDomain">checkDomain</a></li><li><a href="global.html#checkGovernanceCfg">checkGovernanceCfg</a></li><li><a href="global.html#checkPolicySource">checkPolicySource</a></li><li><a href="global.html#checkProposals">checkProposals</a></li><li><a href="global.html#clearGenRequest">clearGenRequest</a></li><li><a href="global.html#createRsi">createRsi</a></li><li><a href="global.html#debtStreakOf">debtStreakOf</a></li><li><a href="global.html#earlyEmbedOf">earlyEmbedOf</a></li><li><a href="global.html#effectiveCatalogOf">effectiveCatalogOf</a></li><li><a href="global.html#evaluatePolicy">evaluatePolicy</a></li><li><a href="global.html#extractTurning">extractTurning</a></li><li><a href="global.html#featureOf">featureOf</a></li><li><a href="global.html#frontierOutcomesOf">frontierOutcomesOf</a></li><li><a href="global.html#generationCheck">generationCheck</a></li><li><a href="global.html#hookErrText">hookErrText</a></li><li><a href="global.html#hookFailureOf">hookFailureOf</a></li><li><a href="global.html#isAliasShort">isAliasShort</a></li><li><a href="global.html#isGenerationFulfilled">isGenerationFulfilled</a></li><li><a href="global.html#isMainModule">isMainModule</a></li><li><a href="global.html#isRoundDir">isRoundDir</a></li><li><a href="global.html#jobKey">jobKey</a></li><li><a href="global.html#lastChangeAtOf">lastChangeAtOf</a></li><li><a href="global.html#lastDreamAt">lastDreamAt</a></li><li><a href="global.html#lenientIdsOf">lenientIdsOf</a></li><li><a href="global.html#listRoundDirs">listRoundDirs</a></li><li><a href="global.html#loadPolicyFile">loadPolicyFile</a></li><li><a href="global.html#loadSummaries">loadSummaries</a></li><li><a href="global.html#maintenanceOf">maintenanceOf</a></li><li><a href="global.html#makeArms">makeArms</a></li><li><a href="global.html#makeAuto">makeAuto</a></li><li><a href="global.html#makeDream">makeDream</a></li><li><a href="global.html#makeExplore">makeExplore</a></li><li><a href="global.html#makeGovernance">makeGovernance</a></li><li><a href="global.html#makeNode">makeNode</a></li><li><a href="global.html#makePaths">makePaths</a></li><li><a href="global.html#makeRegistry">makeRegistry</a></li><li><a href="global.html#makeStatus">makeStatus</a></li><li><a href="global.html#makeStore">makeStore</a></li><li><a href="global.html#makeView">makeView</a></li><li><a href="global.html#markerPidOf">markerPidOf</a></li><li><a href="global.html#markerRoundDirOf">markerRoundDirOf</a></li><li><a href="global.html#markerStale">markerStale</a></li><li><a href="global.html#maxOfDir">maxOfDir</a></li><li><a href="global.html#meta">meta</a></li><li><a href="global.html#newToken">newToken</a></li><li><a href="global.html#nextArmId">nextArmId</a></li><li><a href="global.html#nextLayerId">nextLayerId</a></li><li><a href="global.html#nodeIdOf">nodeIdOf</a></li><li><a href="global.html#noveltyDebtOf">noveltyDebtOf</a></li><li><a href="global.html#nowIso">nowIso</a></li><li><a href="global.html#omitMask">omitMask</a></li><li><a href="global.html#opsOfArm">opsOfArm</a></li><li><a href="global.html#originsOfArm">originsOfArm</a></li><li><a href="global.html#ownedBy">ownedBy</a></li><li><a href="global.html#ownerLine">ownerLine</a></li><li><a href="global.html#parentIdsOf">parentIdsOf</a></li><li><a href="global.html#parseCli">parseCli</a></li><li><a href="global.html#peekRound">peekRound</a></li><li><a href="global.html#pidAlive">pidAlive</a></li><li><a href="global.html#policyDevCheck">policyDevCheck</a></li><li><a href="global.html#policySourcesOf">policySourcesOf</a></li><li><a href="global.html#policyViewOfNode">policyViewOfNode</a></li><li><a href="global.html#readArmExtensions">readArmExtensions</a></li><li><a href="global.html#readGenRequest">readGenRequest</a></li><li><a href="global.html#readHeartbeat">readHeartbeat</a></li><li><a href="global.html#readJson">readJson</a></li><li><a href="global.html#readJsonl">readJsonl</a></li><li><a href="global.html#readOwner">readOwner</a></li><li><a href="global.html#reclaimDeadSlots">reclaimDeadSlots</a></li><li><a href="global.html#reclaimJobDirs">reclaimJobDirs</a></li><li><a href="global.html#relativeImportsOf">relativeImportsOf</a></li><li><a href="global.html#releaseSlots">releaseSlots</a></li><li><a href="global.html#renderProposals">renderProposals</a></li><li><a href="global.html#replanFillOf">replanFillOf</a></li><li><a href="global.html#reportOf">reportOf</a></li><li><a href="global.html#requestBaseOf">requestBaseOf</a></li><li><a href="global.html#requestMustOf">requestMustOf</a></li><li><a href="global.html#rescore">rescore</a></li><li><a href="global.html#roundDirs">roundDirs</a></li><li><a href="global.html#roundNameOf">roundNameOf</a></li><li><a href="global.html#roundNumOf">roundNumOf</a></li><li><a href="global.html#runJobs">runJobs</a></li><li><a href="global.html#selectableOf">selectableOf</a></li><li><a href="global.html#sha">sha</a></li><li><a href="global.html#simulate">simulate</a></li><li><a href="global.html#sleepMs">sleepMs</a></li><li><a href="global.html#slotAuxOf">slotAuxOf</a></li><li><a href="global.html#slotsInUse">slotsInUse</a></li><li><a href="global.html#slotsStatus">slotsStatus</a></li><li><a href="global.html#specDiff">specDiff</a></li><li><a href="global.html#specHash">specHash</a></li><li><a href="global.html#startHeartbeat">startHeartbeat</a></li><li><a href="global.html#tryAcquireSlots">tryAcquireSlots</a></li><li><a href="global.html#unusedOf">unusedOf</a></li><li><a href="global.html#usageOf">usageOf</a></li><li><a href="global.html#validateCatalog">validateCatalog</a></li><li><a href="global.html#waitNote">waitNote</a></li><li><a href="global.html#withLock">withLock</a></li><li><a href="global.html#writeAllowed">writeAllowed</a></li><li><a href="global.html#writeFileAtomic">writeFileAtomic</a></li><li><a href="global.html#writeJson">writeJson</a></li><li><a href="global.html#writeJsonl">writeJsonl</a></li><li><a href="global.html#writeRootsOf">writeRootsOf</a></li></ul>
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">search/governance.mjs</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import fs from 'fs'
+import countBy from 'lodash-es/countBy.js'
+import get from 'lodash-es/get.js'
+import isArray from 'lodash-es/isArray.js'
+import isBoolean from 'lodash-es/isBoolean.js'
+import isEqual from 'lodash-es/isEqual.js'
+import isNil from 'lodash-es/isNil.js'
+import isPlainObject from 'lodash-es/isPlainObject.js'
+import isString from 'lodash-es/isString.js'
+import keys from 'lodash-es/keys.js'
+import omit from 'lodash-es/omit.js'
+import omitBy from 'lodash-es/omitBy.js'
+import { withLock } from '../core/lock.mjs'
+import { readJson, writeJson, writeFileAtomic } from '../core/jsonl.mjs'
+import { nowIso } from '../core/canonical.mjs'
+import { assertWriteRoot } from '../core/writeRoot.mjs'
+import { catalogArmsOf, catalogLayersOf, validateCatalog, ARM_KEYS } from './arms.mjs'
+
+
+//治理(governance;2026-11-14,使用端 Gitea #138):搜尋之詞彙(臂目錄)再廣也是限制 —— 迴圈須能自己調整它, 而調整須經審定
+//  代理之三層(分工之軸;與 README §1 之資料 / 搜尋 / 評估三層不同軸):
+//    節點層 = 評估器(領域注入;可為代理):依所選臂產出並評估規格
+//    做夢層 = hooks.afterRound(領域注入;可為代理):審計本輪、彙整、給下一輪之方向
+//    主控層 = 審定者(人或代理;輪與輪之間):審臂目錄之提案、處置下層上呈之事項、啟動下一輪
+//  原引擎只有「下層 → 外部代理」之兩種單向請求(欠額觸發生成、策略開發), 臂目錄則為組裝期注入之靜態資料(無提案、無審定、無演進)
+//  本模組補上:
+//    提案帳(&lt;root>/governance/proposals.json + 渲染 PROPOSALS.md):任一層皆可提(propose), 類別 PROPOSAL_KINDS ——
+//      new(新臂)/ layer(新的一層 = 新的臂之種類)/ revise(修訂既有臂)/ retire(停用既有臂)/ note(詞彙以外之上呈事項;只記錄與審定, 引擎不代為施行)
+//      與帳上待審者同鍵(類別 + 臂 + 層 + 名稱;revise 另含修訂內容)者不另立, 只在原列補記「再提」
+//      提案帳存在而損壞(非 JSON / 形不合)⇒ 拋錯(不當成空帳 ⇒ 不會以新帳覆寫舊帳);形之檢查逐列(id 唯一且合式、seq 不小於最大編號、kind / status 在值域、已審定者附 decision)
+//    審定(decide):主控逐筆通過或不採(皆須附理由);通過之 new / layer / revise / retire 寫入擴充檔 &lt;root>/governance/extensions.json
+//      **提交點 = 擴充檔之原子寫**(其項帶 origin.proposal);其後才寫提案帳、重載本程序之目錄、重產 PROPOSALS.md(後兩者失敗不使審定失敗, 回 reloadError / renderError)
+//      前次審定於「寫擴充檔」與「寫提案帳」之間中斷 ⇒ 擴充檔已有本提案之項(已生效, 後續審定可能已依賴之)⇒ 重審之 accept 只補記提案帳(不重寫、不搬動該項;冪等),
+//        改判不採則拒(code RSI_GOVERNANCE_COMMITTED:已生效者以另提 retire / revise 撤回);寫提案帳失敗 ⇒ 拋 RSI_GOVERNANCE_PARTIAL(重跑同一審定即完成)
+//      通過前另以「基底 + 新擴充」核對 cfg.arms.use(預設選臂被停用或變不可選 ⇒ 拒, 免下一次組裝即拋而狀態根無法使用)
+//    生效之目錄 = 注入之基底(cfg.arms.catalog)+ 狀態根之擴充(applyArmExtensions;純函式)—— createRsi 組裝時套用, rsi.reloadArms() 於同一程序內重載
+//      基底是使用端給的起點, 擴充是這個狀態根自己長出來的(與樹、策略版本同屬狀態);停用之臂留在目錄(改為 blocked、不可選):樹上之節點仍引用得到
+//      擴充檔損壞(非 JSON、結構不合、指向不存在之臂)⇒ 拋錯(不靜默當成無擴充, 否則已審定之臂無聲消失)
+//      擴充所加之臂、或修訂了 realize 之臂(lenientIdsOf), 其落成之算子 / 片段 / 生成模組 / 載體尚未登錄者 ⇒ 組裝不拋錯, 該臂不可選並列入 rsi.arms.warnings
+//        (arms.mjs 之 lenient;由目錄推導算子之領域於下一次組裝即登錄;擴充之資料不得使組裝失敗而迴圈無法啟動);只改其他欄之修訂不放寬基底之落成名(仍嚴格)
+//      他實例(同狀態根、組裝較早)於 explore 起跑時比對擴充檔, 有變即重載(rsi.syncArms), 不以過期之目錄開輪
+//    起跑之把關(gate;cfg.governance.requireReview, 預設 false = 行為逐字同改前):待審之提案逾 maxPendingRounds 輪未審 ⇒ explore 於取輪號前拋 RSI_GOVERNANCE_PENDING(不開輪)
+//      —— 「下層提、主控審、審過才續跑」之契約由引擎守, 不靠呼叫端記得;呼叫端明示 opt.ackPending 可越過
+//    收件匣(inbox):待審之提案 + 引擎既有之兩種請求標記(生成請求、策略開發請求), 主控之單一入口
+/**
+ * 提案之類別:new(新臂)、layer(新的一層,即新的臂之種類)、revise(修訂既有臂)、retire(停用既有臂)、note(詞彙以外之上呈事項;只記錄與審定)
+ *
+ * @type {Array}
+ */
+export const PROPOSAL_KINDS = ['new', 'layer', 'revise', 'retire', 'note']
+/**
+ * 提案之狀態:pending(待審)、accepted(通過)、rejected(不採)
+ *
+ * @type {Array}
+ */
+export const PROPOSAL_STATUS = ['pending', 'accepted', 'rejected']
+/**
+ * cfg.governance 之預設:requireReview(待審逾期即不開新輪,預設 false)、maxPendingRounds(提案可待審之輪數,預設 0 = 下一輪起跑前須審)、gateKinds(計入把關之類別,預設為四種詞彙類;note 不計)
+ *
+ * @type {Object}
+ */
+export const GOVERNANCE_DEFAULTS = Object.freeze({ requireReview: false, maxPendingRounds: 0, gateKinds: Object.freeze(['new', 'layer', 'revise', 'retire']) })
+/**
+ * cfg.governance 之已知鍵(未知鍵 ⇒ 組裝期拋錯)
+ *
+ * @type {Array}
+ */
+export const GOVERNANCE_CFG_KEYS = ['requireReview', 'maxPendingRounds', 'gateKinds']
+const KIND_LABEL = { new: '新臂', layer: '新層', revise: '修訂', retire: '停用', note: '上呈' }
+const STATUS_LABEL = { pending: '待審', accepted: '通過', rejected: '不採' }
+const VOCAB_KINDS = ['new', 'layer', 'revise', 'retire']
+const ID_RE = /^[A-Za-z][\w-]*$/
+//修訂可改之欄(id / n / origin 不可改)
+const REVISABLE = ARM_KEYS.filter((k) => !['id', 'n', 'origin'].includes(k))
+let str = (v) => (isString(v) &amp;&amp; v.trim() ? v.trim() : null)
+let readJsonSafe = (fp) => { try { return readJson(fp, null) } catch (e) { return null } }
+let norm = (v) => String(v || '').replace(/\s+/g, '').toLowerCase()
+
+/**
+ * cfg.governance 之形檢查(純函式;createRsi 據以拋錯):須為物件、無未知鍵、requireReview 為布林、maxPendingRounds 為非負整數、gateKinds 為類別陣列;各鍵為 undefined 或 null 時取預設
+ *
+ * @param {*} gc 輸入 cfg.governance
+ * @returns {Object} 回傳 { errors:Array(字串) }
+ * @example
+ * console.log(checkGovernanceCfg(undefined).errors.length, checkGovernanceCfg({ requireReview: 1 }).errors.length, checkGovernanceCfg({ foo: 1 }).errors.length, checkGovernanceCfg({ gateKinds: null }).errors.length)
+ * // => 0 1 1 0
+ */
+export let checkGovernanceCfg = (gc) => {
+    let errors = []
+    if (gc === undefined || gc === null) { return { errors } }
+    if (!isPlainObject(gc)) { return { errors: ['cfg.governance 須為物件 { requireReview?, maxPendingRounds?, gateKinds? }'] } }
+    let unknown = keys(gc).filter((k) => !GOVERNANCE_CFG_KEYS.includes(k))
+    if (unknown.length) { errors.push(`cfg.governance 有未知鍵 ${unknown.join(', ')}(已知鍵 ${GOVERNANCE_CFG_KEYS.join(', ')})`) }
+    if (!isNil(gc.requireReview) &amp;&amp; !isBoolean(gc.requireReview)) { errors.push('cfg.governance.requireReview 須為布林') }
+    if (!isNil(gc.maxPendingRounds) &amp;&amp; !(Number.isSafeInteger(gc.maxPendingRounds) &amp;&amp; gc.maxPendingRounds >= 0)) { errors.push('cfg.governance.maxPendingRounds 須為非負整數') }
+    if (!isNil(gc.gateKinds) &amp;&amp; !(isArray(gc.gateKinds) &amp;&amp; gc.gateKinds.every((k) => PROPOSAL_KINDS.includes(k)))) { errors.push(`cfg.governance.gateKinds 須為類別陣列(${PROPOSAL_KINDS.join(' / ')})`) }
+    return { errors }
+}
+
+/**
+ * 提案之檢查(純函式):須為陣列;每筆之 kind 在值域、mechanism 非空(機制之中性描述;revise = 修訂後之定義;retire = 停用之理由;note = 事項之內容)、new / layer / note 須附 title、revise / retire 須附 arm(既有臂之 id)、其餘字串欄須為字串、sources 須為字串陣列
+ *
+ * @param {*} items 輸入提案陣列 [{ kind, arm?, layer?, title?, mechanism, boundary?, evidence?, sources? }]
+ * @returns {Object} 回傳 { errors:Array(字串) }
+ * @example
+ * let ok = [{ kind: 'new', layer: 'P', title: 'z 步進', mechanism: '對 z 軸步進' }, { kind: 'retire', arm: 'tag', mechanism: '與 px 重疊' }]
+ * console.log(checkProposals(ok).errors.length, checkProposals([{ kind: 'new', mechanism: 'm' }, { kind: 'merge' }]).errors.length, checkProposals('x').errors.length)
+ * // => 0 2 1
+ */
+export let checkProposals = (items) => {
+    if (!isArray(items)) { return { errors: ['提案須為陣列'] } }
+    let errors = []
+    items.forEach((x, i) => {
+        let at = `提案[${i}]`
+        if (!isPlainObject(x) || !PROPOSAL_KINDS.includes(x.kind)) { errors.push(`${at}:kind 須為 ${PROPOSAL_KINDS.join(' | ')}`); return }
+        if (!str(x.mechanism)) { errors.push(`${at}:mechanism 不得為空(機制之中性描述;revise = 修訂後之定義;retire = 停用之理由;note = 事項之內容)`); return }
+        if (['new', 'layer', 'note'].includes(x.kind) &amp;&amp; !str(x.title)) { errors.push(`${at}:kind ${x.kind} 須附 title`); return }
+        if (['revise', 'retire'].includes(x.kind) &amp;&amp; !str(x.arm)) { errors.push(`${at}:kind ${x.kind} 須附 arm(既有臂之 id)`); return }
+        if (['arm', 'layer', 'title', 'boundary', 'evidence'].some((k) => !isNil(x[k]) &amp;&amp; !isString(x[k])) || (!isNil(x.sources) &amp;&amp; !(isArray(x.sources) &amp;&amp; x.sources.every(isString)))) { errors.push(`${at}:須為 { kind, arm?, layer?, title?, mechanism, boundary?, evidence?, sources?[] }(字串欄須為字串)`) }
+    })
+    return { errors }
+}
+
+/**
+ * 把擴充套到目錄上(純函式;不改入參):擴充 = { layers:[{ id, title }], arms:[{ op:"add", arm:{…} } | { op:"revise", id, patch:{…} } | { op:"retire", id, why }] },依序套用;各筆之 origin(出處)寫入該臂之 origin 欄(修訂記於 origin.revised、停用記於 origin.retired)。新臂之 n 接全目錄之最大序號、status 未給為 proposed;停用者改為 blocked、不可選並留在目錄。擴充為空 ⇒ 原樣回傳目錄;結構不合(層或臂重複、層不存在、基底無層表而新增層、要改之臂不存在、修訂之欄不可改或未知、op 不明)⇒ 拋錯
+ *
+ * @param {Array|Object|null} catalog 輸入基底目錄(臂陣列或 { arms, layers? })
+ * @param {Object|null} ext 輸入擴充
+ * @returns {Array|Object|null} 回傳套用後之目錄(有擴充時為 { …原欄, layers, arms } 物件形)
+ * @throws {Error} 擴充之結構不合時拋出
+ * @example
+ * let base = { layers: { P: '位置層' }, arms: [{ id: 'px', n: 1, layer: 'P', title: 'x 步進', status: 'sparse', realize: [{ kind: 'operator', op: 'P.x' }] }] }
+ * let ext = {
+ *     layers: [{ id: 'K', title: '資訊源層' }],
+ *     arms: [
+ *         { op: 'add', arm: { id: 'kz', layer: 'K', title: 'z 來源', realize: [{ kind: 'manual', how: '待實作' }] }, origin: { proposal: 'P001' } },
+ *         { op: 'retire', id: 'px', why: '併入 kz' },
+ *     ],
+ * }
+ * let out = applyArmExtensions(base, ext)
+ * console.log(Object.keys(out.layers).join(','), out.arms.map((a) => `${a.id}:${a.status}:${a.n}`).join(' '), out.arms[1].origin.proposal, base.arms.length)
+ * // => P,K px:blocked:1 kz:proposed:2 P001 1
+ *
+ * console.log(applyArmExtensions(base, null) === base)
+ * // => true
+ */
+export let applyArmExtensions = (catalog, ext) => {
+    let xl = isArray(get(ext, 'layers')) ? ext.layers : []
+    let xa = isArray(get(ext, 'arms')) ? ext.arms : []
+    if (!xl.length &amp;&amp; !xa.length) { return catalog }
+    let baseLayers = catalogLayersOf(catalog)
+    let layers = { ...baseLayers }
+    let arms = catalogArmsOf(catalog).map((a) => ({ ...a }))
+    if (xl.length &amp;&amp; !keys(baseLayers).length) { throw new Error('臂目錄之擴充:基底目錄無層表(catalog.layers), 不能新增層') }
+    for (let [i, l] of xl.entries()) {
+        if (!isPlainObject(l) || !isString(l.id) || !ID_RE.test(l.id) || !str(l.title)) { throw new Error(`臂目錄之擴充:layers[${i}] 須為 { id(識別字), title }`) }
+        if (layers[l.id] !== undefined) { throw new Error(`臂目錄之擴充:層 ${l.id} 已存在`) }
+        layers[l.id] = str(l.title)
+    }
+    let hasLayers = keys(layers).length > 0
+    let maxN = () => arms.reduce((m, x) => Math.max(m, Number.isInteger(x.n) ? x.n : 0), 0)
+    for (let [i, e] of xa.entries()) {
+        if (!isPlainObject(e)) { throw new Error(`臂目錄之擴充:arms[${i}] 須為物件`) }
+        let origin = isPlainObject(e.origin) ? e.origin : null
+        if (e.op === 'add') {
+            let a = e.arm
+            if (!isPlainObject(a) || !isString(a.id)) { throw new Error(`臂目錄之擴充:arms[${i}] 之 add 須附 arm(含 id)`) }
+            if (arms.some((x) => x.id === a.id)) { throw new Error(`臂目錄之擴充:臂 ${a.id} 已存在`) }
+            if (hasLayers &amp;&amp; !(a.layer in layers)) { throw new Error(`臂目錄之擴充:臂 ${a.id} 之層 ${a.layer} 不存在(先提新層)`) }
+            let useN = arms.some((x) => Number.isInteger(x.n))
+            arms.push({ ...(useN ? { n: maxN() + 1 } : {}), status: 'proposed', ...omit(a, ['n', 'origin']), ...(origin ? { origin } : {}) })
+        }
+        else if (e.op === 'revise') {
+            let k = arms.findIndex((x) => x.id === e.id)
+            if (k &lt; 0) { throw new Error(`臂目錄之擴充:要修訂之臂 ${e.id} 不存在`) }
+            let p = isPlainObject(e.patch) ? e.patch : {}
+            let bad = keys(p).filter((x) => !REVISABLE.includes(x))
+            if (bad.length) { throw new Error(`臂目錄之擴充:修訂 ${e.id} 之欄 ${bad.join(', ')} 不可改或未知(可改之欄 ${REVISABLE.join(', ')})`) }
+            if (!keys(p).length) { throw new Error(`臂目錄之擴充:修訂 ${e.id} 須附 patch(可改之欄 ${REVISABLE.join(', ')})`) }
+            if (hasLayers &amp;&amp; p.layer !== undefined &amp;&amp; !(p.layer in layers)) { throw new Error(`臂目錄之擴充:臂 ${e.id} 之層 ${p.layer} 不存在`) }
+            arms[k] = { ...arms[k], ...p, ...(origin ? { origin: { ...(arms[k].origin || {}), revised: origin } } : {}) }
+        }
+        else if (e.op === 'retire') {
+            let k = arms.findIndex((x) => x.id === e.id)
+            if (k &lt; 0) { throw new Error(`臂目錄之擴充:要停用之臂 ${e.id} 不存在`) }
+            arms[k] = { ...omit(arms[k], ['selectable', 'requires']), status: 'blocked', blockedBy: `停用(治理):${str(e.why) || '未註明'}`, ...(origin ? { origin: { ...(arms[k].origin || {}), retired: origin } } : {}) }
+        }
+        else { throw new Error(`臂目錄之擴充:arms[${i}] 之 op 須為 add / revise / retire`) }
+    }
+    return { ...(isPlainObject(catalog) ? catalog : {}), layers, arms }
+}
+
+/**
+ * 讀狀態根之擴充檔(&lt;root>/governance/extensions.json):不存在 ⇒ null;存在而非 JSON 或形不合(須為 { layers?:[], arms?:[] })⇒ 拋錯(靜默略過會使已審定之臂無聲消失)
+ *
+ * @param {Object} paths 輸入 makePaths 之回傳(取 govExtensions)
+ * @returns {Object|null} 回傳 { layers:Array, arms:Array } 或 null
+ * @throws {Error} 擴充檔非 JSON 或形不合時拋出
+ * @example
+ * import fs from 'fs'
+ * import os from 'os'
+ * import path from 'path'
+ * import { makePaths } from 'w-recursi/src/core/paths.mjs'
+ *
+ * let dir = fs.mkdtempSync(path.join(os.tmpdir(), 'w-recursi-'))
+ * let paths = makePaths(dir)
+ * console.log(readArmExtensions(paths))
+ * // => null
+ * fs.mkdirSync(paths.governance)
+ * fs.writeFileSync(paths.govExtensions, '{bad')
+ * try { readArmExtensions(paths) } catch (e) { console.log(e.message.startsWith('臂目錄之擴充:擴充檔非 JSON')) }
+ * // => true
+ * fs.rmSync(dir, { recursive: true, force: true })
+ */
+export let readArmExtensions = (paths) => {
+    let fp = paths.govExtensions
+    if (!fs.existsSync(fp)) { return null }
+    let e = null
+    try { e = readJson(fp, null) }
+    catch (err) { throw new Error(`臂目錄之擴充:擴充檔非 JSON(${fp})`) }
+    if (!isPlainObject(e) || (!isNil(e.layers) &amp;&amp; !isArray(e.layers)) || (!isNil(e.arms) &amp;&amp; !isArray(e.arms))) { throw new Error(`臂目錄之擴充:擴充檔須為 { layers?:[], arms?:[] }(${fp})`) }
+    return { layers: isArray(e.layers) ? e.layers : [], arms: isArray(e.arms) ? e.arms : [] }
+}
+
+/**
+ * 擴充之臂中,落成名(realize)來自擴充者之 id:add 之臂、patch 含 realize 之 revise 之臂(供 makeArms / validateCatalog 之 lenient;只改其他欄之修訂不列入,基底之落成名仍嚴格)
+ *
+ * @param {Object|null} ext 輸入擴充 { layers, arms }
+ * @returns {Array|null} 回傳臂 id 陣列;無擴充 ⇒ null
+ * @example
+ * let ext = { arms: [{ op: 'add', arm: { id: 'kz' } }, { op: 'revise', id: 'px', patch: { title: 't' } }, { op: 'revise', id: 'py', patch: { realize: [] } }, { op: 'retire', id: 'pair' }] }
+ * console.log(lenientIdsOf(ext).join(','), lenientIdsOf(null))
+ * // => kz,py null
+ */
+export let lenientIdsOf = (ext) => {
+    if (!ext) { return null }
+    return (isArray(ext.arms) ? ext.arms : []).filter((e) => isPlainObject(e) &amp;&amp; ((e.op === 'add' &amp;&amp; isPlainObject(e.arm)) || (e.op === 'revise' &amp;&amp; isPlainObject(e.patch) &amp;&amp; e.patch.realize !== undefined))).map((e) => (e.op === 'add' ? e.arm.id : e.id))
+}
+
+/**
+ * 讀狀態根之擴充並套到基底目錄上(供使用端於組裝領域之前取得「生效之目錄」—— 如由目錄推導算子與載體者);有擴充時另做不對登錄表之結構檢查(validateCatalog),不合即拋;無擴充檔 ⇒ 原樣回傳基底
+ *
+ * @param {Object} paths 輸入 makePaths 之回傳(取 govExtensions)
+ * @param {Array|Object|null} catalog 輸入基底目錄
+ * @returns {Array|Object|null} 回傳生效之目錄
+ * @throws {Error} 擴充檔損壞、擴充之結構不合或套用後之目錄結構不合時拋出
+ * @example
+ * import fs from 'fs'
+ * import os from 'os'
+ * import path from 'path'
+ * import { makePaths } from 'w-recursi/src/core/paths.mjs'
+ *
+ * let dir = fs.mkdtempSync(path.join(os.tmpdir(), 'w-recursi-'))
+ * let base = { layers: { P: '位置層' }, arms: [{ id: 'px', layer: 'P', title: 'x 步進', status: 'sparse', realize: [{ kind: 'manual', how: '—' }] }] }
+ * console.log(effectiveCatalogOf(makePaths(dir), base) === base)
+ * // => true
+ * fs.rmSync(dir, { recursive: true, force: true })
+ */
+export let effectiveCatalogOf = (paths, catalog) => {
+    let ext = readArmExtensions(paths)
+    let out = applyArmExtensions(catalog, ext)
+    if (out !== catalog) { let c = validateCatalog(out); if (c.errors.length) { throw new Error(`臂目錄之擴充:套用後之目錄不合:\n  ${c.errors.join('\n  ')}`) } }
+    return out
+}
+
+/**
+ * 新臂之 id:層代號 + 全目錄之下一個序號(至少 2 位)+ 底線 + 英數名
+ *
+ * @param {Array|Object|null} catalog 輸入目錄
+ * @param {String} layer 輸入層代號
+ * @param {String} name 輸入英數名(非英數字元略去)
+ * @returns {String} 回傳臂 id
+ * @example
+ * console.log(nextArmId({ arms: [{ id: 'A01_a', n: 1 }, { id: 'B02_b', n: 2 }] }, 'K', 'entry style'))
+ * // => K03_entrystyle
+ */
+export let nextArmId = (catalog, layer, name) => {
+    let arms = catalogArmsOf(catalog)
+    let n = arms.reduce((m, a) => Math.max(m, Number.isInteger(a.n) ? a.n : 0), 0) || arms.length
+    return `${layer}${String(n + 1).padStart(2, '0')}_${String(name).replace(/[^A-Za-z0-9]/g, '')}`
+}
+/**
+ * 新層之代號:尚未使用之下一個大寫字母
+ *
+ * @param {Array|Object|null} catalog 輸入目錄
+ * @returns {String} 回傳層代號
+ * @throws {Error} 26 個字母皆已使用時拋出
+ * @example
+ * console.log(nextLayerId({ layers: { A: 'a', B: 'b', D: 'd' }, arms: [] }), nextLayerId(null))
+ * // => C A
+ */
+export let nextLayerId = (catalog) => {
+    let layers = catalogLayersOf(catalog)
+    for (let c = 65; c &lt;= 90; c++) { let k = String.fromCharCode(c); if (layers[k] === undefined) { return k } }
+    throw new Error('nextLayerId: 層之代號已用完')
+}
+
+let lineOf = (x) => `〔${KIND_LABEL[x.kind] || x.kind}〕${x.arm ? `${x.arm} ` : ''}${x.title || ''}${x.layer ? `(層:${x.layer})` : ''}:${x.mechanism}${x.boundary ? `;與既有臂之界線:${x.boundary}` : ''}${x.evidence ? `(依據:${x.evidence})` : ''}${isArray(x.sources) &amp;&amp; x.sources.length ? `(出處:${x.sources.join('、')})` : ''}`
+let whoOf = (x) => `${isNil(x.round) ? '' : `第 ${x.round} 輪;`}${x.from || '未註明'}`
+/**
+ * 提案帳之渲染(markdown;純函式):待審在前(依編號)、已審定在後(依編號新者在前)
+ *
+ * @param {Object} ledger 輸入提案帳 { seq, items }
+ * @returns {String} 回傳 markdown
+ * @example
+ * let md = renderProposals({ seq: 1, items: [{ id: 'P001', round: 3, from: 'dream', kind: 'new', layer: 'P', title: 'z 步進', mechanism: '對 z 軸步進', status: 'pending', decision: null }] })
+ * console.log(md.split('\n').filter((l) => /^## |^- /.test(l)).join(' | '))
+ * // => ## 待審(1 筆) | - **P001**(第 3 輪;dream)〔新臂〕z 步進(層:P):對 z 軸步進 | ## 已審定(0 筆;新者在前)
+ */
+export let renderProposals = (ledger) => {
+    let items = isArray(get(ledger, 'items')) ? ledger.items : []
+    let pend = items.filter((x) => x.status === 'pending')
+    let done = items.filter((x) => x.status !== 'pending').reverse()
+    let L = ['# 治理:提案帳', '', '> 由引擎產生,不手改(正本 proposals.json)。下層提案、主控審定;通過之臂目錄變更寫入 extensions.json,下一次組裝(或 reloadArms)起生效。', '']
+    L.push(`## 待審(${pend.length} 筆)`, '', pend.length ? pend.map((x) => `- **${x.id}**(${whoOf(x)})${lineOf(x)}${x.note ? `〔${x.note}〕` : ''}`).join('\n') : '(無)', '')
+    L.push(`## 已審定(${done.length} 筆;新者在前)`, '', done.length ? done.map((x) => `- **${x.id}** 〔${STATUS_LABEL[x.status] || x.status}${get(x, 'decision.ref') ? ` ⇒ \`${x.decision.ref}\`` : ''}〕(${whoOf(x)};${KIND_LABEL[x.kind] || x.kind})${x.arm ? `${x.arm} ` : ''}${x.title || ''}:${String(x.mechanism).slice(0, 160)} —— 審定(${get(x, 'decision.by', '-')}):${get(x, 'decision.why', '')}`).join('\n') : '(無)', '')
+    return L.join('\n')
+}
+
+/**
+ * 治理工廠(createRsi 以之組 rsi.governance):提案帳、審定、擴充、起跑之把關、收件匣。寫入皆於 governance 鎖內;通過之臂目錄變更先以「基底 + 新擴充」試建目錄(結構檢查與 cfg.arms.use 之核對),不合 ⇒ 拋錯且不寫任何檔;提案帳存在而損壞 ⇒ propose / decide / list 拋錯(不以新帳覆寫)。
+ * 審定之提交點為擴充檔之原子寫;其後寫提案帳(失敗 ⇒ 拋 code RSI_GOVERNANCE_PARTIAL,重跑同一審定即完成)、重載本程序之目錄(失敗 ⇒ 回 reloadError)、重產 PROPOSALS.md(失敗 ⇒ 回 renderError);前次審定中斷而擴充檔已有本提案之項者,重審之 accept 只補記提案帳(recovered),改判不採 ⇒ 拋 code RSI_GOVERNANCE_COMMITTED
+ *
+ * @param {Object} rsi 輸入實例(取 paths、cfg、baseCatalog、checkCatalog、reloadArms、arms)
+ * @returns {Object} 回傳 { opt(生效之治理選項), ledger(), list(opt), pending(), propose(o), decide(id, o), extensions(), effectiveCatalog(), gate(o), inbox(), render(), exists() };propose 回 { added, repeated, invalid, renderError? },decide 回 { item, extension, reloaded, reloadError?, renderError?, recovered? }
+ * @example
+ * import fs from 'fs'
+ * import os from 'os'
+ * import path from 'path'
+ * import { createRsi } from 'w-recursi/src/index.mjs'
+ *
+ * let dir = fs.mkdtempSync(path.join(os.tmpdir(), 'w-recursi-'))
+ * let domain = {
+ *     name: 'toy',
+ *     score: (raw) => ({ S: raw.v, ladder: raw.v >= 2 ? 1 : 0, flags: {} }),
+ *     validateSpec: (s) => { if (typeof s.x !== 'number') { throw new Error('x 須為數字') } },
+ *     operators: [{ name: 'inc', family: 'f', applies: () => true, children: (s) => [{ spec: { x: s.x + 1 }, params: { by: 1 } }] }],
+ *     carriers: { root: { x: 0 } },
+ *     evaluator: { mode: 'inProcess', evaluate: async (spec) => ({ v: spec.x }) },
+ * }
+ * let catalog = { layers: { L: '層' }, arms: [{ id: 'A1', layer: 'L', title: '遞增', status: 'sparse', realize: [{ kind: 'operator', op: 'inc' }] }] }
+ * let rsi = createRsi({ root: dir, domain, arms: { catalog }, governance: { requireReview: true } }).init()
+ * let p = rsi.governance.propose({ round: 1, from: 'dream', items: [{ kind: 'new', layer: 'L', title: '遞增(手動)', mechanism: '以另一種方式遞增' }] })
+ * console.log(p.added.map((x) => x.id).join(','), rsi.governance.gate({ round: 2 }).pending.length)
+ * // => P001 1
+ * let d = rsi.governance.decide('P001', { accept: true, why: '機制獨立', arm: { id: 'A2', layer: 'L', title: '遞增(手動)', realize: [{ kind: 'manual', how: '待實作' }] } })
+ * console.log(d.item.status, rsi.arms.size, rsi.governance.gate({ round: 2 }))
+ * // => accepted 2 null
+ * fs.rmSync(dir, { recursive: true, force: true })
+ */
+export let makeGovernance = (rsi) => {
+    let { paths } = rsi
+    let gc = isPlainObject(get(rsi.cfg, 'governance')) ? rsi.cfg.governance : {}
+    let G = Object.freeze({ ...GOVERNANCE_DEFAULTS, ...omitBy(gc, isNil) })
+    let lockOpt = { dir: paths.governance, name: 'governance' }
+    //提案帳:不存在 ⇒ 空帳;存在而非 JSON 或形不合 ⇒ 拋錯(不當成空帳, 免被下一次寫入覆蓋)
+    //  形:{ seq:非負安全整數, items:[] };每列 id 為 P + 數字且唯一、seq ≥ 最大編號(免重用編號)、kind / status 在值域、mechanism 為字串、已審定者附 decision 物件
+    let ledger = () => {
+        if (!fs.existsSync(paths.govProposals)) { return { seq: 0, items: [] } }
+        let l = null
+        try { l = readJson(paths.govProposals, null) }
+        catch (e) { throw new Error(`治理:提案帳非 JSON(${paths.govProposals})`) }
+        let bad = (why) => new Error(`治理:提案帳須為 { seq, items:[] }(${why};${paths.govProposals})`)
+        if (!isPlainObject(l) || !isArray(l.items)) { throw bad('頂層') }
+        if (!Number.isSafeInteger(l.seq) || l.seq &lt; 0) { throw bad('seq 須為非負整數') }
+        let ids = new Set()
+        for (let [i, x] of l.items.entries()) {
+            let m = isPlainObject(x) &amp;&amp; isString(x.id) ? /^P(\d+)$/.exec(x.id) : null
+            if (!m || ids.has(x.id)) { throw bad(`items[${i}] 之 id 不合式或重複`) }
+            ids.add(x.id)
+            if (Number(m[1]) > l.seq) { throw bad(`items[${i}] 之編號大於 seq`) }
+            if (!PROPOSAL_KINDS.includes(x.kind) || !PROPOSAL_STATUS.includes(x.status) || !isString(x.mechanism)) { throw bad(`items[${i}] 之 kind / status / mechanism`) }
+            let d = x.decision
+            if (x.status === 'pending' ? !isNil(d) : !(isPlainObject(d) &amp;&amp; str(d.at) &amp;&amp; str(d.by) &amp;&amp; str(d.why))) { throw bad(`items[${i}] 之 decision 與 status 不一致或缺 at / by / why`) }
+        }
+        return l
+    }
+    //擴充:讀檔(損壞即拋)並以「基底 + 擴充」做不對登錄表之結構檢查(深層損壞亦拋;status / 報告 / 生效目錄 / 審定一致)
+    let extensions = () => {
+        let ext = readArmExtensions(paths) || { layers: [], arms: [] }
+        if (ext.layers.length || ext.arms.length) { let c = validateCatalog(applyArmExtensions(rsi.baseCatalog, ext)); if (c.errors.length) { throw new Error(`臂目錄之擴充:套用後之目錄不合:\n  ${c.errors.join('\n  ')}`) } }
+        return ext
+    }
+    //寫提案帳(正本;失敗即拋);PROPOSALS.md 為衍生檔, 重產失敗不使呼叫失敗(回錯誤字串)
+    let saveLedger = (led) => { assertWriteRoot(paths.govProposals, { what: 'governance(proposals.json)' }); writeJson(paths.govProposals, led) }
+    let renderMd = (led) => { try { writeFileAtomic(paths.govProposalsMd, renderProposals(led)); return null } catch (e) { return String((e &amp;&amp; e.message) || e).split('\n')[0].slice(0, 300) } }
+    let errLine = (e) => String((e &amp;&amp; e.message) || e).split('\n')[0].slice(0, 300)
+    let list = ({ status = null, kind = null } = {}) => ledger().items.filter((x) => (status === null || x.status === status) &amp;&amp; (kind === null || x.kind === kind))
+    let pending = () => list({ status: 'pending' })
+    //同鍵:類別 + 臂 + 層 + 名稱(空白與大小寫不計);revise 另含修訂內容(同一臂之不同修訂為不同提案)
+    let keyOf = (p) => [p.kind, norm(p.arm), norm(p.layer), norm(p.title), p.kind === 'revise' ? norm(p.mechanism) : ''].join('|')
+    //提案:items 不合格者不入帳(列於 invalid);與帳上待審者同鍵者不另立(repeated);round = 提出之輪號、from = 提出者(層名或節點 id;自由字串)
+    //  items 未給或 null ⇒ 空;給了而非陣列 ⇒ 拋錯(不與合法之空陣列混同)
+    let propose = ({ round = null, from = null, items = null } = {}) => {
+        if (!isNil(items) &amp;&amp; !isArray(items)) { throw new Error('governance.propose: items 須為提案陣列') }
+        return withLock(() => proposeIn({ round, from, items: items || [] }), lockOpt)
+    }
+    let proposeIn = ({ round, from, items }) => {
+        let led = ledger()
+        let armIds = rsi.arms ? rsi.arms.arms.map((a) => a.id) : []
+        let added = [], repeated = [], invalid = []
+        for (let [i, p] of items.entries()) {
+            let errs = checkProposals([p]).errors
+            if (errs.length) { invalid.push({ index: i, why: errs[0].replace(/^提案\[0\]:/, '') }); continue }
+            let old = led.items.find((x) => x.status === 'pending' &amp;&amp; keyOf(x) === keyOf(p))
+            if (old) {
+                let extra = [str(p.mechanism) !== old.mechanism ? str(p.mechanism) : null, str(p.evidence)].filter(Boolean).join(';')
+                old.note = `${old.note ? `${old.note};` : ''}${Number.isInteger(round) ? `第 ${round} 輪` : ''}再提(${str(from) || '未註明'})${extra ? `:${extra.slice(0, 300)}` : ''}`
+                repeated.push(old)
+                continue
+            }
+            if (!Number.isSafeInteger(led.seq + 1)) { throw new Error('governance.propose: 提案編號已達上限(seq)') }
+            led.seq = led.seq + 1
+            let it = {
+                id: `P${String(led.seq).padStart(3, '0')}`, at: nowIso(), round: Number.isInteger(round) ? round : null, from: str(from), kind: p.kind,
+                arm: str(p.arm), layer: str(p.layer), title: str(p.title), mechanism: str(p.mechanism), boundary: str(p.boundary), evidence: str(p.evidence), sources: isArray(p.sources) ? p.sources.slice() : [],
+                note: ['revise', 'retire'].includes(p.kind) &amp;&amp; !armIds.includes(str(p.arm)) ? '所指之臂不在目錄' : null,
+                status: 'pending', decision: null,
+            }
+            led.items.push(it)
+            added.push(it)
+        }
+        let renderError = null
+        if (added.length || repeated.length) { saveLedger(led); renderError = renderMd(led) }
+        return { added, repeated, invalid, ...(renderError ? { renderError } : {}) }
+    }
+    //審定:accept(true 通過 / false 不採)、why(必填)、by(審定者)
+    //  通過之 new:arm = 目錄條目(須含 id 與 realize;layer / title 未給時取提案者);layer:layer = { id, title }(未給 ⇒ id 取下一個字母、title 取提案者)
+    //  revise:arm = 要改之欄(patch;id 可省, 給則須同所指之臂);retire:無須另給;note:只記審定
+    //  name(通過新臂且 arm.id 未給時):英數名 ⇒ 於鎖內依最新之生效目錄以 nextArmId 配號(免兩個審定者於鎖外配到同號)
+    //  回 { item, extension(擴充檔之該筆 | null), reloaded(本程序之 rsi.arms 是否已重載), reloadError?, renderError?, recovered?(補記前次中斷之審定) }
+    let decide = (id, { accept, why, by = 'controller', arm = null, layer = null, name = null } = {}) => withLock(() => {
+        if (!isBoolean(accept) || !str(why)) { throw new Error('governance.decide: 須給 accept(布林)與 why(審定理由)') }
+        let led = ledger()
+        let it = led.items.find((x) => x.id === id)
+        if (!it) { throw new Error(`governance.decide: 提案帳無此筆 ${id}`) }
+        if (it.status !== 'pending') { throw new Error(`governance.decide: 提案 ${id} 已審定(${it.status})`) }
+        let at = nowIso()
+        let byS = str(by) || 'controller'
+        //origin 記完整之審定(誰、何時、理由):擴充檔即提交點, 中斷後之補記據此還原原決定
+        let origin = { proposal: it.id, round: it.round, from: it.from, by: byS, at, why: str(why) }
+        let ext = extensions()
+        //本次審定之擴充項(不含 origin;exts = 配號所據之擴充)
+        let build = (exts) => {
+            if (it.kind === 'new') {
+                let aid = isPlainObject(arm) ? str(arm.id) : null
+                let lyr = (isPlainObject(arm) &amp;&amp; str(arm.layer)) || it.layer
+                if (!aid &amp;&amp; str(name) &amp;&amp; lyr) { aid = nextArmId(applyArmExtensions(rsi.baseCatalog, exts), lyr, name) }
+                if (!isPlainObject(arm) || !aid) { throw new Error('governance.decide: 通過新臂須給 arm(目錄條目;至少 realize,id 或 name 擇一)') }
+                return { op: 'add', arm: omitBy({ layer: it.layer, title: it.title, ...omit(arm, ['origin', 'n']), id: aid }, isNil) }
+            }
+            if (it.kind === 'layer') { return { id: str(get(layer, 'id')) || nextLayerId(applyArmExtensions(rsi.baseCatalog, exts)), title: str(get(layer, 'title')) || it.title } }
+            if (it.kind === 'revise') {
+                if (isPlainObject(arm) &amp;&amp; !isNil(arm.id) &amp;&amp; arm.id !== it.arm) { throw new Error(`governance.decide: 修訂之 arm.id 須同所指之臂 ${it.arm}`) }
+                return { op: 'revise', id: it.arm, patch: isPlainObject(arm) ? omit(arm, ['id']) : {} }
+            }
+            return { op: 'retire', id: it.arm, why: str(why) }
+        }
+        let refOf = (e) => (e.op === 'add' ? get(e, 'arm.id', null) : e.id)
+        //前次審定已寫入擴充檔(提交點)而未寫提案帳:該項已生效、後續審定可能已依賴之 ⇒ accept 只補記提案帳(不重寫、不搬動;審定者 / 時間 / 理由取原決定), 不採則拒;
+        //  本次另給了 arm / layer / name 而與已生效之內容不同 ⇒ 拒(不把不同之請求當成原決定)
+        let mine = (x) => get(x, 'origin.proposal') === it.id
+        let prior = [...ext.layers.filter(mine), ...ext.arms.filter(mine)]
+        let entry = null, ref = null, recovered = null
+        if (prior.length) {
+            let committed = Object.assign(new Error(`governance.decide: 提案 ${id} 之通過已寫入擴充檔而生效(前次審定於寫提案帳前中斷);只能以 accept 補記原決定(不另給不同之 arm / layer / name),或另提 retire / revise 撤回`), { code: 'RSI_GOVERNANCE_COMMITTED' })
+            if (!accept) { throw committed }
+            entry = prior[0]
+            if (it.kind !== 'retire' &amp;&amp; (!isNil(arm) || !isNil(layer) || !isNil(name))) {
+                let rest = { layers: ext.layers.filter((x) => !mine(x)), arms: ext.arms.filter((x) => !mine(x)) }
+                let want = null
+                try { want = build(rest) } catch (e) { throw committed }
+                if (!isEqual(want, omit(entry, ['origin']))) { throw committed }
+            }
+            ref = refOf(entry)
+            recovered = { at, by: byS, ...(str(why) ? { why: str(why) } : {}) }
+        }
+        else if (accept &amp;&amp; VOCAB_KINDS.includes(it.kind)) {
+            entry = { ...build(ext), origin }
+            if (it.kind === 'layer') { ext.layers.push(entry) }
+            else { ext.arms.push(entry) }
+            ref = refOf(entry)
+        }
+        if (entry &amp;&amp; !recovered) {
+            //試建目錄:結構檢查(不對登錄表 / known:擴充之臂之落成名未登錄者於組裝時降為不可選, 見 arms.mjs 之 lenient)與 cfg.arms.use 之核對;不合 ⇒ 拋錯, 以下皆不執行(兩檔不變)
+            rsi.checkCatalog(applyArmExtensions(rsi.baseCatalog, ext), { lenient: lenientIdsOf(ext) })
+            //提交點:擴充檔之原子寫
+            assertWriteRoot(paths.govExtensions, { what: 'governance(extensions.json)' })
+            writeJson(paths.govExtensions, ext)
+        }
+        it.status = accept ? 'accepted' : 'rejected'
+        //補記:決定取擴充檔所記之原決定(origin 無 why 者以本次理由補), 本次呼叫記於 recovered
+        let po = recovered ? get(entry, 'origin', {}) || {} : null
+        it.decision = recovered
+            ? { at: str(po.at) || at, by: str(po.by) || byS, why: str(po.why) || str(why), ...(ref ? { ref } : {}), recovered }
+            : { at, by: byS, why: str(why), ...(ref ? { ref } : {}) }
+        try { saveLedger(led) }
+        catch (e) {
+            if (!entry || recovered) { throw e }
+            throw Object.assign(new Error(`governance.decide: 提案 ${id} 之擴充已寫入而生效,但提案帳未能寫入(${errLine(e)});重跑同一審定即補記`), { code: 'RSI_GOVERNANCE_PARTIAL', cause: e })
+        }
+        let out = { item: it, extension: entry, reloaded: false, ...(recovered ? { recovered: true } : {}) }
+        if (entry) { try { rsi.reloadArms(); out.reloaded = true } catch (e) { out.reloadError = errLine(e) } }
+        let renderError = renderMd(led)
+        if (renderError) { out.renderError = renderError }
+        return out
+    }, lockOpt)
+    let effectiveCatalog = () => applyArmExtensions(rsi.baseCatalog, extensions())
+    //起跑之把關:requireReview 且有逾期之待審(類別 ∈ gateKinds;提出之輪 + maxPendingRounds &lt; 將起跑之輪;輪號不明者一律視為逾期)⇒ { why, pending };否則 null
+    let gate = ({ round = null } = {}) => {
+        if (G.requireReview !== true) { return null }
+        let over = pending().filter((x) => G.gateKinds.includes(x.kind) &amp;&amp; (!Number.isInteger(x.round) || !Number.isInteger(round) || x.round + G.maxPendingRounds &lt; round))
+        return over.length ? { why: `待審之提案 ${over.length} 筆(${over.map((x) => x.id).join(', ')})已逾 ${G.maxPendingRounds} 輪未審:主控審定後再起跑(rsi.governance.decide;或以 ackPending 明示越過)`, pending: over } : null
+    }
+    //收件匣:主控之單一入口 —— 待審之提案 + 引擎既有之兩種請求標記(標記非 JSON ⇒ 視同無, 同 readGenRequest)
+    let inbox = () => {
+        let ps = pending()
+        let generation = readJsonSafe(paths.genRequest), policyDev = readJsonSafe(paths.devRequest)
+        return { proposals: ps, byKind: countBy(ps, 'kind'), generation, policyDev, n: ps.length + (generation ? 1 : 0) + (policyDev ? 1 : 0) }
+    }
+    let render = () => renderProposals(ledger())
+    //opt = 生效之治理選項(GOVERNANCE_DEFAULTS 併 cfg.governance 之非空鍵;凍結)
+    return { opt: G, ledger, list, pending, propose, decide, extensions, effectiveCatalog, gate, inbox, render, exists: () => fs.existsSync(paths.govProposals) || fs.existsSync(paths.govExtensions) }
+}
+
+export default { PROPOSAL_KINDS, PROPOSAL_STATUS, GOVERNANCE_DEFAULTS, GOVERNANCE_CFG_KEYS, checkGovernanceCfg, checkProposals, applyArmExtensions, readArmExtensions, lenientIdsOf, effectiveCatalogOf, nextArmId, nextLayerId, renderProposals, makeGovernance }
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.5</a> on Sat Nov 14 2026 01:43:57 GMT+0800 (台北標準時間) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+
+</body>
+</html>
