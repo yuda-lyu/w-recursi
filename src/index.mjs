@@ -33,7 +33,7 @@ import { simulate, evaluatePolicy, accept, DEFAULT_SIM, aliasMapOfNodes } from '
 import { runJobs, reclaimJobDirs, jobKey } from './eval/runner.mjs'
 import { DOMAIN_KEYS, checkDomain, aliasShortOfDomain } from './core/domainContract.mjs'
 import { makeArms, validateCatalog, checkArmsCfg, catalogArmsOf, selectableOf, unusedOf, featureOf, ARM_KEYS, ARMS_CFG_KEYS, ARM_STATUS, REALIZE_KINDS, ARMS_DEFAULTS } from './search/arms.mjs'
-import { makeGovernance, checkGovernanceCfg, checkProposals, applyArmExtensions, readArmExtensions, lenientIdsOf, effectiveCatalogOf, nextArmId, nextLayerId, renderProposals, PROPOSAL_KINDS, PROPOSAL_STATUS, GOVERNANCE_DEFAULTS, GOVERNANCE_CFG_KEYS } from './search/governance.mjs'
+import { makeGovernance, checkGovernanceCfg, checkProposals, applyArmExtensions, readArmExtensions, lenientIdsOf, lenientNamesOf, effectiveCatalogOf, nextArmId, nextLayerId, renderProposals, PROPOSAL_KINDS, PROPOSAL_STATUS, GOVERNANCE_DEFAULTS, GOVERNANCE_CFG_KEYS } from './search/governance.mjs'
 
 
 //通用 RSI(遞迴自我改進)迴圈之組裝:createRsi({ root, domain, budget, claims, dream, policyDev, slots, runner, maintenance }) → 實例
@@ -171,14 +171,14 @@ export let createRsi = (cfg = {}) => {
         let pk = a.pick(cfg.arms.use, { reopen: get(cfg, 'arms.defaults.reopen', null) })
         if (pk.rejected.length) { throw new Error(`${head}cfg.arms.use 被拒:${pk.rejected.map((r) => `${r.id}(${r.why})`).join('、')}`) }
     }
-    let makeArmsOf = (catalog, lenient) => makeArms({ catalog, defaults: get(cfg, 'arms.defaults', {}), registry, known: get(cfg, 'arms.known', {}), ...(lenient ? { lenient } : {}) })
+    let makeArmsOf = (catalog, lenient, lenientNames = null) => makeArms({ catalog, defaults: get(cfg, 'arms.defaults', {}), registry, known: get(cfg, 'arms.known', {}), ...(lenient ? { lenient } : {}), ...(lenientNames ? { lenientNames } : {}) })
     //擴充檔之原文(比對用;無檔 ⇒ '')
     let extSigOf = () => { try { return fs.existsSync(paths.govExtensions) ? fs.readFileSync(paths.govExtensions, 'utf8') : '' } catch (e) { return null } }
     let extSig = null
     let armsOf = () => {
         let sig = extSigOf()
         let ext = readArmExtensions(paths)
-        let a = makeArmsOf(applyArmExtensions(baseCatalog, ext), lenientIdsOf(ext))
+        let a = makeArmsOf(applyArmExtensions(baseCatalog, ext), lenientIdsOf(ext), lenientNamesOf(ext, baseCatalog))
         checkUse(a, 'createRsi: ')
         extSig = sig
         return a
@@ -189,10 +189,10 @@ export let createRsi = (cfg = {}) => {
     //擴充檔自上次組裝 / 重載後有變(他實例之審定)⇒ 重載;回是否重載(explore 起跑時呼叫:不以過期之目錄開輪;未用治理 ⇒ 只查無檔, 不寫)
     rsi.syncArms = () => { let sig = extSigOf(); if (sig === extSig) { return false } rsi.reloadArms(); return true }
     //目錄之試建(治理之審定於寫入前呼叫):結構檢查(不對登錄表 / known)、再以登錄表 / known(lenient 之臂寬鬆)組一次並核對 cfg.arms.use;不合 ⇒ 拋錯
-    rsi.checkCatalog = (catalog, { lenient = null } = {}) => {
+    rsi.checkCatalog = (catalog, { lenient = null, lenientNames = null } = {}) => {
         let c = validateCatalog(catalog)
         if (c.errors.length) { throw new Error(`臂目錄不合:\n  ${c.errors.join('\n  ')}`) }
-        checkUse(makeArmsOf(catalog, lenient), '臂目錄與 ')
+        checkUse(makeArmsOf(catalog, lenient, lenientNames), '臂目錄與 ')
         return c
     }
     rsi.governance = makeGovernance(rsi)
@@ -321,7 +321,8 @@ export { DOMAIN_KEYS, checkDomain, aliasShortOfDomain, tryAcquireSlots, slotsSta
 //2026-11-07 臂目錄(search/arms.mjs):目錄之檢查 / 工廠 / 純函式(coverage 與 menu 由實例 rsi.arms 取)
 export { makeArms, validateCatalog, checkArmsCfg, catalogArmsOf, selectableOf, unusedOf, featureOf, ARM_KEYS, ARMS_CFG_KEYS, ARM_STATUS, REALIZE_KINDS, ARMS_DEFAULTS }
 //2026-11-14 治理(search/governance.mjs):提案帳、審定、臂目錄之擴充(純函式與工廠;實例之入口為 rsi.governance / rsi.reloadArms)
-export { makeGovernance, checkGovernanceCfg, checkProposals, applyArmExtensions, readArmExtensions, effectiveCatalogOf, nextArmId, nextLayerId, renderProposals, PROPOSAL_KINDS, PROPOSAL_STATUS, GOVERNANCE_DEFAULTS, GOVERNANCE_CFG_KEYS }
+//  2026-11-14(Gitea #144):補 lenientIdsOf(README §4 已列)與 lenientNamesOf —— 自行以 applyArmExtensions + makeArms 組裝或檢查目錄者取得與引擎一致之 lenient / lenientNames
+export { makeGovernance, checkGovernanceCfg, checkProposals, applyArmExtensions, readArmExtensions, lenientIdsOf, lenientNamesOf, effectiveCatalogOf, nextArmId, nextLayerId, renderProposals, PROPOSAL_KINDS, PROPOSAL_STATUS, GOVERNANCE_DEFAULTS, GOVERNANCE_CFG_KEYS }
 //2026-10-09:輪夾之名、輔助夾之列舉、鉤子失敗之結果形、寫域守門
 export { ROUND_NAME_SRC, isRoundDir, roundNumOf, roundNameOf, listRoundDirs, slotAuxOf, HOOK_FAIL_HEAD, hookFailureOf, assertWriteRoot, writeRootsOf }
 export { specHash, nodeIdOf, canonicalJson, sha, nowIso, withLock, acquireSlots, releaseSlots, slotsInUse, pidAlive, STATUS, OCCUPIED, FRONTIER_BLOCKED, makeStore, makeNode, rescore, aliasMapOf, makeRegistry, makeView, policyViewOfNode, omitMask, checkPolicySource, simulate, evaluatePolicy, accept, DEFAULT_SIM, aliasMapOfNodes, runJobs, reclaimJobDirs, jobKey, allocateRound, roundDirs, peekRound, loadSummaries, loadPolicyFile, policySourcesOf, policyDevCheck, lastChangeAtOf, makePaths, extractTurning, specDiff, applyDiff, noveltyDebtOf, generationCheck, clearGenRequest, readGenRequest, markerStale, frontierOutcomesOf, parentIdsOf, aliasPreOf, isAliasShort }

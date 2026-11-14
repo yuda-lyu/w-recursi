@@ -7,7 +7,9 @@ import isEqual from 'lodash-es/isEqual.js'
 import isNil from 'lodash-es/isNil.js'
 import isPlainObject from 'lodash-es/isPlainObject.js'
 import isString from 'lodash-es/isString.js'
+import isUndefined from 'lodash-es/isUndefined.js'
 import keys from 'lodash-es/keys.js'
+import mapValues from 'lodash-es/mapValues.js'
 import omit from 'lodash-es/omit.js'
 import omitBy from 'lodash-es/omitBy.js'
 import { withLock } from '../core/lock.mjs'
@@ -36,8 +38,10 @@ import { catalogArmsOf, catalogLayersOf, validateCatalog, ARM_KEYS } from './arm
 //    生效之目錄 = 注入之基底(cfg.arms.catalog)+ 狀態根之擴充(applyArmExtensions;純函式)—— createRsi 組裝時套用, rsi.reloadArms() 於同一程序內重載
 //      基底是使用端給的起點, 擴充是這個狀態根自己長出來的(與樹、策略版本同屬狀態);停用之臂留在目錄(改為 blocked、不可選):樹上之節點仍引用得到
 //      擴充檔損壞(非 JSON、結構不合、指向不存在之臂)⇒ 拋錯(不靜默當成無擴充, 否則已審定之臂無聲消失)
-//      擴充所加之臂、或修訂了 realize 之臂(lenientIdsOf), 其落成之算子 / 片段 / 生成模組 / 載體尚未登錄者 ⇒ 組裝不拋錯, 該臂不可選並列入 rsi.arms.warnings
-//        (arms.mjs 之 lenient;由目錄推導算子之領域於下一次組裝即登錄;擴充之資料不得使組裝失敗而迴圈無法啟動);只改其他欄之修訂不放寬基底之落成名(仍嚴格)
+//      擴充所加之臂、停用之臂、修訂了 realize / selectable / status 之臂(lenientIdsOf;後三者 2026-11-14 Gitea #144 補:停用或改變可選與否之臂, 由「可選臂」推導算子之領域下一次組裝即不再登錄其算子),
+//        其落成之算子 / 片段 / 生成模組 / 載體尚未登錄者 ⇒ 組裝不拋錯:可選者不可選並列入 rsi.arms.warnings, 本就不可選者(停用、selectable false)不另警告
+//        (arms.mjs 之 lenient;擴充之資料不得使組裝失敗而迴圈無法啟動);只改其他欄之修訂不放寬基底之落成名(仍嚴格)
+//      修訂之 patch 中值為 null 之鍵 = 刪除該鍵(必填欄不得刪);新臂與修訂之 realize 之字串欄內之佔位字串 {id} 代換為該臂之 id(以 name 配號者為鎖內配出之 id)
 //      他實例(同狀態根、組裝較早)於 explore 起跑時比對擴充檔, 有變即重載(rsi.syncArms), 不以過期之目錄開輪
 //    起跑之把關(gate;cfg.governance.requireReview, 預設 false = 行為逐字同改前):待審之提案逾 maxPendingRounds 輪未審 ⇒ explore 於取輪號前拋 RSI_GOVERNANCE_PENDING(不開輪)
 //      —— 「下層提、主控審、審過才續跑」之契約由引擎守, 不靠呼叫端記得;呼叫端明示 opt.ackPending 可越過
@@ -72,6 +76,17 @@ const VOCAB_KINDS = ['new', 'layer', 'revise', 'retire']
 const ID_RE = /^[A-Za-z][\w-]*$/
 //修訂可改之欄(id / n / origin 不可改)
 const REVISABLE = ARM_KEYS.filter((k) => !['id', 'n', 'origin'].includes(k))
+//修訂不得刪除(patch 之值為 null)之必填欄;layer 於有層表時亦必填(2026-11-14,Gitea #144)
+const REQUIRED_KEYS = ['title', 'status', 'realize']
+//修訂之欄中, 改變「可選與否」或「落成名」者 ⇒ 該臂之落成名寬鬆(lenient;由目錄推導登錄之領域, 下一次組裝之登錄隨之改變)
+const LENIENT_PATCH_KEYS = ['realize', 'selectable', 'status']
+//realize 之字串欄內之佔位字串:代換為該臂之 id(2026-11-14,Gitea #144:落成名含臂 id 之領域, 以 name 配號時於審定前寫不出 realize)
+const ID_PLACEHOLDER = '{id}'
+let fillId = (realize, id) => (isArray(realize) ? realize.map((r) => (isPlainObject(r) ? mapValues(r, (v) => (isString(v) ? v.split(ID_PLACEHOLDER).join(id) : v)) : r)) : realize)
+//realize 之需登錄之名(op / mech / module / name 之字串值)
+let realizeNamesOf = (realize) => (isArray(realize) ? realize : []).flatMap((r) => (isPlainObject(r) ? ['op', 'mech', 'module', 'name'].filter((k) => isString(r[k])).map((k) => r[k]) : []))
+//純資料:JSON 往返後不變(不含函數、undefined、非有限數、Date 等)⇒ 寫入擴充檔者與本程序之目錄一致
+let isPureData = (x) => { try { return isEqual(JSON.parse(JSON.stringify(x)), x) } catch (e) { return false } }
 let str = (v) => (isString(v) && v.trim() ? v.trim() : null)
 let readJsonSafe = (fp) => { try { return readJson(fp, null) } catch (e) { return null } }
 let norm = (v) => String(v || '').replace(/\s+/g, '').toLowerCase()
@@ -122,7 +137,7 @@ export let checkProposals = (items) => {
 }
 
 /**
- * 把擴充套到目錄上(純函式;不改入參):擴充 = { layers:[{ id, title }], arms:[{ op:"add", arm:{…} } | { op:"revise", id, patch:{…} } | { op:"retire", id, why }] },依序套用;各筆之 origin(出處)寫入該臂之 origin 欄(修訂記於 origin.revised、停用記於 origin.retired)。新臂之 n 接全目錄之最大序號、status 未給為 proposed;停用者改為 blocked、不可選並留在目錄。擴充為空 ⇒ 原樣回傳目錄;結構不合(層或臂重複、層不存在、基底無層表而新增層、要改之臂不存在、修訂之欄不可改或未知、op 不明)⇒ 拋錯
+ * 把擴充套到目錄上(純函式;不改入參):擴充 = { layers:[{ id, title }], arms:[{ op:"add", arm:{…} } | { op:"revise", id, patch:{…} } | { op:"retire", id, why }] },依序套用;各筆之 origin(出處)寫入該臂之 origin 欄(修訂記於 origin.revised、停用記於 origin.retired)。新臂之 n 接全目錄之最大序號、status 未給為 proposed;修訂之 patch 中值為 null 之鍵 = 刪除該鍵(必填欄 title / status / realize 與有層表時之 layer 不得刪;刪後之目錄仍須合格,如 blocked 之臂之 blockedBy 由結構檢查擋);停用者改為 blocked、不可選並留在目錄。擴充為空 ⇒ 原樣回傳目錄;結構不合(層或臂重複、層不存在、基底無層表而新增層、要改之臂不存在、修訂之欄不可改或未知、刪除必填欄、op 不明)⇒ 拋錯
  *
  * @param {Array|Object|null} catalog 輸入基底目錄(臂陣列或 { arms, layers? })
  * @param {Object|null} ext 輸入擴充
@@ -143,6 +158,10 @@ export let checkProposals = (items) => {
  *
  * console.log(applyArmExtensions(base, null) === base)
  * // => true
+ *
+ * let base2 = { arms: [{ id: 'py', title: 'y 步進', status: 'sparse', grid: { y: [1, 2] }, realize: [{ kind: 'manual', how: '—' }] }] }
+ * console.log('grid' in applyArmExtensions(base2, { arms: [{ op: 'revise', id: 'py', patch: { grid: null } }] }).arms[0])
+ * // => false
  */
 export let applyArmExtensions = (catalog, ext) => {
     let xl = isArray(get(ext, 'layers')) ? ext.layers : []
@@ -163,7 +182,8 @@ export let applyArmExtensions = (catalog, ext) => {
         if (!isPlainObject(e)) { throw new Error(`臂目錄之擴充:arms[${i}] 須為物件`) }
         let origin = isPlainObject(e.origin) ? e.origin : null
         if (e.op === 'add') {
-            let a = e.arm
+            //值為 undefined 之鍵視同未給(與 decide 一致;2026-11-14 外審 Argon #5)
+            let a = isPlainObject(e.arm) ? omitBy(e.arm, isUndefined) : e.arm
             if (!isPlainObject(a) || !isString(a.id)) { throw new Error(`臂目錄之擴充:arms[${i}] 之 add 須附 arm(含 id)`) }
             if (arms.some((x) => x.id === a.id)) { throw new Error(`臂目錄之擴充:臂 ${a.id} 已存在`) }
             if (hasLayers && !(a.layer in layers)) { throw new Error(`臂目錄之擴充:臂 ${a.id} 之層 ${a.layer} 不存在(先提新層)`) }
@@ -173,12 +193,16 @@ export let applyArmExtensions = (catalog, ext) => {
         else if (e.op === 'revise') {
             let k = arms.findIndex((x) => x.id === e.id)
             if (k < 0) { throw new Error(`臂目錄之擴充:要修訂之臂 ${e.id} 不存在`) }
-            let p = isPlainObject(e.patch) ? e.patch : {}
+            let p = isPlainObject(e.patch) ? omitBy(e.patch, isUndefined) : {}
             let bad = keys(p).filter((x) => !REVISABLE.includes(x))
             if (bad.length) { throw new Error(`臂目錄之擴充:修訂 ${e.id} 之欄 ${bad.join(', ')} 不可改或未知(可改之欄 ${REVISABLE.join(', ')})`) }
             if (!keys(p).length) { throw new Error(`臂目錄之擴充:修訂 ${e.id} 須附 patch(可改之欄 ${REVISABLE.join(', ')})`) }
-            if (hasLayers && p.layer !== undefined && !(p.layer in layers)) { throw new Error(`臂目錄之擴充:臂 ${e.id} 之層 ${p.layer} 不存在`) }
-            arms[k] = { ...arms[k], ...p, ...(origin ? { origin: { ...(arms[k].origin || {}), revised: origin } } : {}) }
+            //值為 null 之鍵 = 刪除該鍵(2026-11-14,Gitea #144);必填欄不得刪
+            let del = keys(p).filter((x) => p[x] === null)
+            let req = del.filter((x) => REQUIRED_KEYS.includes(x) || (x === 'layer' && hasLayers))
+            if (req.length) { throw new Error(`臂目錄之擴充:修訂 ${e.id} 之必填欄 ${req.join(', ')} 不得刪除(null)`) }
+            if (hasLayers && !isNil(p.layer) && !(p.layer in layers)) { throw new Error(`臂目錄之擴充:臂 ${e.id} 之層 ${p.layer} 不存在`) }
+            arms[k] = { ...omit(arms[k], del), ...omit(p, del), ...(origin ? { origin: { ...(arms[k].origin || {}), revised: origin } } : {}) }
         }
         else if (e.op === 'retire') {
             let k = arms.findIndex((x) => x.id === e.id)
@@ -223,18 +247,44 @@ export let readArmExtensions = (paths) => {
 }
 
 /**
- * 擴充之臂中,落成名(realize)來自擴充者之 id:add 之臂、patch 含 realize 之 revise 之臂(供 makeArms / validateCatalog 之 lenient;只改其他欄之修訂不列入,基底之落成名仍嚴格)
+ * 擴充之臂中,落成名(realize)之登錄與否可能隨擴充而變者之 id(供 makeArms / validateCatalog 之 lenient):add 之臂、retire 之臂、patch 含 realize / selectable / status(含以 null 刪除)之 revise 之臂 —— 由「可選臂」推導算子之領域,停用或改變可選與否後之下一次組裝即不再登錄其算子(2026-11-14,Gitea #144);只改其他欄之修訂不列入,基底之落成名仍嚴格
  *
  * @param {Object|null} ext 輸入擴充 { layers, arms }
  * @returns {Array|null} 回傳臂 id 陣列;無擴充 ⇒ null
  * @example
- * let ext = { arms: [{ op: 'add', arm: { id: 'kz' } }, { op: 'revise', id: 'px', patch: { title: 't' } }, { op: 'revise', id: 'py', patch: { realize: [] } }, { op: 'retire', id: 'pair' }] }
+ * let ext = { arms: [{ op: 'add', arm: { id: 'kz' } }, { op: 'revise', id: 'px', patch: { title: 't' } }, { op: 'revise', id: 'py', patch: { realize: [] } }, { op: 'revise', id: 'pq', patch: { selectable: false } }, { op: 'retire', id: 'pair' }] }
  * console.log(lenientIdsOf(ext).join(','), lenientIdsOf(null))
- * // => kz,py null
+ * // => kz,py,pq,pair null
  */
 export let lenientIdsOf = (ext) => {
     if (!ext) { return null }
-    return (isArray(ext.arms) ? ext.arms : []).filter((e) => isPlainObject(e) && ((e.op === 'add' && isPlainObject(e.arm)) || (e.op === 'revise' && isPlainObject(e.patch) && e.patch.realize !== undefined))).map((e) => (e.op === 'add' ? e.arm.id : e.id))
+    let soft = (e) => isPlainObject(e) && ((e.op === 'add' && isPlainObject(e.arm)) || (e.op === 'revise' && isPlainObject(e.patch) && LENIENT_PATCH_KEYS.some((k) => e.patch[k] !== undefined)) || (e.op === 'retire' && isString(e.id)))
+    return (isArray(ext.arms) ? ext.arms : []).filter(soft).map((e) => (e.op === 'add' ? e.arm.id : e.id))
+}
+
+/**
+ * 擴充所觸及之臂(lenientIdsOf)之落成名(realize 之 op / mech / module / name 等字串欄),取自基底目錄之該臂與擴充項(add 之 arm.realize、revise 之 patch.realize)——供 makeArms / validateCatalog 之 lenientNames:由目錄推導登錄者,這些名之登錄與否隨審定而變(停用或改落成名後不再登錄),共用其名之他臂(含基底未被觸及者)亦不因之使組裝拋錯(2026-11-14,Gitea #144);套用後之目錄內 lenient 之臂之名由 validateCatalog 自行加入
+ *
+ * @param {Object|null} ext 輸入擴充 { layers, arms }
+ * @param {Array|Object|null} catalog 輸入基底目錄
+ * @returns {Array|null} 回傳名之陣列(去重);無擴充 ⇒ null
+ * @example
+ * let base = { arms: [{ id: 'px', realize: [{ kind: 'operator', op: 'P.x' }] }, { id: 'py', realize: [{ kind: 'operator', op: 'P.y' }] }] }
+ * let ext = { arms: [{ op: 'revise', id: 'px', patch: { realize: [{ kind: 'operator', op: 'P.x2' }] } }, { op: 'add', arm: { id: 'kz', realize: [{ kind: 'carrier', name: 'far' }] } }] }
+ * console.log(lenientNamesOf(ext, base).join(','), lenientNamesOf(null, base))
+ * // => P.x,P.x2,far null
+ */
+export let lenientNamesOf = (ext, catalog) => {
+    if (!ext) { return null }
+    let ids = new Set(lenientIdsOf(ext))
+    let names = []
+    let push = (realize) => { names.push(...realizeNamesOf(realize)) }
+    for (let a of catalogArmsOf(catalog)) { if (isPlainObject(a) && ids.has(a.id)) { push(a.realize) } }
+    for (let e of isArray(ext.arms) ? ext.arms : []) {
+        if (isPlainObject(e) && e.op === 'add') { push(get(e, 'arm.realize')) }
+        if (isPlainObject(e) && e.op === 'revise') { push(get(e, 'patch.realize')) }
+    }
+    return [...new Set(names)]
 }
 
 /**
@@ -264,7 +314,7 @@ export let effectiveCatalogOf = (paths, catalog) => {
 }
 
 /**
- * 新臂之 id:層代號 + 全目錄之下一個序號(至少 2 位)+ 底線 + 英數名
+ * 新臂之 id:層代號 + 全目錄之下一個序號(至少 2 位)+ 底線 + 英數名;與目錄內既有之 id 相同者序號再遞增(2026-11-14 外審 Argon #7:與明給之 arm.id 混用時曾配出既有之 id)
  *
  * @param {Array|Object|null} catalog 輸入目錄
  * @param {String} layer 輸入層代號
@@ -273,11 +323,18 @@ export let effectiveCatalogOf = (paths, catalog) => {
  * @example
  * console.log(nextArmId({ arms: [{ id: 'A01_a', n: 1 }, { id: 'B02_b', n: 2 }] }, 'K', 'entry style'))
  * // => K03_entrystyle
+ *
+ * console.log(nextArmId({ arms: [{ id: 'A01_a', n: 1 }, { id: 'A03_dup', n: 2 }] }, 'A', 'dup'))
+ * // => A04_dup
  */
 export let nextArmId = (catalog, layer, name) => {
     let arms = catalogArmsOf(catalog)
-    let n = arms.reduce((m, a) => Math.max(m, Number.isInteger(a.n) ? a.n : 0), 0) || arms.length
-    return `${layer}${String(n + 1).padStart(2, '0')}_${String(name).replace(/[^A-Za-z0-9]/g, '')}`
+    let ids = new Set(arms.map((a) => (isPlainObject(a) ? a.id : null)))
+    let n = arms.reduce((m, a) => Math.max(m, Number.isInteger(get(a, 'n')) ? a.n : 0), 0) || arms.length
+    let idOf = (k) => `${layer}${String(k).padStart(2, '0')}_${String(name).replace(/[^A-Za-z0-9]/g, '')}`
+    let k = n + 1
+    while (ids.has(idOf(k))) { k++ }
+    return idOf(k)
 }
 /**
  * 新層之代號:尚未使用之下一個大寫字母
@@ -426,8 +483,10 @@ export let makeGovernance = (rsi) => {
     }
     //審定:accept(true 通過 / false 不採)、why(必填)、by(審定者)
     //  通過之 new:arm = 目錄條目(須含 id 與 realize;layer / title 未給時取提案者);layer:layer = { id, title }(未給 ⇒ id 取下一個字母、title 取提案者)
-    //  revise:arm = 要改之欄(patch;id 可省, 給則須同所指之臂);retire:無須另給;note:只記審定
+    //  revise:arm = 要改之欄(patch;id 可省, 給則須同所指之臂;值為 null 之鍵 = 刪除該鍵, undefined 之鍵視同未給);retire:無須另給;note:只記審定
     //  name(通過新臂且 arm.id 未給時):英數名 ⇒ 於鎖內依最新之生效目錄以 nextArmId 配號(免兩個審定者於鎖外配到同號)
+    //  realize 之字串欄內之 {id}(new / revise)⇒ 代換為該臂之 id(name 配號者為鎖內配出之 id;2026-11-14,Gitea #144)
+    //  寫入擴充檔之項須為純資料(JSON 往返不變;函數、Date、非有限數等 ⇒ 拒, 免本程序之目錄與檔內者不一致)
     //  回 { item, extension(擴充檔之該筆 | null), reloaded(本程序之 rsi.arms 是否已重載), reloadError?, renderError?, recovered?(補記前次中斷之審定) }
     let decide = (id, { accept, why, by = 'controller', arm = null, layer = null, name = null } = {}) => withLock(() => {
         if (!isBoolean(accept) || !str(why)) { throw new Error('governance.decide: 須給 accept(布林)與 why(審定理由)') }
@@ -440,19 +499,25 @@ export let makeGovernance = (rsi) => {
         //origin 記完整之審定(誰、何時、理由):擴充檔即提交點, 中斷後之補記據此還原原決定
         let origin = { proposal: it.id, round: it.round, from: it.from, by: byS, at, why: str(why) }
         let ext = extensions()
-        //本次審定之擴充項(不含 origin;exts = 配號所據之擴充)
-        let build = (exts) => {
+        //本次審定之擴充項(不含 origin;exts = 配號所據之擴充;forceId = 補記時沿用已生效之 id, 不重新配號)
+        let build = (exts, forceId = null) => {
             if (it.kind === 'new') {
                 let aid = isPlainObject(arm) ? str(arm.id) : null
                 let lyr = (isPlainObject(arm) && str(arm.layer)) || it.layer
+                if (!aid && forceId && str(name)) { aid = forceId }
                 if (!aid && str(name) && lyr) { aid = nextArmId(applyArmExtensions(rsi.baseCatalog, exts), lyr, name) }
                 if (!isPlainObject(arm) || !aid) { throw new Error('governance.decide: 通過新臂須給 arm(目錄條目;至少 realize,id 或 name 擇一)') }
-                return { op: 'add', arm: omitBy({ layer: it.layer, title: it.title, ...omit(arm, ['origin', 'n']), id: aid }, isNil) }
+                //值為 undefined 之鍵視同未給(層 / 名稱取提案者;2026-11-14 外審 Argon #5)
+                let a = omitBy({ layer: lyr, title: it.title, ...omitBy(omit(arm, ['origin', 'n']), isUndefined), id: aid }, isNil)
+                if (a.realize !== undefined) { a.realize = fillId(a.realize, aid) }
+                return { op: 'add', arm: a }
             }
-            if (it.kind === 'layer') { return { id: str(get(layer, 'id')) || nextLayerId(applyArmExtensions(rsi.baseCatalog, exts)), title: str(get(layer, 'title')) || it.title } }
+            if (it.kind === 'layer') { return { id: str(get(layer, 'id')) || forceId || nextLayerId(applyArmExtensions(rsi.baseCatalog, exts)), title: str(get(layer, 'title')) || it.title } }
             if (it.kind === 'revise') {
                 if (isPlainObject(arm) && !isNil(arm.id) && arm.id !== it.arm) { throw new Error(`governance.decide: 修訂之 arm.id 須同所指之臂 ${it.arm}`) }
-                return { op: 'revise', id: it.arm, patch: isPlainObject(arm) ? omit(arm, ['id']) : {} }
+                let p = isPlainObject(arm) ? omitBy(omit(arm, ['id']), isUndefined) : {}
+                if (!isNil(p.realize)) { p.realize = fillId(p.realize, it.arm) }
+                return { op: 'revise', id: it.arm, patch: p }
             }
             return { op: 'retire', id: it.arm, why: str(why) }
         }
@@ -467,23 +532,41 @@ export let makeGovernance = (rsi) => {
             if (!accept) { throw committed }
             entry = prior[0]
             if (it.kind !== 'retire' && (!isNil(arm) || !isNil(layer) || !isNil(name))) {
-                let rest = { layers: ext.layers.filter((x) => !mine(x)), arms: ext.arms.filter((x) => !mine(x)) }
+                //比對時沿用已生效之 id(由引擎配出者不重配:其後之審定會改變配號所據之目錄;2026-11-14 外審 Argon #6)
                 let want = null
-                try { want = build(rest) } catch (e) { throw committed }
+                try { want = build(null, refOf(entry)) } catch (e) { throw committed }
                 if (!isEqual(want, omit(entry, ['origin']))) { throw committed }
             }
             ref = refOf(entry)
             recovered = { at, by: byS, ...(str(why) ? { why: str(why) } : {}) }
         }
-        else if (accept && VOCAB_KINDS.includes(it.kind)) {
+        let prevCatalog = null
+        if (!prior.length && accept && VOCAB_KINDS.includes(it.kind)) {
             entry = { ...build(ext), origin }
+            if (!isPureData(entry)) { throw new Error('governance.decide: arm / layer 須為純資料(JSON 可表示且往返不變;不得含函數、Date、非有限數等)') }
+            prevCatalog = applyArmExtensions(rsi.baseCatalog, ext)
             if (it.kind === 'layer') { ext.layers.push(entry) }
             else { ext.arms.push(entry) }
             ref = refOf(entry)
         }
         if (entry && !recovered) {
-            //試建目錄:結構檢查(不對登錄表 / known:擴充之臂之落成名未登錄者於組裝時降為不可選, 見 arms.mjs 之 lenient)與 cfg.arms.use 之核對;不合 ⇒ 拋錯, 以下皆不執行(兩檔不變)
-            rsi.checkCatalog(applyArmExtensions(rsi.baseCatalog, ext), { lenient: lenientIdsOf(ext) })
+            //試建目錄 = 組裝之同一檢查(createRsi / reloadArms 亦為 makeArms(基底 + 擴充, lenientIdsOf(擴充))+ cfg.arms.use 之核對):結構檢查、以本程序之登錄表 / known 組一次
+            //  (lenient 之臂之落成名未登錄者降為不可選, 見 arms.mjs)、核對 cfg.arms.use;不合 ⇒ 拋錯, 以下皆不執行(兩檔不變)
+            //  下一次組裝之登錄表若由目錄推導(README §2c), 只有 lenient 之臂之登錄會隨本次審定而變 —— 其未登錄不使組裝失敗(2026-11-14,Gitea #144:停用之臂原不在 lenient ⇒ 試建以本程序之登錄表通過、下一次組裝拋錯)
+            let nextCatalog = applyArmExtensions(rsi.baseCatalog, ext)
+            rsi.checkCatalog(nextCatalog, { lenient: lenientIdsOf(ext), lenientNames: lenientNamesOf(ext, rsi.baseCatalog) })
+            //預設選臂(cfg.arms.use)之落成名若因本次審定而登錄與否可能改變(本次觸及之臂、或與之共用落成名)⇒ 試建之登錄表(本程序組裝時者)不能代表下一次組裝 ⇒ 收嚴:拒
+            //  (由生效目錄推導登錄之領域, 下一次組裝該臂即可能未登錄而不可選, 組裝於 cfg.arms.use 之核對拋錯;2026-11-14 外審 Argon #3)
+            let use = get(rsi.cfg, 'arms.use')
+            //  只看停用 / 修訂之臂(新增之臂與新落成名不會使既有之登錄消失);名取該臂於本次之前之落成名(可能不再登錄者;外審 hydrogen 第二輪 #3:原含新增之臂與新名而過嚴)
+            if (isArray(use) && use.length && entry.op !== 'add' && it.kind !== 'layer') {
+                let ids = new Set(lenientIdsOf({ layers: [], arms: [entry] }))
+                let prevById = Object.fromEntries(catalogArmsOf(prevCatalog).map((a) => [a.id, a]))
+                let names = new Set([...ids].flatMap((x) => realizeNamesOf(get(prevById, [x, 'realize']))))
+                let byId = Object.fromEntries(catalogArmsOf(nextCatalog).map((a) => [a.id, a]))
+                let risky = use.filter((u) => byId[u] && (ids.has(u) || realizeNamesOf(byId[u].realize).some((n) => names.has(n))))
+                if (risky.length) { throw new Error(`臂目錄與 cfg.arms.use 被拒:${risky.join('、')}(其落成名之登錄可能隨本審定而變 —— 由生效目錄推導登錄之領域, 下一次組裝即不可選而拋錯;先自 cfg.arms.use 移除該臂再審定)`) }
+            }
             //提交點:擴充檔之原子寫
             assertWriteRoot(paths.govExtensions, { what: 'governance(extensions.json)' })
             writeJson(paths.govExtensions, ext)
@@ -523,4 +606,4 @@ export let makeGovernance = (rsi) => {
     return { opt: G, ledger, list, pending, propose, decide, extensions, effectiveCatalog, gate, inbox, render, exists: () => fs.existsSync(paths.govProposals) || fs.existsSync(paths.govExtensions) }
 }
 
-export default { PROPOSAL_KINDS, PROPOSAL_STATUS, GOVERNANCE_DEFAULTS, GOVERNANCE_CFG_KEYS, checkGovernanceCfg, checkProposals, applyArmExtensions, readArmExtensions, lenientIdsOf, effectiveCatalogOf, nextArmId, nextLayerId, renderProposals, makeGovernance }
+export default { PROPOSAL_KINDS, PROPOSAL_STATUS, GOVERNANCE_DEFAULTS, GOVERNANCE_CFG_KEYS, checkGovernanceCfg, checkProposals, applyArmExtensions, readArmExtensions, lenientIdsOf, lenientNamesOf, effectiveCatalogOf, nextArmId, nextLayerId, renderProposals, makeGovernance }

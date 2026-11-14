@@ -23,6 +23,22 @@ export let pidAlive = (pid) => {
 //  不可只用 Date.parse:截斷之「2026」「2026-09-2」可解析為較早日期 ⇒ 被判逾時而誤回收(2026-09-25 槽位雙持有之成因)
 const RE_ISO = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/
 /**
+ * 解析持有者檔之內容列(格式 `pid ISO時間 [token]`);非字串、空字串、半寫、時間非完整 ISO ⇒ null(readOwner 與鎖之判定共用)
+ *
+ * @param {String|null} raw 輸入內容列
+ * @returns {Object|null} 回傳 { pid, at, token } 或 null
+ * @example
+ * let o = ownerOfLine('123 2026-11-14T00:00:00.000Z tok')
+ * console.log(o.pid, o.token, ownerOfLine('123 2026'), ownerOfLine(null))
+ * // => 123 tok null null
+ */
+export let ownerOfLine = (raw) => {
+    if (typeof raw !== 'string') { return null }
+    let [pid, at, token] = raw.trim().split(' ')
+    let p = Number(pid)
+    return Number.isInteger(p) && p > 0 && RE_ISO.test(at || '') ? { pid: p, at, token: token || null } : null
+}
+/**
  * 讀持有者檔 <fd>/owner(格式 `pid ISO時間 [token]`);空檔、半寫、時間非完整 ISO ⇒ null(視同尚未寫)
  *
  * @param {String} fd 輸入鎖或槽之夾路徑
@@ -40,11 +56,7 @@ const RE_ISO = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/
  * fs.rmSync(dir, { recursive: true, force: true })
  */
 export let readOwner = (fd) => {
-    try {
-        let [pid, at, token] = fs.readFileSync(path.join(fd, 'owner'), 'utf8').trim().split(' ')
-        let p = Number(pid)
-        return Number.isInteger(p) && p > 0 && RE_ISO.test(at || '') ? { pid: p, at, token: token || null } : null
-    }
+    try { return ownerOfLine(fs.readFileSync(path.join(fd, 'owner'), 'utf8')) }
     catch (e) { return null }
 }
 /**
@@ -90,4 +102,4 @@ export let ownedBy = (o, token) => !!o && (o.token ? o.token === token : o.pid =
  */
 export let waitNote = (s) => { try { fs.writeSync(2, `[w-recursi ${new Date().toISOString().slice(11, 19)}] ${s}\n`) } catch (e) {} }
 
-export default { pidAlive, readOwner, newToken, ownerLine, ownedBy, waitNote }
+export default { pidAlive, ownerOfLine, readOwner, newToken, ownerLine, ownedBy, waitNote }

@@ -34,8 +34,8 @@ import { specHash } from '../core/canonical.mjs'
 //    grid / used  { 鍵: [值] } 格點全集與已用值 ⇒ unusedOf = 待探索空間      verdict / reopen / blockedBy  判定摘要 / 重啟條件 / 封鎖來源(blocked 必填)
 //    requires / conflicts  [臂 id](多臂組合之相容規則)      n / refs  序號 / 參照(資訊)
 //    origin    出處(物件;治理之擴充所加 / 所修 / 所停:哪一筆提案、哪一輪、誰提、誰審、何時;search/governance.mjs, 2026-11-14;基底目錄之臂通常無此欄)
-//  lenient(2026-11-14;治理):makeArms / validateCatalog 之選項, 列「狀態根之擴充所加或所修之臂 id」——其落成之算子 / 片段 / 生成模組 / 載體未登錄者
-//    不拋錯而列入 warnings、該臂不可選(pick 拒之;擴充之資料不得使組裝失敗);未給 ⇒ 行為逐字同改前(基底之臂恆嚴格)
+//  lenient(2026-11-14;治理):makeArms / validateCatalog 之選項, 列「狀態根之擴充所加、所停或改了落成名 / 可選與否之臂 id」——其落成之算子 / 片段 / 生成模組 / 載體未登錄者
+//    不拋錯:可選者列入 warnings 且不可選(pick 拒之;擴充之資料不得使組裝失敗), 本就不可選者(停用等)不警告;未給 ⇒ 行為逐字同改前(基底之臂恆嚴格)
 //  提供:validateCatalog、pick(選臂:封鎖 / 不可選 / 做完未附重啟理由 / 衝突 / 依賴缺 ⇒ 拒)、restrict(本輪只用所選臂之算子與載體)、compose(多臂依序施用產子規格)、
 //        coverage(樹上每臂之節點數 / 階 ≥ 1 / 階 ≥ 4;依 origin.arms 與 origin.operator, 另依規格特徵)、menu(每輪之選單 markdown, 供 agent 與派工說明)
 //  接線:index.createRsi(rsi.arms)、loop/explore(opt.useArms / opt.reopen ⇒ 計畫只含所選臂;計畫項與節點之 origin.arms)、loop/generation(請求文列待探索臂)、loop/status、cli(--use-arms / --reopen / --mode arms)
@@ -164,11 +164,11 @@ export let unusedOf = (a) => {
 
 //目錄之檢查(純函式)⇒ { errors:[字串], warnings:[字串] };opt.operators / fragments / modules / carriers:合法名之陣列(給了才核對)
 /**
- * 目錄之檢查(純函式):形、未知鍵、id 唯一與格式、title、status、selectable、blocked 須附 blockedBy、layer 在層表、realize 至少一項且各項之 kind 與必填欄、grid / used 形、origin 為物件、requires / conflicts 指向存在之臂;opt 給了合法名清單才核對 realize 之名(lenient 所列之臂未登錄者降為警告,並列於 unregistered)
+ * 目錄之檢查(純函式):形、未知鍵、id 唯一與格式、title、status、selectable、blocked 須附 blockedBy、layer 在層表、realize 至少一項且各項之 kind 與必填欄、grid / used 形、origin 為物件、requires / conflicts 指向存在之臂;opt 給了合法名清單才核對 realize 之名(lenient 所列之臂,以及落成之名為寬鬆之名〔lenient 之臂於本目錄所落成之名 ∪ lenientNames〕之臂,未登錄者:可選者降為警告並列於 unregistered,本就不可選者不警告)
  *
  * @param {Array|Object|null} catalog 輸入目錄
- * @param {Object} [opt={}] 輸入 { operators:Array, fragments:Array, modules:Array, carriers:Array }(給了才核對)、lenient:Array(治理之擴充所加或所修之臂 id;給了回傳另有 unregistered)
- * @returns {Object} 回傳 { errors:Array(字串), warnings:Array(字串) };給 lenient 時另有 unregistered:Array(落成之名未登錄之臂 id)
+ * @param {Object} [opt={}] 輸入 { operators:Array, fragments:Array, modules:Array, carriers:Array }(給了才核對)、lenient:Array(治理之擴充所加、所停或改了落成名 / 可選與否之臂 id)、lenientNames:Array(另外寬鬆之落成名);lenient 或 lenientNames 給了回傳另有 unregistered
+ * @returns {Object} 回傳 { errors:Array(字串), warnings:Array(字串) };給 lenient / lenientNames 時另有 unregistered:Array(落成之名未登錄而降為不可選之臂 id)
  * @example
  * let ok = { arms: [{ id: 'A1', layer: 'L', title: '遞增', status: 'sparse', realize: [{ kind: 'operator', op: 'inc' }] }] }
  * console.log(validateCatalog(ok, { operators: ['inc'] }).errors.length)
@@ -180,9 +180,9 @@ export let unusedOf = (a) => {
  * console.log(validateCatalog({ arms: [{ id: '1x' }] }).errors.length > 0)
  * // => true
  */
-export let validateCatalog = (catalog, { operators = null, fragments = null, modules = null, carriers = null, lenient = null } = {}) => {
+export let validateCatalog = (catalog, { operators = null, fragments = null, modules = null, carriers = null, lenient = null, lenientNames = null } = {}) => {
     let errors = [], warnings = []
-    let soft = isArray(lenient) ? new Set(lenient) : null
+    let soft = isArray(lenient) || isArray(lenientNames) ? new Set(isArray(lenient) ? lenient : []) : null
     let unregistered = []
     let done = () => (soft ? { errors, warnings, unregistered: uniq(unregistered) } : { errors, warnings })
     if (catalog !== null && catalog !== undefined && !isArray(catalog) && !(isPlainObject(catalog) && isArray(catalog.arms))) { errors.push('arms.catalog 須為臂陣列或 { arms:[…], layers? }'); return done() }
@@ -190,10 +190,17 @@ export let validateCatalog = (catalog, { operators = null, fragments = null, mod
     let layers = catalogLayersOf(catalog)
     let ids = new Set()
     let known = (list, v) => !isArray(list) || list.includes(v)
+    //寬鬆之名(2026-11-14,Gitea #144):lenient 之臂於本目錄所落成之名 ∪ lenientNames(治理所觸及之臂於基底與擴充項內之名)——
+    //  由目錄推導登錄者, 這些名之登錄與否隨審定而變;共用其名之他臂(含基底未被觸及者)亦不因之拋錯
+    let softNames = new Set(isArray(lenientNames) ? lenientNames.filter(isString) : [])
+    if (soft) { for (let a of arms) { if (isPlainObject(a) && soft.has(a.id) && isArray(a.realize)) { for (let r of a.realize) { let f = isPlainObject(r) ? REALIZE_FIELD[r.kind] : null; if (f && isString(r[f])) { softNames.add(r[f]) } } } } }
     for (let [i, a] of arms.entries()) {
         let at = `臂[${i}]${a && a.id ? ` ${a.id}` : ''}`
-        //落成之名未登錄:擴充之臂(lenient)⇒ 警告並記 unregistered;其餘 ⇒ 錯誤
-        let unreg = (msg) => { if (soft && a && soft.has(a.id)) { warnings.push(`${msg}(治理之擴充:不可選至登錄為止)`); unregistered.push(a.id) } else { errors.push(msg) } }
+        //落成之名未登錄:擴充之臂(lenient)或寬鬆之名 ⇒ 可選者警告並記 unregistered(不可選至登錄為止);本就不可選者(停用 / blocked / selectable false)不需登錄 ⇒ 不警告(2026-11-14,Gitea #144);其餘 ⇒ 錯誤
+        let unreg = (name, msg) => {
+            if (!(soft && a && (soft.has(a.id) || softNames.has(name)))) { errors.push(msg); return }
+            if (selectableOf(a)) { warnings.push(`${msg}(治理之擴充:不可選至登錄為止)`); unregistered.push(a.id) }
+        }
         if (!isPlainObject(a)) { errors.push(`${at}:須為物件`); continue }
         let unknown = keys(a).filter((k) => !ARM_KEYS.includes(k))
         if (unknown.length) { errors.push(`${at}:未知鍵 ${unknown.join(', ')}(已知鍵 ${ARM_KEYS.join(', ')})`) }
@@ -214,10 +221,10 @@ export let validateCatalog = (catalog, { operators = null, fragments = null, mod
                 if (!isPlainObject(r) || !REALIZE_KINDS.includes(r.kind)) { errors.push(`${at}:realize[${j}] 之 kind 須為 ${REALIZE_KINDS.join(' | ')}`); continue }
                 let f = REALIZE_FIELD[r.kind]
                 if (!isString(r[f]) || !r[f].trim()) { errors.push(`${at}:realize[${j}](${r.kind})須有 ${f}`); continue }
-                if (r.kind === 'operator' && !known(operators, r.op)) { unreg(`${at}:realize 之算子 ${r.op} 不在登錄表`) }
-                if (r.kind === 'fragment' && !known(fragments, r.mech)) { unreg(`${at}:realize 之片段 ${r.mech} 不在 known.fragments`) }
-                if (r.kind === 'generative' && !known(modules, r.module)) { unreg(`${at}:realize 之生成模組 ${r.module} 不在 known.modules`) }
-                if (r.kind === 'carrier' && !known(carriers, r.name)) { unreg(`${at}:realize 之載體 ${r.name} 不在 known.carriers`) }
+                if (r.kind === 'operator' && !known(operators, r.op)) { unreg(r.op, `${at}:realize 之算子 ${r.op} 不在登錄表`) }
+                if (r.kind === 'fragment' && !known(fragments, r.mech)) { unreg(r.mech, `${at}:realize 之片段 ${r.mech} 不在 known.fragments`) }
+                if (r.kind === 'generative' && !known(modules, r.module)) { unreg(r.module, `${at}:realize 之生成模組 ${r.module} 不在 known.modules`) }
+                if (r.kind === 'carrier' && !known(carriers, r.name)) { unreg(r.name, `${at}:realize 之載體 ${r.name} 不在 known.carriers`) }
             }
         }
         for (let k of ['grid', 'used']) { if (a[k] !== undefined && !(isPlainObject(a[k]) && every(values(a[k]), isArray))) { errors.push(`${at}:${k} 須為 { 鍵: [值] }`) } }
@@ -284,7 +291,7 @@ export let featureOf = (a, spec) => {
 /**
  * 臂目錄工廠(臂 = 探索之「可選方向」之一級概念;目錄為資料,由 createRsi({ arms }) 注入):目錄不合即拋(組裝期)。實例提供 validate / get / list / pick(選臂:封鎖、不可選、done 未附重啟理由、衝突、依賴缺 ⇒ 拒)/ restrict(本輪只用所選臂之算子與載體)/ compose(多臂依序施用產子規格)/ coverage(每臂之節點數、階 ≥ 1、階 ≥ 4)/ menu(選單 markdown)
  *
- * @param {Object} [o={}] 輸入 { catalog:Array|Object, defaults:Object(覆寫 ARMS_DEFAULTS), registry:Object(makeRegistry 之回傳,用以核對算子名), known:Object({ fragments, modules, carriers }), lenient:Array(治理之擴充所加或所修之臂 id:落成之名未登錄者不拋錯、列入 warnings 且不可選) }
+ * @param {Object} [o={}] 輸入 { catalog:Array|Object, defaults:Object(覆寫 ARMS_DEFAULTS), registry:Object(makeRegistry 之回傳,用以核對算子名), known:Object({ fragments, modules, carriers }), lenient:Array(治理之擴充所加、所停或改了落成名 / 可選與否之臂 id:落成之名未登錄者不拋錯,可選者列入 warnings 且不可選), lenientNames:Array(另外寬鬆之落成名:共用其名之臂同上;見 governance.mjs 之 lenientNamesOf) }
  * @returns {Object} 回傳 { arms, layers, byId, defaults, size, validate, warnings, get, list, selectableOf, opsOfArm, originsOfArm, carriersOfArm, armsOfOp, unusedOf, featureOf, pick, opsOf, carriersOf, restrict, compose, coverage, menuLines, menu }
  * @throws {Error} 目錄不合時拋出
  * @example
@@ -300,11 +307,11 @@ export let featureOf = (a, spec) => {
  * console.log(arms.size, pk.ok.map((a) => a.id).join(','), pk.rejected.map((r) => r.id + ':' + r.why).join(','))
  * // => 2 A1 B1:封鎖:需改引擎
  */
-export let makeArms = ({ catalog = null, defaults = {}, registry = null, known = {}, lenient = null } = {}) => {
+export let makeArms = ({ catalog = null, defaults = {}, registry = null, known = {}, lenient = null, lenientNames = null } = {}) => {
     let arms = catalogArmsOf(catalog)
     let layers = catalogLayersOf(catalog)
     let D = { ...ARMS_DEFAULTS, ...(defaults || {}) }
-    let chk = validateCatalog(catalog, { operators: registry && isArray(registry.names) ? registry.names : null, fragments: _get(known, 'fragments', null), modules: _get(known, 'modules', null), carriers: _get(known, 'carriers', null), ...(isArray(lenient) ? { lenient } : {}) })
+    let chk = validateCatalog(catalog, { operators: registry && isArray(registry.names) ? registry.names : null, fragments: _get(known, 'fragments', null), modules: _get(known, 'modules', null), carriers: _get(known, 'carriers', null), ...(isArray(lenient) ? { lenient } : {}), ...(isArray(lenientNames) ? { lenientNames } : {}) })
     if (chk.errors.length) { throw new Error(`arms: 臂目錄不合:\n  ${chk.errors.join('\n  ')}`) }
     //治理之擴充之臂, 落成之名未登錄 ⇒ 不可選(副本;原目錄不改)
     let unreg = new Set(chk.unregistered || [])
