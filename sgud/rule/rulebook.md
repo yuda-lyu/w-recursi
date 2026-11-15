@@ -74,7 +74,10 @@
 ### REC-10 前緣結案:評估錯誤可重試,拒絕存根不覆寫已占用節點
 
 - **規則**:`resolveFrontier`:executed ⇒ executed;閘門拒絕 ⇒ rejectedByGate;評估錯誤 ⇒ 維持 proposed 並記 `retries`,達 `frontier.maxRetries`(預設 2)⇒ status `blocked`;閘門拒絕存根以 `putNode(node, { skipIfStatus: OCCUPIED })` 鎖內判,不得覆寫已執行 / 認領中 / 已拒之節點。
-- **測試**:`unit-frontierOutcome`、`unit-store`。
+  **暫時性失敗**(2026-11-16,使用端 Gitea #157;評估器拋出之值帶 `transient: true`,**嚴格 `=== true`**;意指非候選本身之問題,如外部資源一時不可用;「何謂暫時性」由領域以標記表明,引擎不認得任何成因字樣):
+  ①`runJobs` 兩種模式(同程序之 `runner.mjs`、子程序之 `worker.mjs`)之失敗列皆另帶 `transient: true`,其餘失敗不帶此鍵(範圍 = 同一次評估內拋出者,含 `evaluate` 與其後之 `meta`〔同一個 try〕;讀取拋出值之 `transient` 即拋錯 ⇒ 視為未帶,失敗列照舊記下,不使整批評估拋出或 worker 崩潰;兩處之 `isTransient` 須同寫法);②`explore` 之 error 節點 `notes.transient: true`(節點仍為 error,不占用);③`frontierOutcomesOf` 之該筆(限 error 狀態)另帶 `transient: true`;④`resolveFrontier` 對此類**只動 proposed 之列**:不計 `retries`、不動 `note`,另記 `transients`(次數)、`transientNote`(`r<輪> #<次數>:<摘要>`,**只留最近一次**,不隨次數增長)、`lastErrorAt`;回傳另帶 `transient`(**維持 proposed 之筆數**,與一般錯誤之 `retried` 同口徑;達 `maxTransient` 而封鎖者計入 `blocked`、不計入 `transient`),**無此類時不帶此鍵**(既有回傳逐字不變);⑤`cfg.frontier.maxTransient` → `resolveFrontier` 之 `opt.maxTransient`:以 wsemi `iseint(v, { use: 'count', min: 1 })` 判為正整數(數字或其數字字串;採**轉換後之值**,規格〈輸入參數之檢測機制〉K4)才設上限,`transients` 達上限 ⇒ `blocked`(計入回傳之 `blocked`);**給了而非預期 ⇒ 視為未給 = 不設上限**(K3),不自寫 `Number.isInteger` 類之判定;⑥`summary.nTransient`(`nError` 之語意不變,仍含此類)與報告「前緣結案」之「暫時性失敗(不計重試)N」皆**有才帶**;⑦未拋 `transient` 之領域,`resolveFrontier` 之回傳、`summary.json`、報告、前緣檔逐字不變。
+- **盤點指令**:`git grep -n "transient" -- src`;站點全集(2026-11-16,皆「已套」,無「刻意不套」):`eval/runner.mjs`(同程序之失敗列)、`eval/worker.mjs`(子程序之失敗列)、`loop/explore.mjs`(error 節點 `notes`、`frontierOutcomesOf`、`finish` 之 `maxTransient` 傳入與 `nTransient`)、`loop/report.mjs`(前緣結案行)、`tree/store.mjs`(`resolveFrontier`);**刻意不套**:`runner.mjs` 之「worker 無結果」合成失敗列(無可讀之拋出值,不得因 worker 消失即推定暫時性)、`createContext` 失敗(評估器模組初始化,不在「評估拋出之值」之內;同程序模式使整次 `runJobs` 拋出,子程序模式 worker 退出 ⇒ 無結果)。新增另一種評估結果之產出路徑(第三種評估模式、重試包裝)時,須同輪補標記之傳遞。
+- **測試**:`unit-frontierOutcome`、`unit-store`、`unit-frontierTransient`(FT01 ~ FT10、FT07b;變異見 `exp/experience.md` §27)。
 
 ### REC-11 欠額觸發生成:全域一份標記、持有者判活、早退仍計連續欠額
 
@@ -113,7 +116,7 @@
 
 ### REC-18 發布面、依賴與去識別(本套件為公開庫)
 
-- **規則**:`package.json` 不設 `exports` / `files` / `type`,`main` 指 dist UMD,scripts 只有 `test` 與 `deploy`;不提供 `.npmignore`(npm 包＝git 版控內容,`sgud/`、`test/`〔含 `test/tools/`〕、`docs/` 隨包,`CLAUDE*.md` 由 `.gitignore` 排除);依賴只宣告 `wsemi`(`lodash-es` 由其依賴帶入,`src/` 一律 `lodash-es/<函數>.js` 單函數路徑,不整包匯入;`src/` 之 wsemi 只引用觀察回調之單一實作 `wsemi/src/getTrace.mjs`〔2026-11-14〕,打包進 dist);node 內建模組在 `src/` 一律無前綴,且與 `toolg/gDistRollup.mjs` 之 external / globals 一致;`src/` 每個匯出皆有 JSDoc(說明、`@param`、`@returns`、`@example`),範例實跑;**發布內容(程式、測試、`sgud/`、README、註解)不得出現宿主專案之路徑、檔名、內部輪號、工單編號與業務領域字樣**,需求出處只寫「使用端」與 Gitea 編號。
+- **規則**:`package.json` 不設 `exports` / `files` / `type`,`main` 指 dist UMD,scripts 只有 `test` 與 `deploy`;不提供 `.npmignore`(npm 包＝git 版控內容,`sgud/`、`test/`〔含 `test/tools/`〕、`docs/` 隨包,`CLAUDE*.md` 由 `.gitignore` 排除);依賴只宣告 `wsemi`(`lodash-es` 由其依賴帶入,`src/` 一律 `lodash-es/<函數>.js` 單函數路徑,不整包匯入;`src/` 之 wsemi 只引用兩個單檔實作:觀察回調 `wsemi/src/getTrace.mjs`〔2026-11-14〕與 `cfg.frontier.maxTransient` 之正整數判定 `wsemi/src/iseint.mjs`〔2026-11-16,規格〈輸入參數之檢測機制〉不自寫等價判定;其相依 `isenum` / `_numRange` / `_numOpt` / `_const` 皆無裸 import〕,打包進 dist);node 內建模組在 `src/` 一律無前綴,且與 `toolg/gDistRollup.mjs` 之 external / globals 一致;`src/` 每個匯出皆有 JSDoc(說明、`@param`、`@returns`、`@example`),範例實跑;**發布內容(程式、測試、`sgud/`、README、註解)不得出現宿主專案之路徑、檔名、內部輪號、工單編號與業務領域字樣**,需求出處只寫「使用端」與 Gitea 編號。
 - **盤點指令**:不手寫式,以守門測試為準——判準與具名例外見 `test/unit-package.test.mjs` 之 `HOST_PATTERNS` / `HOST_EXCEPTIONS`;`git grep -nE "from 'lodash-es'" -- src` 應無輸出。
 - **測試**:`unit-package`(①發布面 ②依賴與按需引入 ③打包清單 ④g.mjs 與 README ⑤JSDoc 覆蓋與範例實跑 ⑥去識別)。
 

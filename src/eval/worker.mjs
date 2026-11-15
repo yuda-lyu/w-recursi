@@ -28,6 +28,8 @@ let ctx = typeof mod.createContext === 'function' ? await mod.createContext(ctxO
 let done = new Set()
 const RETRY_FAILED = argv.includes('--retry-failed')
 if (fs.existsSync(fpOut)) { for (let l of fs.readFileSync(fpOut, 'utf8').split(/\r?\n/).filter(Boolean)) { try { let j = JSON.parse(l); if (j.key && (!RETRY_FAILED || j.ok === true)) { done.add(j.key) } } catch (e) {} } }
+//暫時性失敗之標記(使用端 Gitea #157):拋出之值之 transient 嚴格為 true;讀取拋錯(存取器等)⇒ 視為未帶, 失敗列照舊記下(runner.mjs 同寫法)
+let isTransient = (e) => { try { return !!e && e.transient === true } catch (err) { return false } }
 let runOne = async (job) => {
     let t = Date.now()
     let line
@@ -37,7 +39,8 @@ let runOne = async (job) => {
         console.log(`${job.id} ok (${line.ms} ms)`)
     }
     catch (e) {
-        line = { id: job.id, key: job.key || null, ok: false, error: String(e && e.stack || e), ms: Date.now() - t }
+        //暫時性失敗(使用端 Gitea #157):評估器拋出之值帶 transient: true(嚴格比對;讀取拋錯 ⇒ 視為未帶)⇒ 失敗列另帶 transient: true(與 runner.mjs 之同程序模式同;其餘失敗不帶此鍵)
+        line = { id: job.id, key: job.key || null, ok: false, error: String(e && e.stack || e), ...(isTransient(e) ? { transient: true } : {}), ms: Date.now() - t }
         console.log(`${job.id} ERROR ${String(e && e.message || e).slice(0, 200)}`)
     }
     fs.appendFileSync(fpOut, JSON.stringify(line) + '\n')

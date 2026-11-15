@@ -5,6 +5,7 @@
 //   .gitignore 列 CLAUDE*.md、不排除 sgud / src / dist / test/tools);根目錄範本檔齊備;LICENSE 為 MIT 且署名同作者
 // ② 依賴對帳:src/ 實際 import 之 npm 套件僅 lodash-es(單函數路徑;由 wsemi 之依賴帶入,package.json 只宣告 wsemi);toolg/ 只用 w-package-tools;
 //   node 內建模組一律無 node: 前綴,且與 toolg/gDistRollup.mjs 之 external / globals 清單一致
+//   (wsemi 之引用限 getTrace〔觀察回調〕與 iseint〔cfg.frontier.maxTransient 之正整數判定〕兩個單一實作)
 // ③ npm 打包清單(npm pack --dry-run):含 sgud/ 四份索引、test/tools/ 全部檔、聚合入口、README、LICENSE、package.json;不含 CLAUDE*.md、tmp、test/_tmp、node_modules
 // ④ 範例 g.mjs 離線可直接執行(不連網),輸出與檔末 // => 逐行相符,README 之 Example 含 g.mjs 全文
 // ⑤ JSDoc:src/ 每個匯出皆有 JSDoc;函式另有 @param(有參數者)、@returns(class 除外)、@example;全部 @example 實跑,輸出與 // => 逐行相符
@@ -142,13 +143,15 @@ describe('unit-package', function() {
     })
 
     describe('② 依賴對帳與按需引入', () => {
-        it('src/ 之 npm 套件僅 lodash-es(單函數路徑,由 wsemi 之依賴帶入)與 wsemi(只 getTrace);dependencies 只宣告 wsemi、devDependencies 只宣告 w-package-tools;toolg/ 與 g.mjs 之 import 皆在宣告內', () => {
+        it('src/ 之 npm 套件僅 lodash-es(單函數路徑,由 wsemi 之依賴帶入)與 wsemi(只 getTrace、iseint);dependencies 只宣告 wsemi、devDependencies 只宣告 w-package-tools;toolg/ 與 g.mjs 之 import 皆在宣告內', () => {
             let bare = bareOf(srcFiles())
             let pkgs = new Set([...bare.keys()].filter((s) => !isBuiltin(s)).map(pkgNameOf))
             //2026-11-14:wsemi 只用觀察回調之單一實作 wsemi/src/getTrace.mjs(計時器相關函數之制式;core/jsonl 之 writeFileAtomic)
-            assert.deepStrictEqual([...pkgs].sort(), ['lodash-es', 'wsemi'], 'src/ 只應引用 lodash-es 與 wsemi(getTrace)')
-            assert.deepStrictEqual([...bare.keys()].filter((s) => pkgNameOf(s) === 'wsemi'), ['wsemi/src/getTrace.mjs'], 'wsemi 只引用 getTrace')
+            //2026-11-16(使用端 Gitea #157):cfg.frontier.maxTransient 之正整數判定用 wsemi 共用函數 iseint(規格〈輸入參數之檢測機制〉§7.1:個數 = N2 正整數,不自寫 Number.isInteger 類之判定)
+            assert.deepStrictEqual([...pkgs].sort(), ['lodash-es', 'wsemi'], 'src/ 只應引用 lodash-es 與 wsemi(getTrace、iseint)')
+            assert.deepStrictEqual([...bare.keys()].filter((s) => pkgNameOf(s) === 'wsemi').sort(), ['wsemi/src/getTrace.mjs', 'wsemi/src/iseint.mjs'], 'wsemi 只引用 getTrace 與 iseint')
             assert.doesNotThrow(() => import.meta.resolve('wsemi/src/getTrace.mjs'))
+            assert.doesNotThrow(() => import.meta.resolve('wsemi/src/iseint.mjs'))
             let wsemi = JSON.parse(read('node_modules/wsemi/package.json'))
             assert.ok(wsemi.dependencies && wsemi.dependencies['lodash-es'], '前提:wsemi 之依賴含 lodash-es(package.json 因此不另宣告)')
             assert.deepStrictEqual(Object.keys(pkg.dependencies), ['wsemi'])

@@ -130,20 +130,21 @@ export let loadSummaries = (paths) => roundDirs(paths).map((d) => readJson(path.
 
 //前緣條目之結案判讀(2026-09-29;純函式):本輪之結果 → store.resolveFrontier 之 outcomes
 //  節點 executed ⇒ executed;閘門拒絕(後閘之節點 / 前閘之存根有寫入者)⇒ rejectedByGate(附理由);評估錯誤 ⇒ error(附錯誤摘要;前緣維持 proposed 並記 retries)
+//    暫時性失敗(error 節點之 notes.transient === true,嚴格比對;評估器拋出之值帶 transient: true, 使用端 Gitea #157)⇒ 該筆另帶 transient: true(前緣不計 retries);其餘各筆不帶此鍵 ⇒ 舊形逐字
 //  前閘拒絕而同 id 節點已被占用(存根未寫)⇒ 不動前緣(該規格之既有節點另有歸屬)
 /**
- * 前緣條目之結案判讀(純函式):本輪之結果 → store.resolveFrontier 之 outcomes;執行 ⇒ executed、閘門拒絕 ⇒ rejectedByGate(附理由)、評估錯誤 ⇒ error(附錯誤摘要);前閘拒絕而同 id 節點已被占用(存根未寫)⇒ 不動前緣
+ * 前緣條目之結案判讀(純函式):本輪之結果 → store.resolveFrontier 之 outcomes;執行 ⇒ executed、閘門拒絕 ⇒ rejectedByGate(附理由)、評估錯誤 ⇒ error(附錯誤摘要;暫時性失敗即 error 節點之 notes.transient 嚴格為 true 者,該筆另帶 transient: true);前閘拒絕而同 id 節點已被占用(存根未寫)⇒ 不動前緣
  *
  * @param {Array} nodes 輸入本輪入樹之節點
  * @param {Array} rejected 輸入本輪被前閘拒絕之計畫項
- * @returns {Array} 回傳 [{ specHash, status, why }]
+ * @returns {Array} 回傳 [{ specHash, status, why }](暫時性失敗之筆另帶 transient: true)
  * @example
  * let nodes = [{ specHash: 'h1', status: 'executed' }, { specHash: 'h2', status: 'error', notes: { error: 'boom' } }]
  * console.log(JSON.stringify(frontierOutcomesOf(nodes, [{ specHash: 'h3', why: 'gate' }])))
  * // => [{"specHash":"h1","status":"executed","why":null},{"specHash":"h2","status":"error","why":"boom"},{"specHash":"h3","status":"rejectedByGate","why":"gate"}]
  */
 export let frontierOutcomesOf = (nodes, rejected) => [
-    ...(nodes || []).map((n) => ({ specHash: n.specHash || specHash(n.spec), status: n.status, why: n.status === STATUS.ERROR ? get(n, 'notes.error', null) : n.status === STATUS.REJECTED ? get(n, 'notes.why', null) : null })),
+    ...(nodes || []).map((n) => ({ specHash: n.specHash || specHash(n.spec), status: n.status, why: n.status === STATUS.ERROR ? get(n, 'notes.error', null) : n.status === STATUS.REJECTED ? get(n, 'notes.why', null) : null, ...(n.status === STATUS.ERROR && get(n, 'notes.transient') === true ? { transient: true } : {}) })),
     ...(rejected || []).filter((r) => !r.stubSkipped).map((r) => ({ specHash: r.specHash || specHash(r.spec), status: STATUS.REJECTED, why: r.why || null })),
 ].filter((o) => [STATUS.EXECUTED, STATUS.REJECTED, STATUS.ERROR].includes(o.status))
 
@@ -433,13 +434,16 @@ let exploreOnce = async (rsi, opt, hbBox) => {
     let finish = () => {
         //前緣結案(2026-09-29;原不分成敗一律標 executed ⇒ 只經前緣進入之臂(生成型算子、轉折)評估錯誤後永不重試):
         //  executed ⇒ executed;閘門拒絕 ⇒ rejectedByGate;評估錯誤 ⇒ 維持 proposed 並記 retries(達 cfg.frontier.maxRetries(預設 2)⇒ status blocked, 原因入 note)
-        let frontierRes = store.resolveFrontier(frontierOutcomesOf(nodes, rejected), { maxRetries: get(rsi.cfg, 'frontier.maxRetries', 2), round })
+        //  暫時性失敗(評估器拋出之值帶 transient: true;非候選本身之問題, 如外部資源一時不可用;使用端 Gitea #157)⇒ 維持 proposed、不計 retries、另記 transients
+        //    (cfg.frontier.maxTransient 為正整數才設上限, 達上限 ⇒ blocked;未給 = 不設;判定在 store.resolveFrontier);無此類之輪:回傳與 summary 逐字同舊
+        let frontierRes = store.resolveFrontier(frontierOutcomesOf(nodes, rejected), { maxRetries: get(rsi.cfg, 'frontier.maxRetries', 2), maxTransient: get(rsi.cfg, 'frontier.maxTransient'), round })
+        let nTransient = nodes.filter((n) => n.status === 'error' && get(n, 'notes.transient') === true).length
         let execNodes = nodes.filter((n) => n.status === 'executed')
         let best = maxBy(execNodes, (n) => n.score.S)
         //行為別名短路(cfg.aliasPre 時才列):本臂指紋 = 某父 ⇒ 評估器略過部分計算;判定由領域鉤子 domain.aliasShortOf(2026-10-01 起;原寫死讀領域原料之欄位)
         let aliasOn = get(rsi.cfg, 'aliasPre', false) === true
         let aliasShortOf = aliasShortOfDomain(domain)
-        let summary = { round, at: nowIso(), by: O.by, nPlanned: mine.length, nSkipped: skipped.length, replans, noveltyDebt: debt.debt, noveltyNeed: debt.need, ...(debt.firstPlan ? { noveltyDebtPlan: debt.firstPlan.debt } : {}), nTurning: turning ? turning.proposals.length : 0, generation: generation && generation.fp ? generation.fp : null, nExecuted: execNodes.length, nError: nodes.filter((n) => n.status === 'error').length, nRejected: rejected.length, ladderGe1: execNodes.filter((n) => (n.score.ladder || 0) >= 1).length, ladders: countBy(execNodes, (n) => n.score.ladder), bestS: best ? { id: best.id, S: best.score.S, summary: (domain.summarize || JSON.stringify)(best.spec) } : null, replays: sum(execNodes.map((n) => get(n, 'cost.replays', 0) || 0)), wallSec: _round((Date.now() - t0) / 1000), policy: pol.meta, ...(aliasOn ? { nAliasShort: nodes.filter((n) => aliasShortOf(n)).length } : {}), ...(useArms ? { useArms } : {}) }
+        let summary = { round, at: nowIso(), by: O.by, nPlanned: mine.length, nSkipped: skipped.length, replans, noveltyDebt: debt.debt, noveltyNeed: debt.need, ...(debt.firstPlan ? { noveltyDebtPlan: debt.firstPlan.debt } : {}), nTurning: turning ? turning.proposals.length : 0, generation: generation && generation.fp ? generation.fp : null, nExecuted: execNodes.length, nError: nodes.filter((n) => n.status === 'error').length, ...(nTransient ? { nTransient } : {}), nRejected: rejected.length, ladderGe1: execNodes.filter((n) => (n.score.ladder || 0) >= 1).length, ladders: countBy(execNodes, (n) => n.score.ladder), bestS: best ? { id: best.id, S: best.score.S, summary: (domain.summarize || JSON.stringify)(best.spec) } : null, replays: sum(execNodes.map((n) => get(n, 'cost.replays', 0) || 0)), wallSec: _round((Date.now() - t0) / 1000), policy: pol.meta, ...(aliasOn ? { nAliasShort: nodes.filter((n) => aliasShortOf(n)).length } : {}), ...(useArms ? { useArms } : {}) }
         //生成已兌現(本輪有 origin.topic = generated 之節點, 或經新區域進入之 operator kind 節點執行;generation.isGenerationFulfilled, 2026-09-27)⇒ 清除全域生成請求
         //  2026-09-29:只清本輪所見 / 所寫之標記(policies 鎖內);計畫後才出現之他輪標記保留
         let genClear = isGenerationFulfilled(execNodes, new Map(mine.map((x) => [x.id, x.kindOf]))) ? clearGenRequest(rsi, { round: path.basename(fd), seen: genSeen }) : null
@@ -471,7 +475,7 @@ let exploreOnce = async (rsi, opt, hbBox) => {
         let origin = toClaim.find((c) => c.id === it.id).origin
         let node = res && res.ok
             ? makeNode({ id: it.id, spec: it.spec, parent: it.parentId || 'root', round, origin, raw: res.raw, envHash: it.envHash, evidence: it.evidence || null, notes: it.notes || null }, domain)
-            : makeNode({ id: it.id, spec: it.spec, parent: it.parentId || 'root', round, origin, raw: null, envHash: it.envHash, status: STATUS.ERROR, notes: { error: res ? res.error : 'worker 無結果' } }, domain)
+            : makeNode({ id: it.id, spec: it.spec, parent: it.parentId || 'root', round, origin, raw: null, envHash: it.envHash, status: STATUS.ERROR, notes: { error: res ? res.error : 'worker 無結果', ...(res && res.transient === true ? { transient: true } : {}) } }, domain)
         if (node.status === 'executed' && get(domain, 'gates.post')) { let g = domain.gates.post(node); if (g && g.ok === false) { node.status = STATUS.REJECTED; node.notes = { ...(node.notes || {}), why: g.why || 'post gate' } } }
         let old = store.getNode(it.id)
         if (old) { node.children = old.children || []; node.createdAt = old.createdAt || node.createdAt }

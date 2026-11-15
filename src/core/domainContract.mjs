@@ -17,7 +17,7 @@ import toPairs from 'lodash-es/toPairs.js'
  */
 export const DOMAIN_KEYS = {
     score: { type: 'function', required: true, doc: 'score(raw, node) → { S, ladder, flags:{ vetoed, … }, evaluator, … }:判讀層(可重算不重跑);ladder = 證據之序數階梯, **≥ 1 = 通過領域之第一道真偽**(引擎據以計 summary.ladderGe1、策略開發之停滯判定「連續兩輪無 ladder ≥ 1」;做夢之 targetLadder 由 cfg.dream 設);flags.vetoed = 否決(不入目標)' },
-    evaluator: { type: 'object', doc: "{ mode:'spawn', module, ctxOpt, protocol, costOf(job) } | { mode:'inProcess', evaluate, createContext, ctxOpt, protocol };costOf 供 runner 大者先派" },
+    evaluator: { type: 'object', doc: "{ mode:'spawn', module, ctxOpt, protocol, costOf(job) } | { mode:'inProcess', evaluate, createContext, ctxOpt, protocol };costOf 供 runner 大者先派;同一次評估(evaluate 與其後之 meta)拋出之值帶 transient: true(嚴格比對)⇒ 暫時性失敗(非候選本身之問題, 如外部資源一時不可用):前緣結案不計重試" },
     evaluatorVersion: { type: ['number', 'string'], doc: '評估器版本(status 顯示)' },
     name: { type: 'string', doc: '領域名稱(資訊)' },
     validateSpec: { type: 'function', doc: 'validateSpec(spec):拋錯即無效' },

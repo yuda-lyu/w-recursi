@@ -105,8 +105,11 @@ export let reclaimJobDirs = (fdJobs, { days = 7, logDir = null, exclude = [] } =
     return out
 }
 let reclaimedOnce = new Set() //本程序已回收過之 jobs 夾(每程序每夾只掃一次)
+//暫時性失敗之標記(使用端 Gitea #157):拋出之值之 transient 嚴格為 true;讀取拋錯(存取器等)⇒ 視為未帶, 失敗列照舊記下(不讓標記之讀取使整批評估拋出;worker.mjs 同寫法)
+let isTransient = (e) => { try { return !!e && e.transient === true } catch (err) { return false } }
 
 //平行評估 runJobs(jobs, opt) → { results: Map(id → { ok, raw | error, meta, ms }), exits, nWorkers, fd, commit }
+//  失敗列(ok: false)於評估器拋出之值帶 transient: true(嚴格比對;暫時性失敗 = 非候選本身之問題, 如外部資源一時不可用)時另帶 transient: true(兩種模式同)
 //  opt.mode = 'spawn'(每 worker 一個 node 子程序;子程序總數受全域槽位 opt.slots = { dir, max } 限制, 多 session 併行時合計 ≤ max)
 //           | 'inProcess'(同程序 promise pool;opt.evaluate / opt.createContext;測試與輕量評估器用)
 //  job: { id, spec, protocol? };opt.protocol 為預設協定;opt.costOf(job) 供大者先派
@@ -131,7 +134,7 @@ let reclaimedOnce = new Set() //本程序已回收過之 jobs 夾(每程序每�
  *
  * @param {Array} jobs 輸入 [{ id, spec, protocol? }]
  * @param {Object} [opt={}] 輸入 { mode, workers:Number(4), tag, tmpDir, evaluatorModule(spawn 必填), evaluate/createContext/ctxOpt/ctx/meta(inProcess;未給 createContext 時取 ctx), protocol, costOf, slots:{ dir, max, timeoutMs, staleMs }, expandMs:Number(5000), keepDir:Boolean(預設 true), logDir, reclaimDays:Number(7), retryFailed:Boolean(false), cwd, env }
- * @returns {Promise} 回傳 Promise,resolve { results:Map(id → { ok, raw | error, meta, ms }), exits, nWorkers, fd(僅 spawn 模式有), commit() }
+ * @returns {Promise} 回傳 Promise,resolve { results:Map(id → { ok, raw | error, meta, ms };評估器拋出之值帶 transient: true 者之失敗列另帶 transient: true,兩種模式同), exits, nWorkers, fd(僅 spawn 模式有), commit() }
  * @throws {Error} inProcess 缺 evaluate、spawn 缺 evaluatorModule、槽位逾時時拋出
  * @example
  * let run = await runJobs([{ id: 'a', spec: { x: 1 } }, { id: 'b', spec: { x: 2 } }], { mode: 'inProcess', workers: 2, evaluate: async (spec) => ({ v: spec.x * 10 }) })
@@ -153,7 +156,8 @@ export let runJobs = async (jobs, opt = {}) => {
                 if (!job) { return }
                 let t = Date.now()
                 try { let raw = await O.evaluate(job.spec, ctx, job.protocol || O.protocol || {}); results.set(job.id, { id: job.id, ok: true, raw, meta: isFunction(O.meta) ? O.meta(ctx) : null, ms: Date.now() - t }) }
-                catch (e) { results.set(job.id, { id: job.id, ok: false, error: String(e && e.stack || e), ms: Date.now() - t }) }
+                //暫時性失敗(使用端 Gitea #157):評估器拋出之值帶 transient: true(嚴格比對;讀取拋錯 ⇒ 視為未帶)⇒ 失敗列另帶 transient: true(與 worker.mjs 之子程序模式同;其餘失敗不帶此鍵 ⇒ 舊形逐字)
+                catch (e) { results.set(job.id, { id: job.id, ok: false, error: String(e && e.stack || e), ...(isTransient(e) ? { transient: true } : {}), ms: Date.now() - t }) }
             }
         }
         await Promise.all(range(nW).map(run))

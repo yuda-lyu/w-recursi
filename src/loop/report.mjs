@@ -102,7 +102,8 @@ export let reportOf = (rsi, round, plan, nodes, rejected, extra = {}) => {
     }
     if (extra.frontierRes) {
         let f = extra.frontierRes
-        if (f.executed || f.rejected || f.retried || f.blocked) { L.push('', '## 前緣結案', '', `- 執行 ${f.executed}、閘門拒絕 ${f.rejected}、評估錯誤待重試 ${f.retried}、錯誤達上限封鎖(status blocked)${f.blocked}`) }
+        //暫時性失敗(使用端 Gitea #157;不計重試)有才附字樣 ⇒ 無此類時本行與舊版逐字同
+        if (f.executed || f.rejected || f.retried || f.blocked || f.transient) { L.push('', '## 前緣結案', '', `- 執行 ${f.executed}、閘門拒絕 ${f.rejected}、評估錯誤待重試 ${f.retried}、錯誤達上限封鎖(status blocked)${f.blocked}${f.transient ? `、暫時性失敗(不計重試)${f.transient}` : ''}`) }
     }
     if (extra.turning) {
         let t = extra.turning

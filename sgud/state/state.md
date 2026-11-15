@@ -1,4 +1,4 @@
-# 現況(w-recursi)— 2026-11-14
+# 現況(w-recursi)— 2026-11-16
 
 > 只記現況,不寫過程(過程在 `../exp/`)。接續工作先讀本檔;完成一項功能或結束一輪工作即更新。
 > **路徑基準**:原始碼在 `src/`,下文檔案路徑除已標 `src/`、`test/`、`toolg/` 者外皆相對 `src/`。
@@ -6,18 +6,19 @@
 ## 身分與位置
 
 - 套件名 `w-recursi`:通用遞迴自我改進(RSI)迴圈,領域無關(領域以依賴注入接上)。`package.json` 之 `version` 設 1.0.0(首發版號由發布流程升為 1.0.1);`main` 指 `dist/w-recursi.umd.js`(來源 `src/WRecursi.mjs`,預設匯出 index 之全部 API + `protocol` 一組)。
-- 依賴:`wsemi` ^1.9.52(`src/` 只引用 `wsemi/src/getTrace.mjs`〔2026-11-14,`core/jsonl.mjs` 之觀察回調〕;`src/` 所用之 `lodash-es` 由其依賴帶入,故不另宣告);devDependencies:`w-package-tools`(`toolg/`;mocha 隨之安裝)。
+- 依賴:`wsemi` ^1.9.61(`src/` 只引用 `wsemi/src/getTrace.mjs`〔2026-11-14,`core/jsonl.mjs` 之觀察回調〕與 `wsemi/src/iseint.mjs`〔2026-11-16,`tree/store.mjs` 之 `maxTransient` 正整數判定;`iseint` 於 1.9.61 之 `node_modules` 實查存在〕;`src/` 所用之 `lodash-es` 由其依賴帶入,故不另宣告);devDependencies:`w-package-tools`(`toolg/`;mocha 隨之安裝)。
 - 被誰用:使用端專案以路徑深層匯入 `w-recursi/src/index.mjs`、`w-recursi/src/protocol.mjs`、`w-recursi/src/search/arms.mjs` 等(套件不設 `exports`;需求出處使用端 Gitea #95),另有大量封存腳本經轉發檔引用 `src/**` 全部檔案;`test/` 隨 npm 包發布(使用端以此夾之 mocha 測試守門),`test/tools/toy.mjs`、`toyArms.mjs` 亦被深層匯入。
 - 發布狀態:最新發布 1.0.9(2026-11-14 01:44,含治理 #138 與原子寫第 429 項;`npm view` 查得);其後之改動(Gitea #144、第 456 項)**尚未提交與發布**,發布與推送由使用者與自動化流程處理。
 - 2026-11-10(使用端 Gitea #127):`eval/runner.mjs` 之 worker `spawn` 補 `windowsHide: true`,`test/` 內起子行程之呼叫同補(REC-20);`runJobs` 介面與其他行為未變。
 - 2026-11-14:①治理(使用端 Gitea #138;新檔 `src/search/governance.mjs`,REC-21):提案帳、主控審定、臂目錄以擴充演進、起跑之把關、收件匣與 CLI `proposals` / `decide` / `--ack-pending`;審定之提交點為擴充檔(中斷後補記)、他實例起跑即重載(`rsi.syncArms`)、把關之終檢與取號同鎖、試建時核對 `cfg.arms.use`;未用治理者逐字不變(改前改後對拍 0 差異)。②原子寫不再退回直接覆寫(第 429 項;REC-02):改名重試用盡即拋 `ERSI_ATOMIC_RENAME`,`atomicStats.fallbacks` 改為 `giveUps`,`writeFileAtomic` 增 `opt.retryMs` / `opt.onTrace`、拋錯前盡力刪暫存檔(刪不掉 ⇒ `tmpLeft`);`withLock` 之建鎖夾 EPERM / EACCES / EBUSY 視同被占用、死鎖夾刪不掉時亦依逾時拋錯(REC-01)。
 - 2026-11-14(使用端 Gitea #144,治理之五項不足 + 排程第 456 項):①停用之臂、修訂了 `selectable` / `status` 之臂納入 `lenientIdsOf`,本就不可選之 lenient 臂之未登錄落成名不報錯不警告,寬鬆另以「名」為單位(`lenientNamesOf`:共用落成名之他臂同此)⇒ 「由生效目錄之可選臂推導算子」之領域停用某臂後之下一次組裝不再拋錯;②修訂之 patch 以 `null` 刪除非必填鍵(必填欄拒)、`undefined` 視同未給、寫入擴充檔之項須為純資料;③`realize` 之 `{id}` 由引擎代換為鎖內配出之 id(API 與 CLI);④`lenientIdsOf` 自 `index.mjs` 匯出(另新增匯出 `lenientNamesOf`);⑤匯入介面未實作(主控初判,見缺口);第 456 項:`withLock` 之持有者檔為持有之憑證(改名取得後核對,回收於同一鎖夾接手、不刪夾;回收途徑寫入後確認無他方進行中之取得、否則撤回;釋放持有者檔不在即不刪)。外審(Argon 兩輪)所提之 `cfg.arms.use` 收嚴、`undefined`、補記沿用 id、`nextArmId` 不重複亦已修。`extensions.json` 之格式不變(新增:revise 之 patch 可含 `null` 值),既有狀態根可續用;鎖夾之 `owner` 格式不變,另有暫時之 `owner.dead-*` / `owner.rel-*`(皆在鎖夾內)。
+- 2026-11-16(使用端 Gitea #157,**未提交、未發布**):評估器拋出之值帶 `transient: true`(嚴格 `=== true`)= 暫時性失敗(非候選本身之問題,如外部資源一時不可用)⇒ 前緣結案不計 `retries`、另記 `transients` / `transientNote`(只留最近一次)/ `lastErrorAt`;選配 `cfg.frontier.maxTransient`(wsemi `iseint` 判為正整數才設上限,其餘 = 不設)達上限 ⇒ `blocked`。`runJobs` 兩種模式之失敗列、error 節點 `notes`、`frontierOutcomesOf` 之該筆、`resolveFrontier` 之回傳(有才帶 `transient`)、`summary.nTransient`(有才帶)與報告「前緣結案」附字樣皆有;未拋此標記之領域逐字不變(REC-10)。`src/` 新增引用 `wsemi/src/iseint.mjs` ⇒ `unit-package` ② 之 wsemi 引用集合與 `toolg/gDistRollup.mjs` 之盤點註解同步更新(REC-18)。需使用端領域於評估器拋錯處加 `transient: true` 才生效(使用端之接線另案)。
 - `dist/`、`docs/` 為產製物(`dist/` 在版控內);2026-11-14 #144 輪本機以 `toolg/gDistRollup.mjs` 重建 `dist/`(含上列改動,PR04 綠;發布時由發布流程再重產);`docs/` 未重產。
 
 ## 佈局
 
 - 原始碼全在 `src/`(33 檔):根層 `index.mjs`(`createRsi` 組裝與 `CFG_KEYS`)、`protocol.mjs`(協定件 barrel)、`WRecursi.mjs`(聚合入口)、`cli.mjs`(通用 CLI),子目錄 `core/`(canonical、cli、domainContract、hookResult、jsonl、lock、paths、proc、slots、writeRoot)、`tree/`(store、view、node、alias)、`search/`(operators、policyV0、turning、arms、governance)、`loop/`(explore、auto、status、report、generation、policyDev)、`sim/`(dream、replay)、`eval/`(runner、worker)。
-- `test/`:`unit-*.test.mjs`(49 檔;2026-11-14 加 `unit-governance`)、`tools/`(玩具領域 `toy.mjs`、`toyArms.mjs`、`toyConfig.mjs`、子程序輔助件、`tmpdir.mjs`、`jsdocExamples.mjs`;2026-11-14 #144 加 `childEvents.mjs`〔起子程序並以其輸出為事件同步點〕、`lockRaceChild.mjs`、`governChild.mjs`、`derivedDomain.mjs`〔由生效目錄之可選臂推導算子之玩具領域〕)、`fixtures/`(兩份舊版輸出快照)。
+- `test/`:`unit-*.test.mjs`(50 檔;2026-11-14 加 `unit-governance`、2026-11-16 加 `unit-frontierTransient`)、`tools/`(玩具領域 `toy.mjs`、`toyArms.mjs`、`toyConfig.mjs`、子程序輔助件、`tmpdir.mjs`、`jsdocExamples.mjs`;2026-11-14 #144 加 `childEvents.mjs`〔起子程序並以其輸出為事件同步點〕、`lockRaceChild.mjs`、`governChild.mjs`、`derivedDomain.mjs`〔由生效目錄之可選臂推導算子之玩具領域〕)、`fixtures/`(兩份舊版輸出快照)。
 - `toolg/`:標準六支(`addVersion`、`modifyReadme`、`cleanFolder`、`gDocsExams`、`gDistRollup`、`genDocsDist`);`g.mjs`:離線範例(玩具領域跑 4 輪探索 + 狀態 + 做夢,不連網);`dist/`、`docs/` 為產製物(未追蹤)。
 - 編譯:`node toolg/gDistRollup.mjs` 產出 `dist/w-recursi.umd.js`(`runin: 'nodejs'`;external 為 node 內建七項 `fs path url crypto zlib child_process util`;`lodash-es/*` 單函數路徑打包進 dist);警告一條(umd 以 browser 環境編譯時提示 node 內建模組,皆已 external);dist 以 `require` 載入之鍵集合(84,含 `protocol`)與型別同 `src/WRecursi.mjs`,`protocol` 44 鍵同。
 - JSDoc:`src/` 匯出函數 110 個,說明、`@param`、`@returns`、`@example` 皆全;匯出常數 27/27;`@example` 110 則皆經 `unit-package` ⑤ 實跑核對。
@@ -34,12 +35,14 @@
 | 2026-11-14 | 外審兩輪(Argon、hydrogen)後之最終(`npm test`,經測試鎖;dist 重建) | 313 通過／0 失敗(49 檔);`unit-lock` 共 24 案(本輪新 16、改 1)、`unit-governance` GV13 ~ GV20;變異 29 組中 27 組轉紅(存活 2 組皆為設計重疊);探測最終版 10 次 0 重疊 0 停滯(中途版本曾停滯,見經驗 §26) |
 | 2026-11-14 | 治理之五項不足(Gitea #144)與鎖之死鎖回收競態(第 456 項)後全套(`npm test`,經測試鎖;先以 `gDistRollup` 重建 dist) | 299 通過／0 失敗(49 檔):新增 `unit-lock` 6 案(改 1 案)、`unit-governance` GV13 ~ GV16;修前副本(HEAD f213c03)跑新測試 14 敗(含競態案實際重疊、GV13 ~ 16、PR01 / PR04)。建議檔 §6 腳本:修前 `reassemble` 拋錯 / `reviseGridNull` 拋錯 / `lenientIdsOf` undefined / `op` 留 `add:{id}`,修後皆符預期。競態 / GV16 / 計數案未改碼重跑 5 次皆綠。探測(4 worker、臨界區內以 0.2 機率結束、各 120 個 worker):舊鎖重疊 7 / 11 / 2 次、異常結束 4 / 4 / 0,新鎖 0 / 0 / 0 |
 | 2026-11-14 | 治理(Gitea #138)與原子寫不退回直寫(第 429 項)後全套(`npm test`,經測試鎖) | 288 通過／1 失敗(49 檔):失敗僅 `unit-protocol` PR04(dist 為舊編譯物,缺治理之 13 個匯出;以副本建置之 dist 跑 PR04 為 5/5 綠)。新增 `unit-governance` 12 案、`unit-atomic` 3 案、`unit-lock` 2 案,修前紅(改前副本:治理匯入即失敗;原子寫 4 案紅;死鎖夾刪不掉之案無限迴圈)、修後綠。未用治理者之改前改後對拍(玩具領域 auto / explore / 乾跑 / status,狀態根 23 檔與輸出遮蔽時間後)0 差異。CPU 壓力負載試驗(6 行程 × 12 次):改前 0 退回 0 短讀(未重現跟跑之數字)、改後 0 拋錯 0 短讀 |
+| 2026-11-16 | 暫時性失敗不計前緣重試(Gitea #157)後全套(`npm test`,經測試鎖) | 324 通過／0 失敗(50 檔):原 313 + `unit-frontierTransient` 11 案(FT01 ~ FT10、FT07b)。新檔對未改之 `src` 修前紅(10 案中 9 敗;不敗之 FT05 守舊行為);變異 36 項被殺 33、存活 3 項皆等價(見經驗 §27);`unit-package` ② 之 wsemi 引用集合改為 `getTrace` + `iseint`;暫存副本建置 dist 並載入驗證(99 鍵同 `src` 聚合入口;`maxTransient` 於 dist 內生效);外審 terra 一輪 7 條(實質修 2 項、文件 3 項、不修 2 項)。repo 之 `dist/` 未重產(發布時由流程重產) |
 
 ## 功能現況(對應規則帳本)
 
 | 功能 | 狀態 | 規則／測試 |
 |---|---|---|
 | 發現樹(節點 / 前緣 / lore)、鎖、原子寫、認領、前緣結案、拒絕存根 | 落地 | REC-01、02、05、10;`unit-store`、`unit-lock`、`unit-atomic`、`unit-frontierOutcome` |
+| 前緣結案之暫時性失敗(評估器拋 `transient: true` ⇒ 不計 retries、記 `transients`;選配 `frontier.maxTransient`;兩種評估模式一致) | 落地(2026-11-16;未發布) | REC-10、18;`unit-frontierTransient` FT01 ~ FT10 |
 | 身分(規格雜湊、節點 id)、輪夾之名與序、原子取號 | 落地 | REC-03、04;`unit-canonical`、`unit-roundId`、`unit-concurrency` |
 | 全域 worker 槽位(原子建槽、租約、死槽回收、CLI 狀態 / 回收) | 落地 | REC-06;`unit-slots`、`unit-slotsAtomic`、`unit-runnerQueue` |
 | 算子登錄、通用預設策略、策略視圖與靜態檢查、轉折點提取與產生端守門、展開鉤子、臂排除 | 落地 | REC-08、17;`unit-operators`、`unit-policy`、`unit-view`、`unit-turning`、`unit-proposalBlock`、`unit-childBlock`、`unit-excludeArm`、`unit-policyLoad` |
@@ -57,6 +60,8 @@
 | 起子行程一律 `windowsHide: true`(runner 之 worker 起程;`src/`、`test/`、`toolg/` 全站點盤點守門) | 落地 | REC-20;`unit-runnerSpawnHide` |
 
 ## 已知缺口與待辦
+
+**00. 暫時性失敗(Gitea #157,2026-11-16)之已知限制**:①同 tag 之 `runJobs` 以 `retryFailed: true` 續跑時,同一 job 鍵若 out 檔留有舊失敗列,讀回以檔序後者為準,新舊失敗列之 `error` 與 `transient` 皆可能取到舊列(`eval/runner.mjs` 讀回之既有機制,`error` 字串同受影響;`explore` 每輪用新 tag 且不開 `retryFailed`,不經此路;外審所提,不修:需於 out 列加本次標識,會改列之形)。②`createContext` 失敗(同程序模式使整次 `runJobs` 拋出、子程序模式 worker 退出 ⇒「worker 無結果」)不屬暫時性標記之範圍;外部資源於評估器模組初始化時即不可用者,仍依一般錯誤計 `retries`(使用端若需要,宜於領域端起跑前檢查,或另案擴充)。③`DOMAIN_KEYS.evaluator.doc` 之說明字串增一句,故 `evaluator` 型別不符之 `createRsi` 錯誤訊息文字隨之多一句(其餘輸出不變)。
 
 **0. 鎖之已知限制(REC-01;第 456 項修正後,2026-11-14)**:競態已修(持有者檔改名取得後核對、回收途徑寫入後確認、釋放原子移除)。**空夾之產生途徑未完全查明**:「臨界區內異常結束」之探測下偶有釋放 / 回收交錯後之空夾(無持有者檔、無取得檔),以「空夾逾 2 秒寬限即可占下」收斂為 ≤ 2 秒之停頓(最終 10 次探測 0 停滯);再查宜加觀察回調(見需裁示之 `onTrace`)。餘下皆為活性(不致兩臨界區重疊):①釋放時本方之持有者檔被存活之回收者取得逾 2 秒未歸還 ⇒ 不刪,其後移回者成為以本程序 pid 為持有者之遺留,至本程序結束或逾 `staleMs`(預設 5 分)才被回收;②釋放之刪夾持續失敗(Windows 占用)⇒ 殘留至取得者逾 `staleMs`;③與舊版(1.0.9 以前)之 `withLock` 同時作用於同一鎖夾時,舊版之「判定後以路徑刪夾」仍可誤刪(混用版本期間之限制)。槽位(REC-06)之回收仍為移夾法,移走期間第三方可建槽(既有註解已載,未在本輪範圍)。
 

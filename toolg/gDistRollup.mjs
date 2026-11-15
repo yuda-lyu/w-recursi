@@ -10,7 +10,8 @@ let fdTar = './dist'
 //   rollup之external與globals以import字串逐字比對, 'fs'不涵蓋'node:fs', 若日後引用node:前綴須另行列入
 //2. 本套件不直接引用任何第三方套件之主入口: lodash-es一律以單函數路徑(lodash-es/<函數>.js)引用, 列於npm依賴之wsemi帶入(package.json不另宣告),
 //   屬純函式之ESM小檔且互相只含相對引用, 不剔除而打包進dist(與自有套件對lodash-es/*之處理一致);
-//   wsemi於src中只引用src/getTrace.mjs(2026-11-14, core/jsonl.mjs之觀察回調;單檔, 其相依僅lodash-es/get.js與同套件之isfun.mjs, 皆純函式ESM), 同樣打包進dist,
+//   wsemi於src中只引用src/getTrace.mjs(2026-11-14, core/jsonl.mjs之觀察回調;單檔, 其相依僅lodash-es/get.js與同套件之isfun.mjs, 皆純函式ESM)
+//   與src/iseint.mjs(2026-11-16, tree/store.mjs之cfg.frontier.maxTransient正整數判定;其相依僅同套件之isenum.mjs、_numRange.mjs、_numOpt.mjs、_const.mjs, 皆無裸import之純函式ESM), 同樣打包進dist,
 //   故無wsemi之剔除清單(tree-kill、dayjs等)需列入
 //3. globals右側為引入後的名稱, 不能包含小數點「.」
 //4. runin須為nodejs: 本套件僅能於nodejs執行(child_process、fs、zlib、process.kill與Atomics.wait), 未給時rollupFiles預設browser,
@@ -18,7 +19,7 @@ let fdTar = './dist'
 //5. dist之限制(行為不改, 僅記錄): src內以import.meta.url相對位置取用之資產(src/eval/worker.mjs, 供spawn模式派發子程序; src/search/policyV0.mjs, 供init()寫入預設策略)
 //   不在import圖內, 故不隨dist打包; 需用spawn模式或init()者請以ESM深層路徑取用(w-recursi/src/index.mjs等, 套件不設exports)
 //盤點方式: 自src/WRecursi.mjs靜態追蹤import圖(含export … from與字串常值之動態import, 並進入node_modules內之lodash-es單檔),
-//   共走訪293檔(本套件29、node_modules 264), 未解析0; 裸import只有上列7個node內建模組與45個lodash-es單函數路徑, node_modules內部無再引用之裸import;
+//   (2026-11-16重盤)共走訪297檔(本套件30、node_modules 267), 未解析0; 裸import只有上列7個node內建模組、49個lodash-es單函數路徑與2個wsemi單檔(getTrace、iseint), node_modules內部無再引用之裸import;
 //   圖外之本套件檔3個: src/cli.mjs(命令列入口)、src/eval/worker.mjs(子程序入口)、src/search/policyV0.mjs(預設策略, 由init()複製)
 
 

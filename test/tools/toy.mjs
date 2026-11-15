@@ -5,7 +5,7 @@ import { sha } from '../../src/core/canonical.mjs'
 //玩具領域(簡化測試問題):二維整數格點上的「策略」
 //  - spec:{ kind:'point', x, y, tag? }(tag 不影響行為 ⇒ 無效變異, 供別名偵測)、{ kind:'cond', up:point, down:point }(行為 = 兩點平均;供對照臂)
 //  - 評估:訓練期分數 = 凹面(最佳點 OPT)+ 確定性雜訊;留出期(backtest)最佳點 BT_OPT 不同 ⇒ 部分區域被否決(backtest ≤ 0)
-//  - 全部確定性(同 spec 同結果), 可設 delayMs 模擬耗時、failIf 模擬評估失敗
+//  - 全部確定性(同 spec 同結果), 可設 delayMs 模擬耗時、failIf 模擬評估失敗、transientIf 模擬暫時性失敗(拋出之錯誤帶 transient: true)
 export const OPT = { x: 3, y: -5 }
 export const BT_OPT = { x: 3, y: 7 }
 export const RANGE = 20
@@ -37,7 +37,7 @@ export let behaviorOf = (spec) => (spec.kind === 'point' ? [[spec.x, spec.y]] : 
 let f = (p, o) => 100 - ((p[0] - o.x) ** 2 + (p[1] - o.y) ** 2) / 4
 let sleep = (ms) => new Promise((r) => setTimeout(r, ms))
 
-export let createContext = async (opt = {}) => ({ delayMs: opt.delayMs || 0, failIf: opt.failIf || null, logFile: opt.logFile || null, createdAt: Date.now(), pid: process.pid })
+export let createContext = async (opt = {}) => ({ delayMs: opt.delayMs || 0, failIf: opt.failIf || null, transientIf: opt.transientIf || null, logFile: opt.logFile || null, createdAt: Date.now(), pid: process.pid })
 export let evaluate = async (spec, ctx, protocol = {}) => {
     validateSpec(spec)
     let t0 = Date.now()
@@ -49,6 +49,16 @@ export let evaluate = async (spec, ctx, protocol = {}) => {
     if (delay) { await sleep(delay) }
     let failRe = _.get(protocol, 'failIf', _.get(ctx, 'failIf', null))
     if (failRe && new RegExp(failRe).test(summarize(spec))) { throw new Error(`模擬評估失敗:${summarize(spec)}`) }
+    //模擬暫時性失敗(錯誤物件帶 transient: true;如外部資源一時不可用):評估器以此表明「非候選本身之問題」
+    let trRe = _.get(protocol, 'transientIf', _.get(ctx, 'transientIf', null))
+    //  protocol.transientVal(預設 true)= 錯誤物件之 transient 值;給非 true 之真值(如 'true'、1)供測「只認嚴格 true」;給 'throws' ⇒ 讀取 transient 即拋錯之存取器(供測標記之讀取不使失敗處理拋出)
+    if (trRe && new RegExp(trRe).test(summarize(spec))) {
+        let err = new Error(`模擬暫時性失敗:${summarize(spec)}`)
+        let tv = _.get(protocol, 'transientVal', true)
+        if (tv === 'throws') { Object.defineProperty(err, 'transient', { get() { throw new Error('transient 存取器拋錯') } }) }
+        else { err.transient = tv }
+        throw err
+    }
     //模擬 worker 於 job 中途崩潰(程序直接結束, 不寫結果;runner 動態派工之隔離測試用)
     let exitRe = _.get(protocol, 'exitIf', null)
     if (exitRe && new RegExp(exitRe).test(summarize(spec))) { process.exit(3) }
