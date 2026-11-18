@@ -1,5 +1,5 @@
 /*!
- * w-recursi v1.0.18
+ * w-recursi v1.0.19
  * (c) 2018-2021 yuda-lyu(semisphere)
  * Released under the MIT License.
  */
