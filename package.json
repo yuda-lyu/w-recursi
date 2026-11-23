@@ -1,9 +1,9 @@
 {
   "name": "w-recursi",
-  "version": "1.0.22",
+  "version": "1.0.23",
   "main": "dist/w-recursi.umd.js",
   "dependencies": {
-    "wsemi": "^1.9.71"
+    "wsemi": "^1.9.72"
   },
   "devDependencies": {
     "w-package-tools": "^1.1.29"
